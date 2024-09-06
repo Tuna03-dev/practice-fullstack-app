@@ -1,0 +1,1 @@
+insert into users(user_id, lastname, password, status, username) values ('1b20d4dd-6382-42ee-9127-f6560c67bc66', 'admin','$2a$10$rMmGVuwIS..JByPomJAsqOtdGkbx9Yw3PZPGYTRjr7GLo6xjPrK4G', '1','Admin123')
