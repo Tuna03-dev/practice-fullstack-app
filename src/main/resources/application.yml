@@ -14,16 +14,17 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.MySQL8Dialect
 
-  task:
-    scheduling:
-      pool:
-        size: 10
-      thread-name-prefix: schedule-task-
 
   data:
     redis:
       host: localhost
       port: 6379
+
+  task:
+    scheduling:
+      pool:
+        size: 10
+      thread-name-prefix: schedule-task-
 
   elasticsearch:
     uris: http://localhost:9200

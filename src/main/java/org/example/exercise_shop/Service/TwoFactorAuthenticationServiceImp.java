@@ -66,7 +66,7 @@ public class TwoFactorAuthenticationServiceImp implements TwoFactorAuthenticatio
     }
 
     private String generateOtp(){
-        return String.format("%06d", new Random().nextInt(999999));
+        return String.format("%04d", new Random().nextInt(9999));
     }
 
 

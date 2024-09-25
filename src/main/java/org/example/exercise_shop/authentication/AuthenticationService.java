@@ -42,7 +42,7 @@ public class AuthenticationService {
         }
         User user = userMapper.toUser(registerRequest);
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setAudit(new Audit())  ;
+        user.setAudit(new Audit()) ;
         user.setStatus(true);
         return userRepository.save(user);
     }
@@ -53,7 +53,9 @@ public class AuthenticationService {
         var user = userRepository.findByUsername(authenticationRequest.getUsername()).orElseThrow(() -> new ApplicationException(ErrorCode.INVALID_USER));
         if (user.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))){
             twoFactorAuthenticationService.sendOtpToUser(user.getUsername());
-            throw new ApplicationException(ErrorCode.ADMIN_AUTHENTICATE);
+            return AuthenticationResponse.builder()
+                    .twoFactorRequired(true)
+                    .build();
         }
         Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -69,8 +71,6 @@ public class AuthenticationService {
     public AuthenticationResponse verifyOtp(String username, String otp){
         if (twoFactorAuthenticationService.validateOtp(username, otp)){
             var user = userRepository.findByUsername(username).orElseThrow(() -> new ApplicationException(ErrorCode.INVALID_USER));
-            user.set2FAAuthenticated(true);
-            userRepository.save(user);
             Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String accessToken = jwtTokenService.generateToken(user);
@@ -129,4 +129,7 @@ public class AuthenticationService {
 
     }
 
+    public boolean checkUsername(String username){
+        return userRepository.existsUserByUsername(username);
+    }
 }

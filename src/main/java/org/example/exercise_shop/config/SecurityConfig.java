@@ -21,7 +21,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig {
     private final JwtRequestFilter jwtRequestFilter;
     private final AuthenticationProvider authenticationProvider;
-    private final String[] PUBLIC_URL = {"/api/v1/authenticate","/api/v1/verify-otp", "/api/v1/register", "/api/v1/logout", "/api/v1/refresh", "/api/v1/customer/products", "/api/v1/customer/shops", "/api/v1/customer/carts/**", "/api/v1/rate-products/**"};
+    private final String[] PUBLIC_URL = {"/api/v1/authenticate","/api/v1/verify-otp", "/api/v1/register", "/api/v1/logout", "/api/v1/refresh", "/api/v1/customer/products", "/api/v1/customer/shops", "/api/v1/customer/carts/**", "/api/v1/rate-products/**", "/api/v1/check-username/**"};
 
 
     @Bean
@@ -36,7 +36,9 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-
+        http.logout(logout -> logout
+                .logoutRequestMatcher(new AntPathRequestMatcher("/api/v1/logout"))
+                .invalidateHttpSession(true));
 
         return http.build();
     }
