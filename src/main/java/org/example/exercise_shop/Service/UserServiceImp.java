@@ -49,4 +49,12 @@ public class UserServiceImp implements UserService{
 
     }
 
+    @Override
+    @Transactional
+    public void login2FAAuthentication(String username) {
+        userRepository.updateUser(username, true);
+
+    }
+
+
 }

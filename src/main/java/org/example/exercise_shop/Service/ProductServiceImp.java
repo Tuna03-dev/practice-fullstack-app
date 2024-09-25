@@ -4,10 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.example.exercise_shop.Repository.CategoryRepository;
 import org.example.exercise_shop.dto.request.ProductCreationRequest;
 import org.example.exercise_shop.dto.request.ProductUpdateRequest;
+import org.example.exercise_shop.dto.response.ProductResponse;
 import org.example.exercise_shop.entity.*;
 import org.example.exercise_shop.Repository.ProductRepository;
 import org.example.exercise_shop.exception.ApplicationException;
 import org.example.exercise_shop.exception.ErrorCode;
+import org.example.exercise_shop.mapper.ProductMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,9 +23,10 @@ import java.time.LocalDateTime;
 public class ProductServiceImp implements ProductService{
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final ProductMapper productMapper;
 
     @Override
-    public Page<Product> getProducts(String name, int page, int size, ProductSortType productSortType) {
+    public Page<ProductResponse> getProducts(String name, int page, int size, ProductSortType productSortType) {
         Pageable pageable;
         switch (productSortType){
             case HOT -> pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("soldQuantity"))
@@ -32,7 +35,13 @@ public class ProductServiceImp implements ProductService{
             default -> pageable = PageRequest.of(page, size);
         }
 
-        return productRepository.findAllByNameIsLikeIgnoreCaseAndDeleteAtIsNull(name,pageable);
+        Page<Product> products = productRepository.findAllByNameIsLikeIgnoreCaseAndDeleteAtIsNull(name,pageable);
+
+        return products.map(product -> {
+            ProductResponse productResponse = productMapper.toProductResponse(product);
+            productResponse.setCategoryName(product.getCategory().getName());
+            return productResponse;
+        });
     }
 
     @Override

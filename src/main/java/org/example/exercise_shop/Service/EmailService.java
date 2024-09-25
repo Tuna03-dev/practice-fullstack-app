@@ -15,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 public class EmailService {
     private final RestTemplate restTemplate =new RestTemplate();
-    private final String apiKey = "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";
+    private final String apiKey = "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";
     private final String brevoApiUrl = "https://api.brevo.com/v3/smtp/email";
 
 
