@@ -27,6 +27,8 @@ public class Category {
     String id;
     @Column(name = "category_name")
     String name;
+    String icon;
+
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     Set<Product> products = new HashSet<>();

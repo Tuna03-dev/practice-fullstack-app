@@ -4,10 +4,8 @@ package org.example.exercise_shop.controller.shop;
 import lombok.RequiredArgsConstructor;
 import org.example.exercise_shop.Service.ReportService;
 import org.example.exercise_shop.Service.ShopService;
-import org.example.exercise_shop.dto.response.ApiResponse;
+import org.example.exercise_shop.dto.ApiResponse;
 import org.example.exercise_shop.dto.response.ReportResponse;
-import org.example.exercise_shop.entity.Report;
-import org.example.exercise_shop.entity.Shop;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

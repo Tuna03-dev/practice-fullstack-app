@@ -64,4 +64,7 @@ public class Shop {
 
     @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL)
     List<Order> orders;
+
+    @OneToMany(mappedBy = "shop")
+    private List<Discount> discounts;
 }

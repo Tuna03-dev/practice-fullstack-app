@@ -7,8 +7,7 @@ const authStore = useAuthStore();
 
 onMounted(() => {
   authStore.restoreSession();
-
-
+  
 })
 
 </script>

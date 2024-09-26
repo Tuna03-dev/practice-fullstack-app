@@ -17,4 +17,6 @@ public interface ProductService {
     Product addProduct(ProductCreationRequest productCreationRequest, Shop shop);
     Product updateProduct(ProductUpdateRequest productUpdateRequest);
     void deleteProduct(String productId, Shop shop);
+
+    List<ProductResponse> getBestSellers(int size);
 }

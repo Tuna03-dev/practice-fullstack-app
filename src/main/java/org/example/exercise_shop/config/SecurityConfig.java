@@ -21,8 +21,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig {
     private final JwtRequestFilter jwtRequestFilter;
     private final AuthenticationProvider authenticationProvider;
-    private final String[] PUBLIC_URL = {"/api/v1/authenticate","/api/v1/verify-otp", "/api/v1/register", "/api/v1/customer/products", "/api/v1/customer/shops", "/api/v1/customer/carts/**", "/api/v1/rate-products/**", "/api/v1/check-username/**"};
-
+    private final String[] PUBLIC_URL = {"/api/v1/authenticate","/api/v1/verify-otp", "/api/v1/register", "/api/v1/customer/products/**", "/api/v1/customer/shops", "/api/v1/customer/carts/**", "/api/v1/rate-products/**", "/api/v1/check-username/**"};
+    private final String[] TEST_URL = {"/api/v1/managements/**", "/api/v1/sliders/**", "/api/v1/categories/**", "/api/v1/discounts/**"};
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
@@ -30,6 +30,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(
                 request -> request
                         .requestMatchers(PUBLIC_URL).permitAll()
+                        .requestMatchers(TEST_URL).permitAll()
                         .requestMatchers("/api/v1/admin/**").hasAuthority(Role.ADMIN.name())
                         .requestMatchers("/api/v1/shop/**").hasAuthority(Role.SHOP.name())
                         .anyRequest().authenticated())

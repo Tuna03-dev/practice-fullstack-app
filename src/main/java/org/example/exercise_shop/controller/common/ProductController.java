@@ -2,15 +2,16 @@ package org.example.exercise_shop.controller.common;
 
 import lombok.RequiredArgsConstructor;
 import org.example.exercise_shop.Service.ProductService;
-import org.example.exercise_shop.dto.response.ApiResponse;
+import org.example.exercise_shop.dto.ApiResponse;
 import org.example.exercise_shop.dto.response.ProductResponse;
-import org.example.exercise_shop.entity.Product;
 import org.example.exercise_shop.entity.ProductSortType;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,4 +32,15 @@ public class ProductController {
                 .build();
 
     }
+
+
+    @GetMapping("/best-sellers")
+    public ApiResponse<List<ProductResponse>> getBestSellers(@RequestParam(name = "size", defaultValue = "5") int size){
+        List<ProductResponse> bestSellers = productService.getBestSellers(size);
+
+        return ApiResponse.<List<ProductResponse>>builder()
+                .data(bestSellers)
+                .build();
+    }
+
 }

@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.exercise_shop.Service.OrderItemService;
 import org.example.exercise_shop.Service.OrderService;
 import org.example.exercise_shop.Service.ShopService;
-import org.example.exercise_shop.dto.response.ApiResponse;
+import org.example.exercise_shop.dto.ApiResponse;
 import org.example.exercise_shop.dto.response.OrderItemResponse;
 import org.example.exercise_shop.dto.response.OrderResponse;
 import org.example.exercise_shop.entity.Shop;

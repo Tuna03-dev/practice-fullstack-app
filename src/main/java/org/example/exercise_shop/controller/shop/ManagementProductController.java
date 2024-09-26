@@ -6,18 +6,15 @@ import org.example.exercise_shop.Service.ProductService;
 import org.example.exercise_shop.Service.ShopService;
 import org.example.exercise_shop.dto.request.ProductCreationRequest;
 import org.example.exercise_shop.dto.request.ProductUpdateRequest;
-import org.example.exercise_shop.dto.response.ApiResponse;
+import org.example.exercise_shop.dto.ApiResponse;
 import org.example.exercise_shop.entity.Product;
 import org.example.exercise_shop.entity.Shop;
 import org.example.exercise_shop.entity.User;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController

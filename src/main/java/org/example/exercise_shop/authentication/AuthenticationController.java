@@ -10,12 +10,10 @@ import org.example.exercise_shop.Service.UserService;
 import org.example.exercise_shop.config.JwtTokenService;
 import org.example.exercise_shop.dto.request.RegisterRequest;
 import org.example.exercise_shop.dto.request.Verification2FARequest;
-import org.example.exercise_shop.dto.response.ApiResponse;
+import org.example.exercise_shop.dto.ApiResponse;
 import org.example.exercise_shop.entity.User;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

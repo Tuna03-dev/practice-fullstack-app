@@ -14,5 +14,8 @@ public class ProductResponse {
     String id;
     String name;
     BigDecimal price;
+    BigDecimal priceWithDiscount;
     String categoryName;
+    double averageRate;
+    String image;
 }

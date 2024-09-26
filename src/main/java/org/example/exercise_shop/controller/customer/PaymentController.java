@@ -6,13 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.example.exercise_shop.Service.OrderService;
 import org.example.exercise_shop.config.ConfigVNPayment;
 import org.example.exercise_shop.dto.request.OrderRequest;
-import org.example.exercise_shop.dto.response.ApiResponse;
+import org.example.exercise_shop.dto.ApiResponse;
 import org.example.exercise_shop.dto.response.CheckoutResponse;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
