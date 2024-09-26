@@ -20,34 +20,43 @@
           </RouterLink>
         </li>
       </ul>
-      <div class="flex space-x-2 ml-auto">
-        <Dialog>
-          <DialogTrigger>
-            <button class="border-2 border-black px-4 py-2 rounded-lg font-medium">Sign in</button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle class="text-center text-2xl font-bold">Sign in</DialogTitle>
-              
-            </DialogHeader>
-            <SignInForm />
-          </DialogContent>
-        </Dialog>
+
+      <template v-if="isLogged">
+        <div class="flex space-x-2 ml-auto">
+
+          <UserNav />
+        </div>
+      </template>
+      <template v-else>
+        <div class="flex space-x-2 ml-auto">
+          <Dialog>
+            <DialogTrigger>
+              <button class="border-2 border-black px-4 py-2 rounded-lg font-medium">Sign in</button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle class="text-center text-2xl font-bold">Sign in</DialogTitle>
         
-        <Dialog>
-          <DialogTrigger>
-            <button class="bg-black text-white px-4 py-2 rounded-lg font-medium">Sign up</button>
-          </DialogTrigger>
-          <DialogContent >
-            <DialogHeader >
-              <DialogTitle class="text-center text-2xl font-bold">Sign up</DialogTitle>
-              
-            </DialogHeader>
-            <RegisterForm />
-          </DialogContent>
-        </Dialog>
+              </DialogHeader>
+              <SignInForm />
+            </DialogContent>
+          </Dialog>
         
-      </div>
+          <Dialog>
+            <DialogTrigger>
+              <button class="bg-black text-white px-4 py-2 rounded-lg font-medium">Sign up</button>
+            </DialogTrigger>
+            <DialogContent >
+              <DialogHeader >
+                <DialogTitle class="text-center text-2xl font-bold">Sign up</DialogTitle>
+        
+              </DialogHeader>
+              <RegisterForm />
+            </DialogContent>
+          </Dialog>
+        
+        </div>
+      </template>
     </Container>
   </div>
 </template>
@@ -63,7 +72,13 @@ import {
 import { RouterLink, useRoute } from 'vue-router'
 import SignInForm from './SignInForm.vue';
 import RegisterForm from './RegisterForm.vue';
+import { useAuthStore } from '@/stores/authStore';
+import { computed } from 'vue';
+import UserNav from './UserNav.vue';
 const route = useRoute()
+
+const authStore = useAuthStore();
+const isLogged = computed(() => authStore.isLoggedIn);
 
 const isActive = (path: string) => {
   return route.path === path
@@ -76,9 +91,14 @@ const menuItems = [
     icon: 'ic:outline-other-houses'
   },
   {
-    name: 'Product',
+    name: 'Products',
     path: '/product',
     icon: 'ic:baseline-shopify'
+  },
+  {
+    name: 'Stores',
+    path: '/store',
+    icon: 'lucide:store'
   }
 ]
 </script>

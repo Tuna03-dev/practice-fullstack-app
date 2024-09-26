@@ -30,7 +30,7 @@ public class AuthenticationController {
 
     @PostMapping("/authenticate")
     public ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest authenticationRequest, HttpServletRequest request, HttpServletResponse response) {
-        AuthenticationResponse authenticationResponse = authenticationService.authenticate(authenticationRequest);
+        AuthenticationResponse authenticationResponse = authenticationService.authenticate(authenticationRequest, response);
 
         if (authenticationResponse.isTwoFactorRequired()) {
             return ApiResponse.<AuthenticationResponse>builder()
@@ -78,10 +78,10 @@ public class AuthenticationController {
     }
 
     @PostMapping("/refresh")
-    public ApiResponse<AuthenticationResponse> refresh(@RequestBody RefreshTokenRequest refreshTokenRequest){
+    public ApiResponse<AuthenticationResponse> refresh(HttpServletRequest request, HttpServletResponse response){
 
         return ApiResponse.<AuthenticationResponse>builder()
-                .data(authenticationService.refresh(refreshTokenRequest))
+                .data(authenticationService.refresh(request, response))
                 .message("Refresh Token Successfully")
                 .build();
     }
