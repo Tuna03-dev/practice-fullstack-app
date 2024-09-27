@@ -1,5 +1,5 @@
 <template>
-  <Card class="w-[300px]">
+  <Card >
     <CardHeader class="border-b-[1px]">
       <CardTitle>CATEGORY</CardTitle>
       <CardDescription>Some category you can find!</CardDescription>

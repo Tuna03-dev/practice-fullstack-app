@@ -7,7 +7,7 @@
     </DropdownMenuTrigger>
     <DropdownMenuContent  class="w-56 font-medium">
       <DropdownMenuLabel >My Account</DropdownMenuLabel>
-      <DropdownMenuSeparator />
+      <DropdownMenuSeparator /> 
       <DropdownMenuGroup>
         <DropdownMenuItem>
             <iconify-icon icon="lucide:user" class="mr-2 h-4 w-4" />

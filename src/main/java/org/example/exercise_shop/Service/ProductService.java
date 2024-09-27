@@ -19,4 +19,6 @@ public interface ProductService {
     void deleteProduct(String productId, Shop shop);
 
     List<ProductResponse> getBestSellers(int size);
+    List<ProductResponse> getNewArrival(int size);
+    List<ProductResponse> getTopRates(int size);
 }

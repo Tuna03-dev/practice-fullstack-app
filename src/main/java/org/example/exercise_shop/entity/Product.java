@@ -66,7 +66,8 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     Set<CartItem> cartItems = new HashSet<>();
     @Embedded
-    Audit audit;
+    @Builder.Default
+    Audit audit = new Audit();
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime deleteAt;
 
