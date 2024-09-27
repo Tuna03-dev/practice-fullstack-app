@@ -28,7 +28,8 @@ public enum ErrorCode {
     PRODUCT_NOT_PURCHASED(1017, "Product have not been purchased"),
     ORDER_NOT_FOUND(1018, "Order not found"),
     ADMIN_AUTHENTICATE(200, "Continue 2FA authentication"),
-    OTP_FAILED(1019, "OTP Invalid")
+    OTP_FAILED(1019, "OTP Invalid"),
+    SLIDER_NOT_FOUND(1020, "Slider not found"),
     ;
 
     private int code;

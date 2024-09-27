@@ -1,6 +1,7 @@
 package org.example.exercise_shop.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.exercise_shop.Repository.CategoryRepository;
 import org.example.exercise_shop.dto.request.ProductCreationRequest;
 import org.example.exercise_shop.dto.request.ProductUpdateRequest;
@@ -16,10 +17,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductServiceImp implements ProductService{
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
@@ -93,5 +98,52 @@ public class ProductServiceImp implements ProductService{
             throw new ApplicationException(ErrorCode.DONT_HAVE_PERMISSION);
         }
 
+    }
+
+    @Override
+    public List<ProductResponse> getBestSellers(int size) {
+        List<Product> products = productRepository.findBestSellers(size);
+        return mapToProductResponseHaveDiscount(products);
+    }
+
+    @Override
+    public List<ProductResponse> getNewArrival(int size) {
+        LocalDateTime date = LocalDateTime.now().minusDays(15);
+        List<Product> products = productRepository.findNewArrival(size, date);
+        if (products.size() < size){
+            products.addAll(productRepository.findNewArrivalIfNull(size));
+        }
+        return mapToProductResponseHaveDiscount(products);
+    }
+
+    @Override
+    public List<ProductResponse> getTopRates(int size) {
+        List<Product> products = productRepository.findTopRates(size);
+        return mapToProductResponseHaveDiscount(products);
+    }
+
+
+    private Double getDiscountPercentage(Product product){
+        return (product.getDiscounts() != null && !product.getDiscounts().isEmpty())
+                ? product.getDiscounts().stream()
+                .filter(discount -> LocalDateTime.now().isAfter(discount.getStartDate()) &&
+                        LocalDateTime.now().isBefore(discount.getEndDate()))
+                .map(Discount::getPercentage)
+                .findFirst()
+                .orElse(0.0)
+                : 0.0;
+    }
+
+    private List<ProductResponse> mapToProductResponseHaveDiscount(List<Product> products){
+        return products.stream().map(
+                product -> {
+                    Double discountPercentage = getDiscountPercentage(product);
+                    ProductResponse productResponse = productMapper.toProductResponse(product);
+                    productResponse.setPriceWithDiscount(product.getPrice().subtract(BigDecimal.valueOf(discountPercentage).multiply(product.getPrice())));
+                    productResponse.setCategoryName(product.getCategory().getName());
+                    return productResponse;
+                }
+
+        ).toList();
     }
 }

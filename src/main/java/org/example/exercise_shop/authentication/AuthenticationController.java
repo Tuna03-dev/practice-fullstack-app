@@ -10,12 +10,10 @@ import org.example.exercise_shop.Service.UserService;
 import org.example.exercise_shop.config.JwtTokenService;
 import org.example.exercise_shop.dto.request.RegisterRequest;
 import org.example.exercise_shop.dto.request.Verification2FARequest;
-import org.example.exercise_shop.dto.response.ApiResponse;
+import org.example.exercise_shop.dto.ApiResponse;
 import org.example.exercise_shop.entity.User;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,7 +28,7 @@ public class AuthenticationController {
 
     @PostMapping("/authenticate")
     public ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest authenticationRequest, HttpServletRequest request, HttpServletResponse response) {
-        AuthenticationResponse authenticationResponse = authenticationService.authenticate(authenticationRequest);
+        AuthenticationResponse authenticationResponse = authenticationService.authenticate(authenticationRequest, response);
 
         if (authenticationResponse.isTwoFactorRequired()) {
             return ApiResponse.<AuthenticationResponse>builder()
@@ -78,10 +76,10 @@ public class AuthenticationController {
     }
 
     @PostMapping("/refresh")
-    public ApiResponse<AuthenticationResponse> refresh(@RequestBody RefreshTokenRequest refreshTokenRequest){
+    public ApiResponse<AuthenticationResponse> refresh(HttpServletRequest request, HttpServletResponse response){
 
         return ApiResponse.<AuthenticationResponse>builder()
-                .data(authenticationService.refresh(refreshTokenRequest))
+                .data(authenticationService.refresh(request, response))
                 .message("Refresh Token Successfully")
                 .build();
     }

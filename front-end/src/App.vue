@@ -1,6 +1,15 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import {Toaster} from 'vue-sonner'
+import { useAuthStore } from '@/stores/authStore'
+import { onMounted } from 'vue';
+const authStore = useAuthStore();
+
+onMounted(() => {
+  authStore.restoreSession();
+  
+})
+
 </script>
 
 <template>

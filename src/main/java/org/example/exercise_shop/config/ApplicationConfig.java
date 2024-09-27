@@ -26,6 +26,7 @@ public class ApplicationConfig {
         return authenticationProvider;
     }
 
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();

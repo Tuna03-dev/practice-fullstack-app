@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.exercise_shop.Service.CartService;
 import org.example.exercise_shop.dto.request.AddToCartRequest;
-import org.example.exercise_shop.dto.response.ApiResponse;
+import org.example.exercise_shop.dto.ApiResponse;
 import org.example.exercise_shop.dto.response.CartItemResponse;
 import org.example.exercise_shop.entity.Cart;
 import org.example.exercise_shop.entity.CartItem;

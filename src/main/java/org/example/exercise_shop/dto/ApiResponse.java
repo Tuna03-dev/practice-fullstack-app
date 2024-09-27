@@ -1,4 +1,4 @@
-package org.example.exercise_shop.dto.response;
+package org.example.exercise_shop.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;

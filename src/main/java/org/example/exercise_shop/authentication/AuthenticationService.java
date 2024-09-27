@@ -1,6 +1,9 @@
 package org.example.exercise_shop.authentication;
 
 import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.exercise_shop.Service.TwoFactorAuthenticationService;
@@ -22,6 +25,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
 
 @Service
 @RequiredArgsConstructor
@@ -48,7 +53,7 @@ public class AuthenticationService {
     }
 
 
-    public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest){
+    public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest, HttpServletResponse response){
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
         var user = userRepository.findByUsername(authenticationRequest.getUsername()).orElseThrow(() -> new ApplicationException(ErrorCode.INVALID_USER));
         if (user.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))){
@@ -61,9 +66,10 @@ public class AuthenticationService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String accessToken = jwtTokenService.generateToken(user);
         String refreshToken = jwtTokenService.generateRefreshToken(user);
+
+        setRefreshTokenCookie(refreshToken,response);
         return AuthenticationResponse.builder()
                 .accessToken(accessToken)
-                .refreshToken(refreshToken)
                 .role(user.getRole())
                 .build();
     }
@@ -77,7 +83,6 @@ public class AuthenticationService {
             String refreshToken = jwtTokenService.generateRefreshToken(user);
             return AuthenticationResponse.builder()
                     .accessToken(accessToken)
-                    .refreshToken(refreshToken)
                     .role(user.getRole())
                     .build();
         }else {
@@ -86,8 +91,15 @@ public class AuthenticationService {
     }
 
 
-    public AuthenticationResponse refresh(RefreshTokenRequest refreshTokenRequest){
-        String refreshToken = refreshTokenRequest.getToken();
+    public AuthenticationResponse refresh(HttpServletRequest request, HttpServletResponse response){
+
+        Cookie[] cookies = request.getCookies();
+        String refreshToken = Arrays.stream(cookies)
+                .filter(cookie -> cookie.getName().equals("refreshToken"))
+                .findFirst()
+                .map(Cookie::getValue)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.INVALID_TOKEN));
+
         String username = jwtTokenService.extractUsername(refreshToken);
         User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         if (jwtTokenService.validateToken(refreshToken, user)){
@@ -99,9 +111,10 @@ public class AuthenticationService {
                     .build();
             invalidatedTokenRepository.save(invalidatedToken);
 
+            setRefreshTokenCookie(newRefreshToken, response);
+
             return AuthenticationResponse.builder()
                     .accessToken(newAccessToken)
-                    .refreshToken(newRefreshToken)
                     .role(user.getRole())
                     .build();
         }else {
@@ -132,4 +145,15 @@ public class AuthenticationService {
     public boolean checkUsername(String username){
         return userRepository.existsUserByUsername(username);
     }
+
+    private void setRefreshTokenCookie(String refreshToken, HttpServletResponse response){
+        Cookie cookie = new Cookie("refreshToken", refreshToken);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setMaxAge(7 * 24 * 60 * 60);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+    }
+
+
 }

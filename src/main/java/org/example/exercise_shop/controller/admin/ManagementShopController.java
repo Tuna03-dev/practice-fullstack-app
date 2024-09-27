@@ -2,12 +2,9 @@ package org.example.exercise_shop.controller.admin;
 
 import lombok.RequiredArgsConstructor;
 import org.example.exercise_shop.Service.ShopService;
-import org.example.exercise_shop.dto.request.ShopCreationRequest;
-import org.example.exercise_shop.dto.response.ApiResponse;
+import org.example.exercise_shop.dto.ApiResponse;
 import org.example.exercise_shop.entity.Shop;
 import org.example.exercise_shop.entity.StatusShop;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

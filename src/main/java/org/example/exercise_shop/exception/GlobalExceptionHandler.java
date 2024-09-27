@@ -4,7 +4,7 @@ package org.example.exercise_shop.exception;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.example.exercise_shop.dto.response.ApiResponse;
+import org.example.exercise_shop.dto.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;

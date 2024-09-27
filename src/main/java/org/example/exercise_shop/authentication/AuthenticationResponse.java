@@ -14,6 +14,5 @@ public class AuthenticationResponse {
     @Builder.Default
     private boolean twoFactorRequired = false;
     private String accessToken;
-    private String refreshToken;
     private Role role;
 }

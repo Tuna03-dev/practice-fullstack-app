@@ -1,5 +1,7 @@
 import axios, { type AxiosResponse } from "axios";
-
+import { useAuthStore } from "@/stores/authStore";
+import { useRouter } from "vue-router";
+import { toast } from "vue-sonner";
 
 const httpClient = axios.create({
     baseURL: "http://localhost:8080/api/v1",
@@ -10,10 +12,11 @@ const httpClient = axios.create({
 
 httpClient.interceptors.request.use(
     async (config) => {
-        // const token = localStorage.getItem('access_token');
-        // if(token){
-        //     config.headers.Authorization = `Bearer ${token}`;
-        // }
+        const authStore = useAuthStore();
+        const token =authStore.accessToken;
+        if(token){
+            config.headers.Authorization = `Bearer ${token}`;
+        }
         return config;
     },
     (error) => {
@@ -30,14 +33,32 @@ httpClient.interceptors.response.use(
         }
         return response;
     },
-    (error) => {
+    async(error) => {
         if (error.response) {
             const { status, data } = error.response;
             console.error(`API error: ${status}`, data);
+            
+            const authStore = useAuthStore();
+            const originalRequest = error.config;
+            
+            if(error.response && error.response.status === 401 && !originalRequest._retry){
+                originalRequest._retry = true;
+                try{
+                    const newTokens = await httpClient.post("/refresh");
+                    authStore.setAccessToken(newTokens.data.accessToken);
+                    originalRequest.headers.Authorization = `Bearer ${newTokens.data.accessToken}`;
+                    return httpClient(originalRequest);
 
-            if (status === 401) {
-                console.log('Unauthorized error - redirecting to login');
+                }catch(error){
+                    console.log("Refresh token error:", error);
+                    authStore.logout();
+                    const router = useRouter();
+                    router.push("/login");
+                    toast.error("Your session has expired. Please login again.");
+                }
+
             }
+
 
             return Promise.reject(data);
         }

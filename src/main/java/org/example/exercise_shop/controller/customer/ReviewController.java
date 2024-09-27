@@ -4,11 +4,10 @@ package org.example.exercise_shop.controller.customer;
 import lombok.RequiredArgsConstructor;
 import org.example.exercise_shop.Service.ReviewService;
 import org.example.exercise_shop.dto.request.AddReviewRequest;
-import org.example.exercise_shop.dto.response.ApiResponse;
+import org.example.exercise_shop.dto.ApiResponse;
 import org.example.exercise_shop.dto.response.ReviewReponse;
 import org.example.exercise_shop.entity.Review;
 import org.example.exercise_shop.mapper.ReviewMapper;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
