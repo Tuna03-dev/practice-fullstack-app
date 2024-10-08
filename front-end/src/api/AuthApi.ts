@@ -11,7 +11,7 @@ const AuthApi = {
     },
 
     CheckUsername: async (username: String) => {
-        return await httpClient.post(`/check-username/${username}`)
+        return await httpClient.get(`/check-username?username=${username}`)
     }
 }
 

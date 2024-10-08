@@ -31,3 +31,21 @@ export type slidesResponse = {
     active: boolean
 
 } 
+
+
+export type UserProfileResponse = {
+    id: string,
+    username: string,
+    email: string,
+    firstname: string,
+    lastname: string,
+    role: string
+    phone: string,
+    address: string,
+    imageUrl: string,
+    gender: boolean,
+    birthDate: Date,
+    status: boolean,
+    
+
+}

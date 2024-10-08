@@ -1,7 +1,7 @@
 <template >
    <DropdownMenu>
     <DropdownMenuTrigger as-child>
-        <Avatar >
+        <Avatar>
             <AvatarImage :src="'./src/assets/hi.gif'" alt="User Avatar"></AvatarImage>
         </Avatar>
     </DropdownMenuTrigger>
@@ -9,11 +9,9 @@
       <DropdownMenuLabel >My Account</DropdownMenuLabel>
       <DropdownMenuSeparator /> 
       <DropdownMenuGroup>
-        <DropdownMenuItem>
-            <iconify-icon icon="lucide:user" class="mr-2 h-4 w-4" />
-          
+        <DropdownMenuItem @click="profile">
+          <iconify-icon icon="lucide:user" class="mr-2 h-4 w-4" />
           <span>Profile</span>
-       
         </DropdownMenuItem>
         <DropdownMenuItem>
             <iconify-icon icon="lucide:credit-card" class="mr-2 h-4 w-4" />
@@ -56,11 +54,19 @@ import {
 import { Avatar, AvatarImage } from '../components/ui/avatar'
 import { useAuthStore } from '@/stores/authStore';
 import { toast } from 'vue-sonner';
+import { useRouter } from 'vue-router';
 
+const route = useRouter();
 const authStore = useAuthStore();
 const logout = () => {
 authStore.logout();
+route.push('/')
 toast.success('Logout successful!');
+
+}
+
+const profile = () => {
+  route.push('/profile/personal-information')
 }
 
 </script>

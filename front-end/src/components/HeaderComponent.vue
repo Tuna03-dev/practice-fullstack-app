@@ -21,9 +21,20 @@
         </li>
       </ul>
 
-      <template v-if="isLogged">
-        <div class="flex space-x-2 ml-auto">
+      <div class="flex items-center ml-auto">
+        <input
+          type="text"
+          v-model="searchQuery"
+          @keyup.enter="handleSearch"
+          placeholder="Search..."
+          class="border-2 border-gray-300 px-4 py-2 rounded-lg focus:rounded-lg outline-none hover:bg-gray-100"
+        />
 
+        <Button class="ml-2 py-5 font-medium" @click="handleSearch">Search</Button>
+      </div>
+
+      <template v-if="isLogged">
+        <div class="flex space-x-2 mr-10 ml-auto">
           <UserNav />
         </div>
       </template>
@@ -31,30 +42,29 @@
         <div class="flex space-x-2 ml-auto">
           <Dialog>
             <DialogTrigger>
-              <button class="border-2 border-black px-4 py-2 rounded-lg font-medium">Sign in</button>
+              <button class="border-2 border-black px-4 py-2 rounded-lg font-medium">
+                Sign in
+              </button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
                 <DialogTitle class="text-center text-2xl font-bold">Sign in</DialogTitle>
-        
               </DialogHeader>
               <SignInForm />
             </DialogContent>
           </Dialog>
-        
+
           <Dialog>
             <DialogTrigger>
               <button class="bg-black text-white px-4 py-2 rounded-lg font-medium">Sign up</button>
             </DialogTrigger>
-            <DialogContent >
-              <DialogHeader >
+            <DialogContent>
+              <DialogHeader>
                 <DialogTitle class="text-center text-2xl font-bold">Sign up</DialogTitle>
-        
               </DialogHeader>
               <RegisterForm />
             </DialogContent>
           </Dialog>
-        
         </div>
       </template>
     </Container>
@@ -69,19 +79,29 @@ import {
   DialogTitle,
   DialogTrigger
 } from '../components/ui/dialog'
-import { RouterLink, useRoute } from 'vue-router'
-import SignInForm from './SignInForm.vue';
-import RegisterForm from './RegisterForm.vue';
-import { useAuthStore } from '@/stores/authStore';
-import { computed } from 'vue';
-import UserNav from './UserNav.vue';
-const route = useRoute()
+import { Button } from './ui/button'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
+import SignInForm from './SignInForm.vue'
+import RegisterForm from './RegisterForm.vue'
+import { useAuthStore } from '@/stores/authStore'
+import { computed, ref } from 'vue'
+import UserNav from './UserNav.vue'
 
-const authStore = useAuthStore();
-const isLogged = computed(() => authStore.isLoggedIn);
+const route = useRoute()
+const router = useRouter()
+
+const authStore = useAuthStore()
+const isLogged = computed(() => authStore.isLoggedIn)
+const searchQuery = ref<string>('')
 
 const isActive = (path: string) => {
   return route.path === path
+}
+
+const handleSearch = () => {
+    if(searchQuery.value.trim()){
+      router.push(`/search?q=${searchQuery.value.trim()}`)
+    }
 }
 
 const menuItems = [
