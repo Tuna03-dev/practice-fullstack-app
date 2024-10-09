@@ -24,7 +24,7 @@ const router = useRouter();
 
 const props = defineProps<{ product: ProductResponse }>();
 const handleClick = (id: string) => {
-    router.push(`/products/${id}`)
+    router.push(`/products/details/${id}`)
 }
 </script>
 <style lang="">

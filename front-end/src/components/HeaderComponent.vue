@@ -100,7 +100,7 @@ const isActive = (path: string) => {
 
 const handleSearch = () => {
     if(searchQuery.value.trim()){
-      router.push(`/search?q=${searchQuery.value.trim()}`)
+      router.push({ path: "/products", query: { ...route.query, search: searchQuery.value } })
     }
 }
 
@@ -112,7 +112,7 @@ const menuItems = [
   },
   {
     name: 'Products',
-    path: '/product',
+    path: '/products',
     icon: 'ic:baseline-shopify'
   },
   {

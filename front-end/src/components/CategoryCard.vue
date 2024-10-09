@@ -26,9 +26,9 @@ import {
 } from '@/components/ui/card'
 import { onMounted, ref } from 'vue'
 import { toast } from 'vue-sonner'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
-
+const route = useRoute();
 const router = useRouter();
 const categories = ref<CategoryResponse[]>([])
 
@@ -45,7 +45,7 @@ const fetchCategory = async () => {
 }
 
 const handleClick = (id: string) => {
-  router.push(`/products/category/${id}`)
+  router.push({path: "/products", query: { ...route.query, category: id }})
     
 }
 

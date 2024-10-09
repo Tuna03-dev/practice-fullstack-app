@@ -13,8 +13,8 @@ const ProductApi = {
         return await httpClient.get(`/customer/products/top-rates?size=${size}`);
     },
 
-    getAllProducts: async (page?: number, size?: number, sort?: string, name?: string) => {
-        return await httpClient.get('/customer/products', { params: { page: page, size: size, sort: sort, name: name } });
+    getAllProducts: async ( {page, size, sort, name, categoryId}:{page?: number, size?: number, sort?: string, name?: string, categoryId?: string}) => {
+        return await httpClient.get('/customer/products', { params: { page: page, size: size, sort: sort, name: name, category: categoryId } });
     }
 
 

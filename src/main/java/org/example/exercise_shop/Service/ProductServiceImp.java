@@ -11,10 +11,7 @@ import org.example.exercise_shop.Repository.ProductRepository;
 import org.example.exercise_shop.exception.ApplicationException;
 import org.example.exercise_shop.exception.ErrorCode;
 import org.example.exercise_shop.mapper.ProductMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -31,22 +28,23 @@ public class ProductServiceImp implements ProductService{
     private final ProductMapper productMapper;
 
     @Override
-    public Page<ProductResponse> getProducts(String name, int page, int size, ProductSortType productSortType) {
+    public Page<ProductResponse> getProducts(String name, int page, int size, ProductSortType productSortType, String categoryId) {
         Pageable pageable;
-        switch (productSortType){
+        switch (productSortType) {
             case HOT -> pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("soldQuantity"))
                     .and(Sort.by(Sort.Order.desc("averageRate"))));
             case NEW -> pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("audit.createdAt")));
+            case PRICE_ASC -> pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc("price")));
+            case PRICE_DESC -> pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("price")));
             default -> pageable = PageRequest.of(page, size);
         }
 
-        Page<Product> products = productRepository.findAllByNameIsLikeIgnoreCaseAndDeleteAtIsNull(name,pageable);
 
-        return products.map(product -> {
-            ProductResponse productResponse = productMapper.toProductResponse(product);
-            productResponse.setCategoryName(product.getCategory().getName());
-            return productResponse;
-        });
+        Page<Product> productPage = productRepository.findAllByNameIsLikeIgnoreCaseAndCategory_IdAndDeleteAtIsNull(name, categoryId, pageable);
+        List<ProductResponse> productResponses = mapToProductResponseHaveDiscount(productPage.getContent());
+
+
+        return new PageImpl<>(productResponses, pageable, productPage.getTotalElements());
     }
 
     @Override
@@ -67,6 +65,7 @@ public class ProductServiceImp implements ProductService{
                 .price(productCreationRequest.getPrice())
                 .category(productCreationRequest.getCategory())
                 .stockQuantity(productCreationRequest.getSockQuantity())
+                .image(productCreationRequest.getImage())
                 .shop(shop)
                 .audit(new Audit())
                 .build();

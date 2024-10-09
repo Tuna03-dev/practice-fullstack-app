@@ -22,10 +22,11 @@ public class ProductController {
 
     @GetMapping
     public ApiResponse<Page<ProductResponse>> showAllProducts(@RequestParam(name = "page", defaultValue = "0")int page,
-                                                              @RequestParam(name = "size", defaultValue = "10")int size,
+                                                              @RequestParam(name = "size", defaultValue = "8")int size,
                                                               @RequestParam(name = "name", defaultValue = "")String name,
-                                                              @RequestParam(name = "sort", defaultValue = "NONE") ProductSortType sort){
-        Page<ProductResponse> productPage = productService.getProducts(name, page, size, sort);
+                                                              @RequestParam(name = "sort", defaultValue = "NONE") ProductSortType sort,
+                                                              @RequestParam(name = "category", defaultValue = "") String categoryId){
+        Page<ProductResponse> productPage = productService.getProducts(name, page, size, sort, categoryId);
 
         return ApiResponse.<Page<ProductResponse>>builder()
                 .data(productPage)

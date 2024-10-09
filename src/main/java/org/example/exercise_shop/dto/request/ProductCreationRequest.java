@@ -29,6 +29,6 @@ public class ProductCreationRequest {
 
     @NotNull(message = "Category is required")
     Category category;
-
+    String image;
 
 }

@@ -23,8 +23,8 @@ public class UserServiceImp implements UserService{
     private final UserMapper userMapper;
 
     @Override
-    public UserProfileResponse getUserProfileById(String userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
+    public UserProfileResponse getUserProfileByUsername(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
 
         return userMapper.toUserProfileResponse(user);
     }

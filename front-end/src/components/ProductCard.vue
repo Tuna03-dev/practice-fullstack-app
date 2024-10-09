@@ -1,5 +1,5 @@
 <template >
-    <div class="flex border p-2 w-full rounded-lg my-4 hover:cursor-pointer" @click="handleClick(product.id)">
+    <div class="flex border p-2 w-full rounded-lg hover:cursor-pointer" @click="handleClick(product.id)">
       <div>
         <img class="w-24" :src="product.image" alt="Product Image" />
       </div>

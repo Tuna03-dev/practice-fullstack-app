@@ -85,10 +85,10 @@ public class AuthenticationController {
     }
 
     @PostMapping("/logout")
-    public ApiResponse<?> logout(@RequestBody LogoutRequest request){
+    public ApiResponse<?> logout(@RequestBody LogoutRequest request, HttpServletRequest httpServletRequest){
         String username = jwtTokenService.extractUsername(request.getToken());
         userService.logout2FAAuthentication(username);
-        authenticationService.logout(request);
+        authenticationService.logout(request, httpServletRequest);
 
         return  ApiResponse.builder()
                 .message("Logout Successfully")

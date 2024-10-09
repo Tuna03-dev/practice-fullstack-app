@@ -21,17 +21,17 @@ public class UserProfileController {
     private final UserRedisService userRedisService;
 
 
-    @GetMapping("/{id}")
-    public ApiResponse<UserProfileResponse> getUserProfile(@PathVariable String id) {
+    @GetMapping("/{username}")
+    public ApiResponse<UserProfileResponse> getUserProfile(@PathVariable String username) {
         try{
-            UserProfileResponse cacheProfile = userRedisService.getUserProfile(id);
+            UserProfileResponse cacheProfile = userRedisService.getUserProfile(username);
             if (cacheProfile != null){
                 return ApiResponse.<UserProfileResponse>builder()
                         .data(cacheProfile)
                         .build();
             }
 
-            UserProfileResponse profileResponse = userService.getUserProfileById(id);
+            UserProfileResponse profileResponse = userService.getUserProfileByUsername(username);
             userRedisService.cacheUserProfile(profileResponse);
 
             return ApiResponse.<UserProfileResponse>builder()
