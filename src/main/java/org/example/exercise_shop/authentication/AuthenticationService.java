@@ -68,6 +68,7 @@ public class AuthenticationService {
         String refreshToken = jwtTokenService.generateRefreshToken(user);
 
         setRefreshTokenCookie(refreshToken,response);
+
         return AuthenticationResponse.builder()
                 .accessToken(accessToken)
                 .role(user.getRole())
@@ -92,8 +93,10 @@ public class AuthenticationService {
 
 
     public AuthenticationResponse refresh(HttpServletRequest request, HttpServletResponse response){
-
+        log.info("Refresh token");
         Cookie[] cookies = request.getCookies();
+
+        log.info(cookies.length + " cookies found");
         String refreshToken = Arrays.stream(cookies)
                 .filter(cookie -> cookie.getName().equals("refreshToken"))
                 .findFirst()
@@ -123,9 +126,20 @@ public class AuthenticationService {
     }
 
     @Transactional
-    public void logout(LogoutRequest request){
+    public void logout(LogoutRequest request, HttpServletRequest httpServletRequest){
         String username = jwtTokenService.extractUsername(request.getToken());
         User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        Cookie[] cookies = httpServletRequest.getCookies();
+
+        Cookie refreshToken = Arrays.stream(cookies)
+                .filter(cookie -> cookie.getName().equals("refreshToken"))
+                .findFirst()
+                .orElseThrow(() -> new ApplicationException(ErrorCode.INVALID_TOKEN));
+        refreshToken.setMaxAge(0);
+        refreshToken.setPath("/");
+
+
         if (jwtTokenService.validateToken(request.getToken(), user)){
 
             InvalidatedToken invalidatedToken = InvalidatedToken.builder()
@@ -149,10 +163,12 @@ public class AuthenticationService {
     private void setRefreshTokenCookie(String refreshToken, HttpServletResponse response){
         Cookie cookie = new Cookie("refreshToken", refreshToken);
         cookie.setHttpOnly(true);
-        cookie.setSecure(true);
+        cookie.setSecure(false);
         cookie.setMaxAge(7 * 24 * 60 * 60);
         cookie.setPath("/");
+
         response.addCookie(cookie);
+        log.info("Refresh token cookie set");
     }
 
 

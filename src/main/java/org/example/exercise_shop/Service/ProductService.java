@@ -11,7 +11,7 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface ProductService {
-    Page<ProductResponse> getProducts(String name, int page, int size, ProductSortType productSortType);
+    Page<ProductResponse> getProducts(String name, int page, int size, ProductSortType productSortType, String categoryId);
     Page<Product> getProductsByDeletedAtAndShopId(String shopId, int page, int size);
     Product getProduct(String id);
     Product addProduct(ProductCreationRequest productCreationRequest, Shop shop);

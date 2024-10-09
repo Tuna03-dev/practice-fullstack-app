@@ -27,7 +27,7 @@ const router = useRouter();
 const props = defineProps<{ product: ProductResponse }>()
 const discountPrice = ref<number>(0);
   const handleClick = (id: string) => {
-    router.push(`/products/${id}`)
+    router.push(`/products/details/${id}`)
 }
 
 </script>

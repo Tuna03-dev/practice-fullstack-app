@@ -30,6 +30,7 @@ public enum ErrorCode {
     ADMIN_AUTHENTICATE(200, "Continue 2FA authentication"),
     OTP_FAILED(1019, "OTP Invalid"),
     SLIDER_NOT_FOUND(1020, "Slider not found"),
+    AGE_GROUP_NOT_FOUND(1021, "Age group not found"),
     ;
 
     private int code;

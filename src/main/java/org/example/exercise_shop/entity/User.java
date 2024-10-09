@@ -40,7 +40,7 @@ public class User implements UserDetails {
     String email;
     boolean gender;
     LocalDate birthDate;
-
+    String imageUrl;
     boolean status;
 
     @Column(name = "is_2fa_authenticated")

@@ -1,13 +1,14 @@
 import axios, { type AxiosResponse } from "axios";
 import { useAuthStore } from "@/stores/authStore";
-import { useRouter } from "vue-router";
+import router from "@/router";
 import { toast } from "vue-sonner";
 
 const httpClient = axios.create({
     baseURL: "http://localhost:8080/api/v1",
     headers:{
         "Content-Type": "application/json",
-    }
+    },
+    withCredentials: true
 });
 
 httpClient.interceptors.request.use(
@@ -41,10 +42,10 @@ httpClient.interceptors.response.use(
             const authStore = useAuthStore();
             const originalRequest = error.config;
             
-            if(error.response && error.response.status === 401 && !originalRequest._retry){
+            if(error.response && (error.response.status === 401 || error.response.status === 403)  && !originalRequest._retry){
                 originalRequest._retry = true;
                 try{
-                    const newTokens = await httpClient.post("/refresh");
+                    const newTokens = await httpClient.post("/refresh", null, {withCredentials: true});
                     authStore.setAccessToken(newTokens.data.accessToken);
                     originalRequest.headers.Authorization = `Bearer ${newTokens.data.accessToken}`;
                     return httpClient(originalRequest);
@@ -52,7 +53,6 @@ httpClient.interceptors.response.use(
                 }catch(error){
                     console.log("Refresh token error:", error);
                     authStore.logout();
-                    const router = useRouter();
                     router.push("/login");
                     toast.error("Your session has expired. Please login again.");
                 }

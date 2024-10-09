@@ -5,7 +5,8 @@ export const useAuthStore =defineStore('auth',{
     state: () => ({
         accessToken: '',
         userRole: '',
-        isLoggedIn:false
+        isLoggedIn:false,
+        username: '',
     }),
     actions:{
         setAccessToken(token: string){
@@ -16,13 +17,18 @@ export const useAuthStore =defineStore('auth',{
         clearAccessToken(){
             this.accessToken = "";
             this.isLoggedIn = false; 
-            localStorage.removeItem('access_token');
+            localStorage.removeItem('accessToken');
         },
         setIsLoggedIn(loggedIn: boolean){
             this.isLoggedIn = loggedIn
         },
         setUserRole(role: string){
             this.userRole = role
+            localStorage.setItem('userRole', role);
+        },
+        setUsername(username: string){
+            this.username = username;
+            localStorage.setItem('username', username);
         },
         logout(){
             this.clearAccessToken();
@@ -30,11 +36,21 @@ export const useAuthStore =defineStore('auth',{
         },
 
         restoreSession() {
-            const token = localStorage.getItem('access_token');
-            if (token) {
+            const token = localStorage.getItem('accessToken');
+            const role = localStorage.getItem('userRole');
+            const username = localStorage.getItem('username');
+            if (token && role && username) {
                 this.setAccessToken(token); 
+                this.setUserRole(role);
+                this.setUsername(username);
             }
         }
+
+    },
+    getters:{
+        isAdmin: (state) => state.userRole === 'ADMIN',
+        isCustomer: (state) => state.userRole === 'CUSTOMER',
+        isShop: (state) => state.userRole === 'SHOP',
 
     }
 

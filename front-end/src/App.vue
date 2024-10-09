@@ -13,9 +13,11 @@ onMounted(() => {
 </script>
 
 <template>
-  
-  <Toaster richColors  :expand="true" position="top-center"/>
-  <RouterView />
+  <div class="font-sans">
+
+    <Toaster richColors  :expand="true" position="top-center"/>
+    <RouterView />
+  </div>
 </template>
 
 <style scoped>

@@ -19,17 +19,17 @@ public class UserRedisServiceImp implements UserRedisService{
     private static final String USER_PROFILE_CACHE_KEY_PREFIX = "userprofile:";
 
     private String generateKey(String userId){
-        return USER_PROFILE_CACHE_KEY_PREFIX+ " userId";
+        return USER_PROFILE_CACHE_KEY_PREFIX+ " " + userId;
     }
 
     @Override
-    public void clear(String userId) {
-        redisTemplate.delete(generateKey(userId));
+    public void clear(String username) {
+        redisTemplate.delete(generateKey(username));
     }
 
     @Override
-    public UserProfileResponse getUserProfile(String userId) throws JsonProcessingException {
-        String key = generateKey(userId);
+    public UserProfileResponse getUserProfile(String username) throws JsonProcessingException {
+        String key = generateKey(username);
         String json = (String) redisTemplate.opsForValue().get(key);
 
         return json != null ? redisObjectMapper.readValue(json, new TypeReference<UserProfileResponse>(){}) : null;
