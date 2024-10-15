@@ -31,6 +31,8 @@ public enum ErrorCode {
     OTP_FAILED(1019, "OTP Invalid"),
     SLIDER_NOT_FOUND(1020, "Slider not found"),
     AGE_GROUP_NOT_FOUND(1021, "Age group not found"),
+    ERROR_CACHE(1022, "Error cache"),
+    ERROR_CONVERT_TIME(1023, "Error convert time"),
     ;
 
     private int code;

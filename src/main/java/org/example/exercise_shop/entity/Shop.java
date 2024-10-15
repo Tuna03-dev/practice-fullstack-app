@@ -2,7 +2,6 @@ package org.example.exercise_shop.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -10,7 +9,6 @@ import org.hibernate.annotations.UuidGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -34,8 +32,8 @@ public class Shop {
     String address;
 
     @Column(name = "shop_average_rate")
-    double rate;
-
+    double averageRate;
+    int numberOfRates;
     @Enumerated(EnumType.STRING)
     @Column(name = "shop_status")
     StatusShop status;
@@ -44,6 +42,7 @@ public class Shop {
     LocalDateTime requestDate;
     double feePercentage;
     String userId;
+    String imageUrl;
     @Embedded
     Audit audit;
 
@@ -59,12 +58,11 @@ public class Shop {
     @JsonIgnore
     Set<Product> products;
 
-    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL)
-    List<ShopReview> reviews;
+
 
     @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL)
     List<Order> orders;
 
     @OneToMany(mappedBy = "shop")
-    private List<Discount> discounts;
+    List<Discount> discounts;
 }

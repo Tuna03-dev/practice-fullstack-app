@@ -5,11 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.exercise_shop.Repository.CategoryRepository;
 import org.example.exercise_shop.dto.request.ProductCreationRequest;
 import org.example.exercise_shop.dto.request.ProductUpdateRequest;
+import org.example.exercise_shop.dto.response.ProductDetailResponse;
+import org.example.exercise_shop.dto.response.ProductImageResponse;
 import org.example.exercise_shop.dto.response.ProductResponse;
 import org.example.exercise_shop.entity.*;
 import org.example.exercise_shop.Repository.ProductRepository;
 import org.example.exercise_shop.exception.ApplicationException;
 import org.example.exercise_shop.exception.ErrorCode;
+import org.example.exercise_shop.mapper.ProductImageMapper;
 import org.example.exercise_shop.mapper.ProductMapper;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,8 @@ public class ProductServiceImp implements ProductService{
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ProductMapper productMapper;
+    private final ProductImageMapper productImageMapper;
+
 
     @Override
     public Page<ProductResponse> getProducts(String name, int page, int size, ProductSortType productSortType, String categoryId) {
@@ -53,8 +58,15 @@ public class ProductServiceImp implements ProductService{
     }
 
     @Override
-    public Product getProduct(String id) {
-        return productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product does not exist"));
+    public ProductDetailResponse getProduct(String id) {
+        Product product = productRepository.findProductByIdAndDeleteAtIsNull(id);
+        ProductDetailResponse productDetailResponse = productMapper.toProductDetailResponse(product);
+        List<ProductImageResponse> productImageResponses = productImageMapper.toListProductImageResponse(product.getProductImages());
+        productDetailResponse.setProductImages(productImageResponses);
+        productDetailResponse.setCategoryName(product.getCategory().getName());
+        productDetailResponse.setPriceWithDiscount(product.getPrice().subtract(BigDecimal.valueOf(getDiscountPercentage(product)).multiply(product.getPrice())));
+        productDetailResponse.setShopId(product.getShop().getId());
+        return productDetailResponse;
     }
 
     @Override
@@ -119,6 +131,11 @@ public class ProductServiceImp implements ProductService{
     public List<ProductResponse> getTopRates(int size) {
         List<Product> products = productRepository.findTopRates(size);
         return mapToProductResponseHaveDiscount(products);
+    }
+
+    @Override
+    public Product findById(String productId) {
+        return productRepository.findById(productId).orElseThrow(() -> new ApplicationException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 
 

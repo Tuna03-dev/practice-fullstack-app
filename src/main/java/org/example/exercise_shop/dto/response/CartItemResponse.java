@@ -24,5 +24,7 @@ public class CartItemResponse {
     BigDecimal pricePerProduct;
     BigDecimal cartItemAmount;
     String productId;
+    String productName;
+    String productImage;
 
 }

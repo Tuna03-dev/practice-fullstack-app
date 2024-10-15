@@ -7,7 +7,7 @@ import { useAuthStore } from '@/stores/authStore'
 import { record } from 'zod'
 import { toast } from 'vue-sonner'
 import ProfileLayout from '@/layouts/ProfileLayout.vue'
-
+import ProductDetailsView from '@/views/ProductDetailsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,6 +32,10 @@ const router = createRouter({
         {
           path: '',
           component: ProductsView
+        },
+        {
+          path: 'details/:id',
+          component: ProductDetailsView
         }
       ]
     },
@@ -53,6 +57,7 @@ const router = createRouter({
         }
       ]
     },
+    
   ]
 })
 

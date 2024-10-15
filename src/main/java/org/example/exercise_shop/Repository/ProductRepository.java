@@ -28,4 +28,5 @@ public interface ProductRepository extends JpaRepository<Product,String> {
     List<Product> findTopRates(@Param(value = "size") int size);
 
     List<Product> findAllByIdIn(List<String> ids);
+    Product findProductByIdAndDeleteAtIsNull(String id);
 }

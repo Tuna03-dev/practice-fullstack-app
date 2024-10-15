@@ -15,5 +15,4 @@ public class AddToCartRequest {
     int quantity;
     BigDecimal pricePerProduct;
 
-
 }

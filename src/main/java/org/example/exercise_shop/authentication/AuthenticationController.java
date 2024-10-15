@@ -16,6 +16,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
@@ -37,15 +39,12 @@ public class AuthenticationController {
                     .build();
         }
 
-        String cartData = cartService.getCartDataFromCookies(request);
+        String sessionId = Arrays.stream(request.getCookies()).filter(cookie -> cookie.getName().equals("SESSION_CART")).findFirst().map(cookie -> cookie.getValue()).orElse(null);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null && authentication.isAuthenticated()) {
             var user = (User) authentication.getPrincipal();
-            if (cartData != null && !cartData.isEmpty()) {
-                cartService.syncCartFromCookies(cartData, user.getId());
-                cartService.clearCartCookie(response);
-            }
+            cartService.syncCartFromRedis(sessionId, user.getId());
         }
 
         return ApiResponse.<AuthenticationResponse>builder()

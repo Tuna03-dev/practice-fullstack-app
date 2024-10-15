@@ -27,7 +27,8 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
 
-public class Product {
+public class
+Product {
     @Id
     @UuidGenerator
     @Column(name = "product_id", updatable = false, unique = true)
@@ -76,4 +77,7 @@ public class Product {
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "discount_id"))
     private List<Discount> discounts;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    List<ProductImage> productImages;
 }

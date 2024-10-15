@@ -24,6 +24,10 @@ public class Review {
     String id;
     int rating;
     String comment;
+    String material;
+    String trueDescription;
+    String colour;
+    int likes;
     @Embedded
     @Builder.Default
     Audit audit = new Audit();

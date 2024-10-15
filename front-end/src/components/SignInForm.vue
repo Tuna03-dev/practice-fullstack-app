@@ -56,7 +56,9 @@ import { toast } from 'vue-sonner'
 import AuthApi from '../api/AuthApi'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
+import { useQueryClient } from '@tanstack/vue-query'
 
+const queryClient = useQueryClient()
 const loading = ref<boolean>(false)
 const showpassword = ref<boolean>(false)
 const route = useRouter()
@@ -91,6 +93,7 @@ const onSubmit = form.handleSubmit(async (values) => {
         authStore.setUserRole(dataResponse.data.role)
         authStore.setUsername(form.values.username || '')
         toast.success('Login successful!')
+        queryClient.invalidateQueries({queryKey: ['cartitems']})
         route.push('/')
       }
     }

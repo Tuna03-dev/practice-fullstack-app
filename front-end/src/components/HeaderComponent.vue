@@ -32,14 +32,17 @@
 
         <Button class="ml-2 py-5 font-medium" @click="handleSearch">Search</Button>
       </div>
+      <div class="ml-auto">
+        <shopping-cart-header :cartItems="data"/>
+      </div>
 
       <template v-if="isLogged">
-        <div class="flex space-x-2 mr-10 ml-auto">
+        <div class="flex space-x-2 mr-10">
           <UserNav />
         </div>
       </template>
       <template v-else>
-        <div class="flex space-x-2 ml-auto">
+        <div class="flex space-x-2">
           <Dialog>
             <DialogTrigger>
               <button class="border-2 border-black px-4 py-2 rounded-lg font-medium">
@@ -71,6 +74,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import ShoppingCartHeader from './cart/ShoppingCartHeader.vue'
 import Container from './Container.vue'
 import {
   Dialog,
@@ -84,8 +88,13 @@ import { RouterLink, useRoute, useRouter } from 'vue-router'
 import SignInForm from './SignInForm.vue'
 import RegisterForm from './RegisterForm.vue'
 import { useAuthStore } from '@/stores/authStore'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import UserNav from './UserNav.vue'
+import type { CartItemResponse } from '@/apiTypes'
+import CartApi from '@/api/CartApi'
+import { useQuery } from '@tanstack/vue-query'
+import { toast } from 'vue-sonner'
+
 
 const route = useRoute()
 const router = useRouter()
@@ -93,15 +102,40 @@ const router = useRouter()
 const authStore = useAuthStore()
 const isLogged = computed(() => authStore.isLoggedIn)
 const searchQuery = ref<string>('')
+const cartItems = ref<CartItemResponse[]>([])
+
+const {data, error, isLoading} = useQuery({
+  queryKey: ['cartitems'],
+  queryFn:  async () => {
+    try {
+      const response = await CartApi.getCart()
+      return response.data
+    } catch (error:any) {
+      console.error('API request failed:', error)
+      toast.error('API request failed:', error.message)
+    }
+  },
+  
+  refetchOnMount: true 
+  
+})
+
+if (isLoading) {
+  console.log('Loading cart items...')
+}
+
+if (error) {
+  console.error('Error loading cart items:', error)
+}
 
 const isActive = (path: string) => {
   return route.path === path
 }
 
 const handleSearch = () => {
-    if(searchQuery.value.trim()){
-      router.push({ path: "/products", query: { ...route.query, search: searchQuery.value } })
-    }
+  if (searchQuery.value.trim()) {
+    router.push({ path: '/products', query: { ...route.query, search: searchQuery.value } })
+  }
 }
 
 const menuItems = [
@@ -121,6 +155,8 @@ const menuItems = [
     icon: 'lucide:store'
   }
 ]
+
+
 </script>
 <style lang="scss">
 </style>

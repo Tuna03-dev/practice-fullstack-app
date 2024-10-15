@@ -11,13 +11,11 @@ import java.util.List;
 public interface CartService {
     Cart createNewCartForUser(String userId);
     void addToCart(String productId, int quantity, String userId, BigDecimal price);
-    void addToCartCookies(AddToCartRequest addToCartRequest, HttpServletRequest request, HttpServletResponse response);
-    void syncCartFromCookies(String cartData, String userId);
-    void storeCartinCookies(HttpServletResponse response, List<AddToCartRequest> cartRequestList);
-    void clearCartCookie(HttpServletResponse response);
-    String getCartDataFromCookies(HttpServletRequest request);
+    void addToCartRedis(AddToCartRequest addToCartRequest,HttpServletRequest request, HttpServletResponse response);
+    void syncCartFromRedis(String sessionId, String userId);
+
     Cart findByUserId(String userId);
     void deleteCartItem(String productId);
-    void deleteCartItemFromCookies(String productId, List<AddToCartRequest> addToCartRequests, HttpServletResponse response);
+
 
 }

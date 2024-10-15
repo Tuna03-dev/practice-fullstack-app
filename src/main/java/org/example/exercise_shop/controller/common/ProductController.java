@@ -1,15 +1,14 @@
 package org.example.exercise_shop.controller.common;
 
 import lombok.RequiredArgsConstructor;
+import org.example.exercise_shop.Service.redis.ProductRedisService;
 import org.example.exercise_shop.Service.ProductService;
 import org.example.exercise_shop.dto.ApiResponse;
+import org.example.exercise_shop.dto.response.ProductDetailResponse;
 import org.example.exercise_shop.dto.response.ProductResponse;
 import org.example.exercise_shop.entity.ProductSortType;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,13 +18,15 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
-
+    private final ProductRedisService productRedisService;
     @GetMapping
     public ApiResponse<Page<ProductResponse>> showAllProducts(@RequestParam(name = "page", defaultValue = "0")int page,
                                                               @RequestParam(name = "size", defaultValue = "8")int size,
                                                               @RequestParam(name = "name", defaultValue = "")String name,
                                                               @RequestParam(name = "sort", defaultValue = "NONE") ProductSortType sort,
                                                               @RequestParam(name = "category", defaultValue = "") String categoryId){
+
+
         Page<ProductResponse> productPage = productService.getProducts(name, page, size, sort, categoryId);
 
         return ApiResponse.<Page<ProductResponse>>builder()
@@ -59,6 +60,15 @@ public class ProductController {
 
         return ApiResponse.<List<ProductResponse>>builder()
                 .data(bestSellers)
+                .build();
+    }
+
+    @GetMapping("/details/{productId}")
+    public ApiResponse<ProductDetailResponse> getProductById(@PathVariable String productId){
+        ProductDetailResponse product = productService.getProduct(productId);
+
+        return ApiResponse.<ProductDetailResponse>builder()
+                .data(product)
                 .build();
     }
 }

@@ -1,4 +1,4 @@
-package org.example.exercise_shop.Service;
+package org.example.exercise_shop.Service.redis;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;

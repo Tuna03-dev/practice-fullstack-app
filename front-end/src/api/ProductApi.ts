@@ -1,3 +1,4 @@
+import { get } from "@vueuse/core";
 import httpClient from "./httpClient";
 
 
@@ -15,7 +16,11 @@ const ProductApi = {
 
     getAllProducts: async ( {page, size, sort, name, categoryId}:{page?: number, size?: number, sort?: string, name?: string, categoryId?: string}) => {
         return await httpClient.get('/customer/products', { params: { page: page, size: size, sort: sort, name: name, category: categoryId } });
-    }
+    },
+
+    getProductDetails: async (id: string) => {
+        return await httpClient.get(`/customer/products/details/${id}`);
+    },
 
 
 }

@@ -4,13 +4,17 @@ import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import lombok.RequiredArgsConstructor;
 import org.example.exercise_shop.Repository.CategoryRepository;
+import org.example.exercise_shop.Repository.ProductRepository;
 import org.example.exercise_shop.Repository.ShopRepository;
 import org.example.exercise_shop.Repository.UserRepository;
 import org.example.exercise_shop.dto.request.ShopCreationRequest;
 import org.example.exercise_shop.dto.request.ShopUpdateRequest;
+import org.example.exercise_shop.dto.response.ShopInformationResponse;
 import org.example.exercise_shop.entity.*;
 import org.example.exercise_shop.exception.ApplicationException;
 import org.example.exercise_shop.exception.ErrorCode;
+import org.example.exercise_shop.mapper.ShopMapper;
+import org.example.exercise_shop.utils.DateTimeFormatter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,10 +33,12 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ShopServiceImp implements ShopService{
-
+    private final DateTimeFormatter dateTimeFormatter;
     private final ShopRepository shopRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
+    private final ShopMapper shopMapper;
+    private final ProductRepository productRepository;
 
     @Override
     public Shop findById(String shopId) {
@@ -135,6 +141,18 @@ public class ShopServiceImp implements ShopService{
                 pageable);
 
 
+    }
+
+    @Override
+    public ShopInformationResponse getShopDetail(String id) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new ApplicationException(ErrorCode.PRODUCT_NOT_FOUND));
+        Shop shop = product.getShop();
+        ShopInformationResponse shopInformationResponse = shopMapper.toShopInformationResponse(shop);
+        shopInformationResponse.setNumberOfProducts(shop.getProducts().size());
+        shopInformationResponse.setCreatedAt(shop.getAudit().getCreatedAt());
+        shopInformationResponse.setUpdatedAt(shop.getAudit().getUpdatedAt());
+        shopInformationResponse.setJoinedDate(dateTimeFormatter.format(shop.getAudit().getCreatedAt()));
+        return shopInformationResponse;
     }
 
 
