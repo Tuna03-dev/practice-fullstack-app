@@ -57,6 +57,17 @@ const router = createRouter({
         }
       ]
     },
+    {
+      path: '/stores',
+      name: 'stores',
+      component: HomeLayout,
+      children: [
+        {
+          path: ':id',
+          component: () => import('@/views/StoreDetailView.vue')
+        }
+      ]
+    }
     
   ]
 })

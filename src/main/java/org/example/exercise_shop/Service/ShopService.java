@@ -19,6 +19,7 @@ public interface ShopService {
     void updateShopStatus(String shopId, StatusShop statusShop);
     Shop findByCurrentUser();
     Page<Shop> getAllShopsActive(int page, int size,String name, String categoryId, String address);
-    ShopInformationResponse getShopDetail(String id);
+    ShopInformationResponse getShopDetailByProductId(String productId);
+    ShopInformationResponse getShopDetailByShopId(String shopId);
 
 }

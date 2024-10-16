@@ -7,7 +7,7 @@
       </Avatar>
       <div class="flex flex-col gap-2">
         <label for="" class="text-lg font-bold">{{ shop.name }}</label>
-        <button class="border-[2px] hover:bg-white border-black px-3 py-1 rounded-md flex gap-1">
+        <button class="border-[2px] hover:bg-white border-black px-3 py-1 rounded-md flex gap-1" @click="handleClick">
           <Store strokeWidth="{1}" /> View Shop
         </button>
       </div>
@@ -38,10 +38,17 @@
 import type { ShopInformationType } from '@/apiTypes';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Store } from 'lucide-vue-next'
+import { useRouter } from 'vue-router';
 
 const props = defineProps<{
     shop: ShopInformationType
 }>()
-</script>
+const router = useRouter();
+
+const handleClick = () => {
+  router.push(`/stores/${props.shop.id}`)
+
+}
+</script> 
 <style lang="">
 </style>

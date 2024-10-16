@@ -1,0 +1,68 @@
+version: '3.9'
+
+services:
+  mysql:
+    image: mysql:8.4.0
+    container_name: mysql-app
+    environment:
+      MYSQL_ROOT_PASSWORD: 123
+      MYSQL_DATABASE: exercise_shop
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - tuna-network
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  redis:
+    image: redis:7.4.0
+    container_name: redis-app
+    volumes:
+      - redis-data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - tuna-network
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: tuna-webapp:0.0.1
+    container_name: web-app-container
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-app:3306/exercise_shop
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 123
+      SPRING_REDIS_HOST: redis-app
+      SPRING_REDIS_PORT: 6379
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - tuna-network
+
+volumes:
+  mysql-data:
+    external: true
+  redis-data:
+    external: true
+
+
+networks:
+    tuna-network:
+        driver: bridge
+        name: tuna-network

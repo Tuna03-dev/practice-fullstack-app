@@ -25,6 +25,8 @@ public class ShopInformationResponse {
     String userId;
     String imageUrl;
     String joinedDate;
+    String description;
+    String descriptionImage;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
 }

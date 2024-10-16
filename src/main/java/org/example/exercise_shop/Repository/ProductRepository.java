@@ -29,4 +29,7 @@ public interface ProductRepository extends JpaRepository<Product,String> {
 
     List<Product> findAllByIdIn(List<String> ids);
     Product findProductByIdAndDeleteAtIsNull(String id);
+
+    @Query("SELECT p from Product p where p.shop.id = :shopId and p.deleteAt is null  order by p.soldQuantity desc LIMIT 6")
+    List<Product> findBestSellersByShopId(String shopId);
 }

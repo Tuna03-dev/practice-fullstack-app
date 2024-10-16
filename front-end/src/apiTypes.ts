@@ -18,7 +18,7 @@ export type ProductResponse = {
     priceWithDiscount: bigint,
     averageRate: number,
     categoryName: string
-
+    soldQuantity: number
 }
 
 export type slidesResponse = {
@@ -76,6 +76,8 @@ export type ShopInformationType = {
     userId: string,
     numberOfProducts: number,
     joinedDate: string,
+    description: string,
+    descriptionImage: string,
 
 }
 export type ProductDetailResponse = {

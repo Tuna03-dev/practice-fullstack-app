@@ -144,9 +144,20 @@ public class ShopServiceImp implements ShopService{
     }
 
     @Override
-    public ShopInformationResponse getShopDetail(String id) {
+    public ShopInformationResponse getShopDetailByProductId(String id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new ApplicationException(ErrorCode.PRODUCT_NOT_FOUND));
         Shop shop = product.getShop();
+        ShopInformationResponse shopInformationResponse = shopMapper.toShopInformationResponse(shop);
+        shopInformationResponse.setNumberOfProducts(shop.getProducts().size());
+        shopInformationResponse.setCreatedAt(shop.getAudit().getCreatedAt());
+        shopInformationResponse.setUpdatedAt(shop.getAudit().getUpdatedAt());
+        shopInformationResponse.setJoinedDate(dateTimeFormatter.format(shop.getAudit().getCreatedAt()));
+        return shopInformationResponse;
+    }
+
+    @Override
+    public ShopInformationResponse getShopDetailByShopId(String id) {
+        Shop shop = shopRepository.findById(id).orElseThrow(() -> new ApplicationException(ErrorCode.SHOP_NOT_FOUND));
         ShopInformationResponse shopInformationResponse = shopMapper.toShopInformationResponse(shop);
         shopInformationResponse.setNumberOfProducts(shop.getProducts().size());
         shopInformationResponse.setCreatedAt(shop.getAudit().getCreatedAt());

@@ -24,4 +24,5 @@ public interface ProductService {
     List<ProductResponse> getTopRates(int size);
 
     Product findById(String productId);
+    List<ProductResponse> getRecommendProducts(String shopId);
 }

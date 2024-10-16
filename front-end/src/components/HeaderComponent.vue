@@ -21,16 +21,16 @@
         </li>
       </ul>
 
-      <div class="flex items-center ml-auto">
+      <div class="flex items-center ml-auto ">
         <input
           type="text"
           v-model="searchQuery"
           @keyup.enter="handleSearch"
           placeholder="Search..."
-          class="border-2 border-gray-300 px-4 py-2 rounded-lg focus:rounded-lg outline-none hover:bg-gray-100"
+          class="border-2 border-gray-300 px-4 w-[300px] py-2 rounded-lg focus:rounded-lg outline-none hover:bg-gray-100"
         />
 
-        <Button class="ml-2 py-5 font-medium" @click="handleSearch">Search</Button>
+        <Button class="ml-2 py-5 px-3 font-medium" @click="handleSearch"><Search /></Button>
       </div>
       <div class="ml-auto">
         <shopping-cart-header :cartItems="data"/>
@@ -74,6 +74,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import { Search } from 'lucide-vue-next'
 import ShoppingCartHeader from './cart/ShoppingCartHeader.vue'
 import Container from './Container.vue'
 import {
@@ -149,11 +150,11 @@ const menuItems = [
     path: '/products',
     icon: 'ic:baseline-shopify'
   },
-  {
-    name: 'Stores',
-    path: '/store',
-    icon: 'lucide:store'
-  }
+  // {
+  //   name: 'Stores',
+  //   path: '/stores',
+  //   icon: 'lucide:store'
+  // }
 ]
 
 

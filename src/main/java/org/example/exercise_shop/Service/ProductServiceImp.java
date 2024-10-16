@@ -138,6 +138,13 @@ public class ProductServiceImp implements ProductService{
         return productRepository.findById(productId).orElseThrow(() -> new ApplicationException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 
+    @Override
+    public List<ProductResponse> getRecommendProducts(String shopId) {
+        List<Product> products = productRepository.findBestSellersByShopId(shopId);
+
+        return mapToProductResponseHaveDiscount(products);
+    }
+
 
     private Double getDiscountPercentage(Product product){
         return (product.getDiscounts() != null && !product.getDiscounts().isEmpty())

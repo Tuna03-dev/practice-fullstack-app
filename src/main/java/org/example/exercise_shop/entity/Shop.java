@@ -42,9 +42,16 @@ public class Shop {
     LocalDateTime requestDate;
     double feePercentage;
     String userId;
+    @Column(length = 512)
     String imageUrl;
     @Embedded
     Audit audit;
+    @Column(length = 512)
+
+    String description;
+    @Column(length = 512)
+
+    String descriptionImage;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(

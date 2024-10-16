@@ -88,7 +88,7 @@ const fetchProductDetails = async () => {
 
 const fetchShopDetails = async () => {
   try {
-    const response = await ShopApi.getShopdetails(productId)
+    const response = await ShopApi.getShopdetailsByProductId(productId)
     shopDetail.value = response.data
     numberOfRates.value = response.data.numberOfRates
 
