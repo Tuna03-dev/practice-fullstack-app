@@ -7,7 +7,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.exercise_shop.Service.UserRedisService;
+import org.example.exercise_shop.Service.redis.UserRedisService;
 
 @AllArgsConstructor
 @Slf4j

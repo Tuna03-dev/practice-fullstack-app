@@ -1,24 +1,23 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/exercise_shop
-    username: root
-    password: 123
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/exercise_shop}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:123}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
       ddl-auto: update
-#    show-sql: true
+
     properties:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.MySQL8Dialect
 
-
   data:
     redis:
-      host: localhost
-      port: 6379
+      host: ${SPRING_REDIS_HOST:localhost}
+      port: ${SPRING_REDIS_PORT:6379}
 
   task:
     scheduling:
@@ -26,10 +25,10 @@ spring:
         size: 10
       thread-name-prefix: schedule-task-
 
-  elasticsearch:
-    uris: http://localhost:9200
-    username: elastic
-    password: 123
+#  elasticsearch:
+#    uris: http://localhost:9200
+#    username: elastic
+#    password: 123
 
 
 #  flyway:

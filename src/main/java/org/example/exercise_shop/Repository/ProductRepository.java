@@ -16,6 +16,9 @@ public interface ProductRepository extends JpaRepository<Product,String> {
     @Query("SELECT p from Product p where (:categoryId = '' or p.category.id = :categoryId) and lower(p.name) like lower(concat('%', :name,'%')) and p.deleteAt is null ")
     Page<Product> findAllByNameIsLikeIgnoreCaseAndCategory_IdAndDeleteAtIsNull(@Param(value = "name") String name, @Param(value = "categoryId") String categoryId, Pageable pageable);
 
+    @Query("SELECT p from Product p where p.shop.id = :shopId and (:categoryId = '' or p.category.id = :categoryId) and lower(p.name) like lower(concat('%', :name,'%')) and p.deleteAt is null ")
+    Page<Product> findAllByNameIsLikeIgnoreCaseAndCategory_IdAndDeleteAtIsNullAndShopId(@Param(value = "name") String name, @Param(value = "categoryId") String categoryId,@Param(value = "shopId") String shopId, Pageable pageable);
+
     @Query("SELECT p from Product p where p.deleteAt is null  order by p.soldQuantity desc LIMIT :size")
     List<Product> findBestSellers(@Param(value = "size") int size);
     @Query("SELECT p from Product p where p.deleteAt is null and p.audit.createdAt >= :date order by p.audit.createdAt desc LIMIT :size")
@@ -28,4 +31,8 @@ public interface ProductRepository extends JpaRepository<Product,String> {
     List<Product> findTopRates(@Param(value = "size") int size);
 
     List<Product> findAllByIdIn(List<String> ids);
+    Product findProductByIdAndDeleteAtIsNull(String id);
+
+    @Query("SELECT p from Product p where p.shop.id = :shopId and p.deleteAt is null  order by p.soldQuantity desc LIMIT 6")
+    List<Product> findBestSellersByShopId(String shopId);
 }

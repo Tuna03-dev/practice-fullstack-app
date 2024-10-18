@@ -53,7 +53,7 @@ httpClient.interceptors.response.use(
                 }catch(error){
                     console.log("Refresh token error:", error);
                     authStore.logout();
-                    router.push("/login");
+                    router.push("/");
                     toast.error("Your session has expired. Please login again.");
                 }
 

@@ -31,4 +31,11 @@ public class CategoryServiceImp implements CategoryService{
     public List<CategoryResponse> getAllCategories() {
         return categoryRepository.findAll().stream().map(categoryMapper::toCategoryResponse).collect(Collectors.toList());
     }
+
+    @Override
+    public List<CategoryResponse> getCategoriesByShopId(String shopId) {
+        List<Category> categories = categoryRepository.findAllByShopId(shopId);
+
+        return categories.stream().map(categoryMapper::toCategoryResponse).toList();
+    }
 }

@@ -52,7 +52,7 @@
           >
             New
           </Button>
-          <Select v-on:update:model-value="handleSortClick">
+          <Select v-on:update:model-value="handleSortClick" >
             <SelectTrigger class="w-[180px] bg-white text-lg text-orange-500">
               <SelectValue placeholder="Price" />
             </SelectTrigger>
@@ -151,7 +151,7 @@ const categoryId = ref<string>('')
 const sort = ref<string>('NONE')
 
 const handleClear = () => {
-  router.push('/products')
+  router.push(route.path)
 }
 const fetchCategory = async () => {
   try {

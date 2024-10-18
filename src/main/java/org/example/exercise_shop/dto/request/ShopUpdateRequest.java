@@ -16,6 +16,6 @@ public class ShopUpdateRequest {
     String id;
     String name;
     String address;
-    
+    String imageUrl;
     Set<Category> categories;
 }

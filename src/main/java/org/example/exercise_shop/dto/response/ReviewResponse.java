@@ -2,21 +2,24 @@ package org.example.exercise_shop.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.example.exercise_shop.entity.Audit;
-
-import java.time.LocalDateTime;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ReviewReponse {
+public class ReviewResponse {
     String id;
     int rating;
     String comment;
+    String material;
+    String trueDescription;
+    String colour;
+    String createdAt;
+    String updatedAt;
     String productId;
-    LocalDateTime createdAt;
-    LocalDateTime updatedAt;
     String userId;
+    String userName;
+    String userAvatar;
+    int likes;
 }

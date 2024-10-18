@@ -45,14 +45,8 @@ public class User implements UserDetails {
 
     @Column(name = "is_2fa_authenticated")
     boolean is2FAAuthenticated = false;
-
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     List<Review> reviews;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    List<ShopReview> shopReviews;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     Set<Order> orders = new HashSet<>();
 

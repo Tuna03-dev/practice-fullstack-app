@@ -9,4 +9,5 @@ import java.util.List;
 public interface CategoryService {
     Category addCategory(CategoryRequest category);
     List<CategoryResponse> getAllCategories();
+    List<CategoryResponse> getCategoriesByShopId(String shopId);
 }

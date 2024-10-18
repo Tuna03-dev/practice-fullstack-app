@@ -27,7 +27,6 @@ public class Discount {
     String name;
     @Enumerated(EnumType.STRING)
     DiscountType type;
-
     Double percentage;
 
     BigDecimal amount;

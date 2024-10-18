@@ -20,6 +20,5 @@ public class ShopCreationRequest {
 
     String name;
     String address;
-
     Set<Category> categories;
 }

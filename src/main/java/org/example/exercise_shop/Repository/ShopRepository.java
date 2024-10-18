@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface ShopRepository extends JpaRepository<Shop, String> {
@@ -42,5 +43,7 @@ public interface ShopRepository extends JpaRepository<Shop, String> {
             @Param("name") String name,
             @Param("address") String address,
             Pageable pageable);
+
+    Optional<Shop> findByIdAndStatus(String id, StatusShop status);
 }
 

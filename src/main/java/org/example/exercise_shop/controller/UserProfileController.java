@@ -3,7 +3,7 @@ package org.example.exercise_shop.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
-import org.example.exercise_shop.Service.UserRedisService;
+import org.example.exercise_shop.Service.redis.UserRedisService;
 import org.example.exercise_shop.Service.UserService;
 import org.example.exercise_shop.dto.ApiResponse;
 import org.example.exercise_shop.dto.response.UserProfileResponse;

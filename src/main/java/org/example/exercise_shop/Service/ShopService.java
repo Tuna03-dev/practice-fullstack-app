@@ -2,6 +2,7 @@ package org.example.exercise_shop.Service;
 
 import org.example.exercise_shop.dto.request.ShopCreationRequest;
 import org.example.exercise_shop.dto.request.ShopUpdateRequest;
+import org.example.exercise_shop.dto.response.ShopInformationResponse;
 import org.example.exercise_shop.entity.Shop;
 import org.example.exercise_shop.entity.StatusShop;
 import org.springframework.data.domain.Page;
@@ -18,4 +19,7 @@ public interface ShopService {
     void updateShopStatus(String shopId, StatusShop statusShop);
     Shop findByCurrentUser();
     Page<Shop> getAllShopsActive(int page, int size,String name, String categoryId, String address);
+    ShopInformationResponse getShopDetailByProductId(String productId);
+    ShopInformationResponse getShopDetailByShopId(String shopId);
+
 }

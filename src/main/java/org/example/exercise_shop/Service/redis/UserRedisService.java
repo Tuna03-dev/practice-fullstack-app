@@ -1,8 +1,7 @@
-package org.example.exercise_shop.Service;
+package org.example.exercise_shop.Service.redis;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.exercise_shop.dto.response.UserProfileResponse;
-import org.example.exercise_shop.entity.User;
 
 public interface UserRedisService {
     void clear(String userId);

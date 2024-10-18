@@ -1,37 +1,33 @@
 <template >
-   <DropdownMenu>
+  <DropdownMenu>
     <DropdownMenuTrigger as-child>
-        <Avatar>
-            <AvatarImage :src="'./src/assets/hi.gif'" alt="User Avatar"></AvatarImage>
-        </Avatar>
+      <Avatar>
+        <AvatarImage :src="'./src/assets/hi.gif'" alt="User Avatar"></AvatarImage>
+      </Avatar>
     </DropdownMenuTrigger>
-    <DropdownMenuContent  class="w-56 font-medium">
-      <DropdownMenuLabel >My Account</DropdownMenuLabel>
-      <DropdownMenuSeparator /> 
+    <DropdownMenuContent class="w-56 font-medium">
+      <DropdownMenuLabel>My Account</DropdownMenuLabel>
+      <DropdownMenuSeparator />
       <DropdownMenuGroup>
         <DropdownMenuItem @click="profile">
           <iconify-icon icon="lucide:user" class="mr-2 h-4 w-4" />
           <span>Profile</span>
         </DropdownMenuItem>
         <DropdownMenuItem>
-            <iconify-icon icon="lucide:credit-card" class="mr-2 h-4 w-4" />
-         
+          <iconify-icon icon="lucide:credit-card" class="mr-2 h-4 w-4" />
+
           <span>Billing</span>
-          
         </DropdownMenuItem>
         <DropdownMenuItem>
           <iconify-icon icon="lucide:settings" class="mr-2 h-4 w-4" />
           <span>Settings</span>
-       
         </DropdownMenuItem>
-        
       </DropdownMenuGroup>
 
       <DropdownMenuSeparator />
       <DropdownMenuItem @click="logout">
         <iconify-icon icon="lucide:log-out" class="mr-2 h-4 w-4" />
         <span>Log out</span>
-        
       </DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>
@@ -52,23 +48,24 @@ import {
   DropdownMenuTrigger
 } from '../components/ui/dropdown-menu'
 import { Avatar, AvatarImage } from '../components/ui/avatar'
-import { useAuthStore } from '@/stores/authStore';
-import { toast } from 'vue-sonner';
-import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/authStore'
+import { toast } from 'vue-sonner'
+import { useRouter } from 'vue-router'
+import { useQueryClient } from '@tanstack/vue-query'
 
-const route = useRouter();
-const authStore = useAuthStore();
+const queryClient = useQueryClient()
+const route = useRouter()
+const authStore = useAuthStore()
 const logout = () => {
-authStore.logout();
-route.push('/')
-toast.success('Logout successful!');
-
+  authStore.logout()
+  queryClient.invalidateQueries({ queryKey: ['cartitems'] })
+  route.push('/')
+  toast.success('Logout successful!')
 }
 
 const profile = () => {
   route.push('/profile/personal-information')
 }
-
 </script>
 <style lang="">
 </style>
