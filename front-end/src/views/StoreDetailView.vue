@@ -46,16 +46,17 @@
       </div>
     </div>
 
-    <div ref="productsSection" class="mt-10">
+    <div ref="productsSection" class="mt-10 min-h-screen">
       <p class="text-2xl font-bold mb-5">All Products</p>
-
+      <all-products-of-store :total-pages="totalPages":categories="categories" :product-list="productList" @fetch-products="fetchProducts"></all-products-of-store>
     </div>
   </Container>
 </template>
   
 <script lang="ts" setup>
+import AllProductsOfStore from '@/components/stores/AllProductsOfStore.vue'
 import ShopApi from '@/api/ShopApi'
-import type { ProductResponse, ShopInformationType } from '@/apiTypes'
+import type { CategoryResponse, ProductResponse, ShopInformationType } from '@/apiTypes'
 import Container from '@/components/Container.vue'
 import StoreDetailCard from '@/components/stores/StoreDetailCard.vue'
 import router from '@/router'
@@ -63,6 +64,8 @@ import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'
 import RecommenedProduct from '@/components/stores/RecommenedProduct.vue'
+import ProductApi from '@/api/ProductApi'
+import CategoryApi from '@/api/CategoryApi'
 
 const navItem = ref<{ name: string }[]>([
   { name: 'Home' },
@@ -75,6 +78,35 @@ const aboutShopSection = ref<HTMLElement | null>(null)
 const shopDetail = ref<ShopInformationType>({} as ShopInformationType)
 const route = useRoute()
 const recommendedProducts = ref<ProductResponse[]>([])
+const productList = ref<ProductResponse[]>([]);
+const categories = ref<CategoryResponse[]>([]);
+const totalPages = ref<number>(0)
+const fetchCategory = async () => {
+  try {
+    const response = await CategoryApi.getAllCategorisByShopId(route.params.id as string)
+    categories.value = response.data
+  } catch (err: any) {
+    toast.error(err.message)
+  }
+}
+
+const fetchProducts = async (currentPages: number, pageSize: number, query: string, sort: string, categoryId: string) => {
+  try {
+    const response = await ProductApi.getAllProductByShopId({
+      shopId: route.params.id as string,
+      page: currentPages - 1,
+      size: 12,
+      name: query,
+      sort: sort,
+      categoryId: categoryId
+    })
+    productList.value = response.data.content
+    totalPages.value = response.data.totalPages
+    console.log(response.data)
+  } catch (error) {
+    console.error(error)
+  }
+}
 
 const fetchRecommendProducts = async () => {
   try {
@@ -112,6 +144,8 @@ const scrollToSection = (sectionName: string) => {
 onMounted(() => {
   fetchShopDetails()
   fetchRecommendProducts()
+  fetchCategory()
+  fetchProducts(1, 12, '', 'asc', '')
 })
 </script>
   

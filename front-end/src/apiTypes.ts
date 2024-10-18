@@ -126,3 +126,11 @@ export type CartItemResponse = {
     productName: string,
     productImage: string
 }
+
+
+
+export type CartResponse = {
+    shopId: string,
+    shopName: string,
+    cartItemResponses: CartItemResponse[]
+}

@@ -13,6 +13,7 @@ import java.util.List;
 
 public interface ProductService {
     Page<ProductResponse> getProducts(String name, int page, int size, ProductSortType productSortType, String categoryId);
+    Page<ProductResponse> getProductsByShopId(String name, int page, int size, ProductSortType productSortType, String categoryId, String shopId);
     Page<Product> getProductsByDeletedAtAndShopId(String shopId, int page, int size);
     ProductDetailResponse getProduct(String id);
     Product addProduct(ProductCreationRequest productCreationRequest, Shop shop);

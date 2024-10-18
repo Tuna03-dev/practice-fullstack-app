@@ -128,7 +128,7 @@ const addToCart = async (product: ProductDetailResponse, quantity: number) => {
           pricePerProduct: product.priceWithDiscount
       }
       const response = await CartApi.addToCart(cartItem);
-      queryClient.invalidateQueries(['cartitems'])
+      queryClient.invalidateQueries({ queryKey: ['cartitems'] })
       toast.success(response.message)
       console.log(response)
   }catch(err: any){

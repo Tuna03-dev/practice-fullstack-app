@@ -151,7 +151,7 @@ const categoryId = ref<string>('')
 const sort = ref<string>('NONE')
 
 const handleClear = () => {
-  router.push('/products')
+  router.push(route.path)
 }
 const fetchCategory = async () => {
   try {

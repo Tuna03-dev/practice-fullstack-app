@@ -8,7 +8,7 @@
     <span
       className="absolute top-0 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
     >
-      {{cartItems ? cartItems.length : 0 }}
+      {{ cartItems ? cartItems.length : 0 }}
     </span>
     <div
       v-if="isOpen"
@@ -16,19 +16,24 @@
       @mouseenter="isOpen = true"
       @mouseleave="isOpen = false"
     >
-      <div  className="">
+      <div className="">
         <div className="p-4">
           <h3 className="text-lg font-semibold mb-2">Recently Added Products</h3>
-          
-          <ScrollArea v-if="cartItems.length > 0"  class="h-[200px]">
+
+          <ScrollArea v-if="cartItems.length > 0" class="h-[200px]">
             <div
-            v-for="cartItem in props.cartItems" :key="cartItem.productId"
+              v-for="cartItem in props.cartItems"
+              :key="cartItem.productId"
               className="flex items-center gap-2 mb-2 hover:bg-gray-100 p-2 rounded transition-colors duration-200"
+              @click="handleClick(cartItem.productId)"
             >
               <img :src="cartItem.productImage" alt="" className="w-10 h-10 object-cover rounded" />
               <div>
                 <p className="text-sm font-medium">{{ cartItem.productName }}</p>
-                <p className="text-xs text-orange-500">₫{{ cartItem.pricePerProduct }}</p>
+                <p className="text-xs text-orange-500">₫{{ cartItem.pricePerProduct.toLocaleString() }}</p>
+              </div>
+              <div className="ml-auto">
+                <p className="text-sm font-medium">x{{ cartItem.quantity }}</p>
               </div>
             </div>
           </ScrollArea>
@@ -38,7 +43,7 @@
         </div>
       </div>
       <div className="p-4 bg-gray-100">
-        <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white rounded-sm">
+        <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white rounded-sm" @click="router.push('/cart')">
           View My Shopping Cart
         </Button>
       </div>
@@ -47,16 +52,20 @@
 </template>
 <script lang="ts" setup>
 import { Car, ShoppingCart } from 'lucide-vue-next'
-import { ref } from 'vue'
-import { Button } from '../ui/button';
-import { string } from 'zod';
-import type { CartItemResponse } from '@/apiTypes';
+import { ref, watch } from 'vue'
+import { Button } from '../ui/button'
+import { string } from 'zod'
+import type { CartItemResponse } from '@/apiTypes'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { useRoute, useRouter } from 'vue-router'
 
 const isOpen = ref(false)
-
-const props = defineProps<{cartItems: CartItemResponse[]}>();
-
+const router = useRouter()
+const props = defineProps<{ cartItems: CartItemResponse[] }>()
+const route =useRoute()
+const handleClick = (productId: string) => {
+  router.push(`/products/details/${productId}`)
+}
 
 </script>
 <style lang="">

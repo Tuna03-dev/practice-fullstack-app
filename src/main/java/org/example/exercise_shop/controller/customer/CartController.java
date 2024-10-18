@@ -11,6 +11,7 @@ import org.example.exercise_shop.Service.redis.CartRedisService;
 import org.example.exercise_shop.dto.request.AddToCartRequest;
 import org.example.exercise_shop.dto.ApiResponse;
 import org.example.exercise_shop.dto.response.CartItemResponse;
+import org.example.exercise_shop.dto.response.CartResponse;
 import org.example.exercise_shop.entity.Cart;
 import org.example.exercise_shop.entity.CartItem;
 import org.example.exercise_shop.entity.Product;
@@ -25,6 +26,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,17 +45,49 @@ public class CartController {
         if (isAuthenticated(authentication)) {
             User user = (User) authentication.getPrincipal();
             Cart cart = cartService.findByUserId(user.getId());
-            cartItemResponses = getCartItemResponsesFromCart(cart);
+            cartItemResponses = cartService.getCartItemResponsesFromCart(cart);
         } else {
             String sessionId = getSessionIdFromCookies(request);
             List<AddToCartRequest> addToCartRequestList = cartRedisService.getCart(sessionId);
-            cartItemResponses = getCartItemResponsesFromRedis(addToCartRequestList);
+            cartItemResponses = cartService.getCartItemResponsesFromRedis(addToCartRequestList);
         }
 
         return ApiResponse.<List<CartItemResponse>>builder()
                 .data(cartItemResponses)
                 .build();
     }
+
+    @GetMapping("/get-cart")
+    public ApiResponse<List<CartResponse>> getListCartResponse(HttpServletRequest request){
+        List<CartResponse> cartResponses = cartService.getListCartResponse(request,isAuthenticated(SecurityContextHolder.getContext().getAuthentication()));
+        return ApiResponse.<List<CartResponse>>builder()
+                .data(cartResponses)
+                .build();
+    }
+
+    @PutMapping("/update-quantity/{id}")
+    public ApiResponse<Object> updateQuantity(@PathVariable(value = "id")String productId, @RequestBody Map<String, Integer> requestBody, HttpServletRequest request){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CartItemResponse cartItemResponse = new CartItemResponse();
+        try{
+            if (isAuthenticated(authentication)){
+                cartItemResponse = cartService.updateCartItemQuantity(productId, requestBody.get("quantity"));
+            }else{
+                List<AddToCartRequest> addToCartRequestList = cartRedisService.getCart(getSessionIdFromCookies(request));
+                cartItemResponse = cartService.updateCartItemQuantityFromRedis(productId, requestBody.get("quantity"), addToCartRequestList, getSessionIdFromCookies(request));
+            }
+        }catch (Exception e){
+            Product product = productService.findById(productId);
+            return ApiResponse.builder()
+                    .message(String.format("Sorry, you can only buy up to %s products", product.getStockQuantity()))
+                    .data(product.getStockQuantity())
+                    .build();
+        }
+        return ApiResponse.builder()
+                .data(cartItemResponse)
+                .build();
+    }
+
 
     private boolean isAuthenticated(Authentication authentication) {
         return authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken);
@@ -67,31 +101,7 @@ public class CartController {
                 .orElse(null);
     }
 
-    private List<CartItemResponse> getCartItemResponsesFromCart(Cart cart) {
-        List<CartItemResponse> cartItemResponses = new ArrayList<>();
-        for (CartItem cartItem : cart.getCartItems()) {
-            CartItemResponse cartItemResponse = cartItemMapper.cartItemsToCartItemResponse(cartItem);
-            cartItemResponse.setProductId(cartItem.getProduct().getId());
-            cartItemResponse.setProductName(cartItem.getProduct().getName());
-            cartItemResponse.setProductImage(cartItem.getProduct().getImage());
-            cartItemResponses.add(cartItemResponse);
-        }
-        return cartItemResponses;
-    }
 
-    private List<CartItemResponse> getCartItemResponsesFromRedis(List<AddToCartRequest> addToCartRequestList) {
-        List<CartItemResponse> cartItemResponses = new ArrayList<>();
-        for (AddToCartRequest cartRequest : addToCartRequestList) {
-            CartItemResponse cartItemResponse = cartItemMapper.addToCartRequestsToCartItemResponse(cartRequest);
-            cartItemResponse.setCartItemAmount(cartRequest.getPricePerProduct().multiply(BigDecimal.valueOf(cartRequest.getQuantity())));
-            Product product = productService.findById(cartRequest.getProductId());
-            cartItemResponse.setProductImage(product.getImage());
-            cartItemResponse.setProductName(product.getName());
-            cartItemResponse.setProductId(product.getId());
-            cartItemResponses.add(cartItemResponse);
-        }
-        return cartItemResponses;
-    }
 
 
     @PostMapping("/add-to-cart")
@@ -110,21 +120,31 @@ public class CartController {
                 .build();
     }
 
-//    @DeleteMapping("/delete/{id}")
-//    public ApiResponse<Object> deleteCartItem(@PathVariable(value = "id")String productId, HttpServletRequest request, HttpServletResponse response){
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if (authentication != null &&authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)){
-//            cartService.deleteCartItem(productId);
-//
-//        }else{
-//            List<AddToCartRequest> addToCartRequestList = cartItemMapper.jsonToCartItems(cartService.getCartDataFromCookies(request));
-//            cartService.deleteCartItemFromCookies(productId, addToCartRequestList, response);
-//        }
-//
-//
-//        return ApiResponse.builder()
-//                .message("Delete Successfully")
-//                .build();
-//    }
+    @DeleteMapping("/delete/{id}")
+    public ApiResponse<Object> deleteCartItem(@PathVariable(value = "id")String productId, HttpServletRequest request){
+        boolean isAuthenticated = isAuthenticated(SecurityContextHolder.getContext().getAuthentication());
+
+        cartService.deleteCartItem(productId,isAuthenticated, getSessionIdFromCookies(request));
+
+        return ApiResponse.builder()
+                .message("Delete Successfully")
+                .build();
+    }
+
+    @DeleteMapping("/clear")
+    public ApiResponse<Object> clearCart(@RequestBody String[] productIds, HttpServletRequest request){
+        boolean isAuthenticated = isAuthenticated(SecurityContextHolder.getContext().getAuthentication());
+
+        if (isAuthenticated){
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            cartService.clearCart(user.getId(), productIds);
+        }else{
+            cartService.clearCartFromRedis(getSessionIdFromCookies(request), productIds);
+        }
+
+        return ApiResponse.builder()
+                .message("Clear cart successfully")
+                .build();
+    }
 
 }

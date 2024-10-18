@@ -3,15 +3,19 @@
       <div>
         <img class="w-24" :src="product.image" alt="Product Image" />
       </div>
-      <div class="flex flex-col my-2 gap-1">
-        <p class="font-medium">{{ product.name }}</p>
-        <p class="text-gray-400 text-xs">{{ product.categoryName }}</p>
-        <StarRating :star-size="16" :show-rating="false" :rating="product.averageRate" :read-only="true" :increment="0.01"></StarRating>
+      <div class="flex flex-col my-2 justify-between">
         <div>
-          <span class="text-gray-400 line-through">{{ product.price }} VND</span>
+          <p class="font-medium">{{ product.name }}</p>
+          <p class="text-gray-400 text-xs">{{ product.categoryName }}</p>
+          <StarRating :star-size="16" :show-rating="false" :rating="product.averageRate" :read-only="true" :increment="0.01"></StarRating>
         </div>
-        <div>
-          <span class="font-medium text-red-400">{{ product.priceWithDiscount }} VND</span>
+        <div class="flex flex-col justify-end">
+          <div>
+            <span v-if="product.priceWithDiscount < product.price" class="text-gray-400 line-through">{{ product.price.toLocaleString() }} VND</span>
+          </div>
+          <div>
+            <span class="font-medium text-red-400">{{ product.priceWithDiscount.toLocaleString() }} VND</span>
+          </div>
         </div>
       </div>
     </div>

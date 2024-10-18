@@ -21,6 +21,9 @@ const ProductApi = {
     getProductDetails: async (id: string) => {
         return await httpClient.get(`/customer/products/details/${id}`);
     },
+    getAllProductByShopId: async ({shopId, page, size, sort, name, categoryId}:{shopId?: string, page?: number, size?: number, sort?: string, name?: string, categoryId?: string}) => {
+        return await httpClient.get(`/customer/products/get-by-shopId/${shopId}`, { params: { page: page, size: size, sort: sort, name: name, category: categoryId } });
+    }
 
 
 }

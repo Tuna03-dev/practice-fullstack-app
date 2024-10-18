@@ -8,6 +8,8 @@ import { record } from 'zod'
 import { toast } from 'vue-sonner'
 import ProfileLayout from '@/layouts/ProfileLayout.vue'
 import ProductDetailsView from '@/views/ProductDetailsView.vue'
+import ProductDetailLayout from '@/layouts/ProductDetailLayout.vue'
+import CartView from '@/views/CartView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,7 +29,7 @@ const router = createRouter({
     {
       path: '/products',
       name: 'products',
-      component: HomeLayout,
+      component: ProductDetailLayout,
       children: [
         {
           path: '',
@@ -65,6 +67,22 @@ const router = createRouter({
         {
           path: ':id',
           component: () => import('@/views/StoreDetailView.vue')
+        }
+      ]
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: () => import('@/views/NotFoundView.vue')
+    },
+    {
+      path: '/cart',
+      name: 'cart',
+      component: HomeLayout,
+      children: [
+        {
+          path: '',
+          component: CartView
         }
       ]
     }

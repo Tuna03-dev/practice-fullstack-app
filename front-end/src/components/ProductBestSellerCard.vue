@@ -7,10 +7,10 @@
       <p class="font-medium">{{ product.name }}</p>
       <StarRating :star-size="16" :show-rating="false" :rating="product.averageRate" :read-only="true" :increment="0.01"></StarRating>
       <div>
-        <span class="text-gray-400 line-through">{{ product.price }} VND</span>
+        <span class="text-gray-400 line-through">{{ product.price.toLocaleString() }} VND</span>
       </div>
       <div>
-        <span class="font-medium ">{{ product.priceWithDiscount }} VND</span>
+        <span class="font-medium ">{{ product.priceWithDiscount.toLocaleString() }} VND</span>
       </div>
     </div>
   </div>

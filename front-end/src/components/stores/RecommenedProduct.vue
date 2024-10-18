@@ -11,10 +11,10 @@
       <div class="flex flex-col gap-2 p-2 text-xl bg-slate-200 rounded-b-lg">
         <p>{{ product.name }}</p>
         <div>
-          <p class="text-orange-600">₫{{ product.priceWithDiscount }}</p>
+          <p class="text-red-500">₫{{ product.priceWithDiscount.toLocaleString() }}</p>
         </div>
         <div class="flex gap-2 text-sm">
-          <div class="flex items-center border-r pr-2 border-orange-200">
+          <div class="flex items-center border-r pr-2 gap-1 border-orange-200">
             <Star :size="18" strokeWidth="{1}" fill="#FFB91E" color="#FFB91E" />
             <p>{{ product.averageRate }}</p>
           </div>

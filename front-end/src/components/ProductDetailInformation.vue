@@ -11,8 +11,10 @@
       :read-only="true"
     ></StarRateing>
     <div class="flex flex-col border-b-2 pb-10">
-      <label class="text-2xl font-bold line-through text-gray-400">{{ product.price }} VND</label>
-      <label class="text-4xl font-bold">{{ product.priceWithDiscount }} VND</label>
+      <label v-if="product.priceWithDiscount !== undefined" class="text-2xl font-bold line-through text-gray-400">{{ product.price.toLocaleString() }} VND</label>
+      <label v-if="product.priceWithDiscount !== undefined" class="text-4xl font-bold text-red-400">
+        {{ product.priceWithDiscount.toLocaleString() }} VND
+      </label>
     </div>
     <div>
       <Label class="text-base font-bold">Last {{ product.stockQuantity }} left</Label>

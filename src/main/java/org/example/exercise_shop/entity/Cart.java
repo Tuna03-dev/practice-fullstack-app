@@ -23,7 +23,7 @@ public class Cart {
     @Column(name = "cart_id", updatable = false, unique = true)
     String id;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<CartItem> cartItems = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.ALL)

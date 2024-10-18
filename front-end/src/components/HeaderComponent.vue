@@ -33,7 +33,7 @@
         <Button class="ml-2 py-5 px-3 font-medium" @click="handleSearch"><Search /></Button>
       </div>
       <div class="ml-auto">
-        <shopping-cart-header :cartItems="data"/>
+        <shopping-cart-header :cartItems="data" @click="handleGotoCart"/>
       </div>
 
       <template v-if="isLogged">
@@ -129,6 +129,9 @@ if (error) {
   console.error('Error loading cart items:', error)
 }
 
+const handleGotoCart = () => {
+  router.push('/cart')
+}
 const isActive = (path: string) => {
   return route.path === path
 }

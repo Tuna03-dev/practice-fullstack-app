@@ -35,6 +35,20 @@ public class ProductController {
 
     }
 
+    @GetMapping("/get-by-shopId/{shopId}")
+    public ApiResponse<Page<ProductResponse>> getProductsByShopId(@PathVariable String shopId,
+                                                                  @RequestParam(name = "page", defaultValue = "0")int page,
+                                                                  @RequestParam(name = "size", defaultValue = "8")int size,
+                                                                  @RequestParam(name = "name", defaultValue = "")String name,
+                                                                  @RequestParam(name = "sort", defaultValue = "NONE") ProductSortType sort,
+                                                                  @RequestParam(name = "category", defaultValue = "") String categoryId){
+        Page<ProductResponse> products = productService.getProductsByShopId(name, page, size, sort, categoryId, shopId);
+
+        return ApiResponse.<Page<ProductResponse>>builder()
+                .data(products)
+                .build();
+    }
+
 
     @GetMapping("/best-sellers")
     public ApiResponse<List<ProductResponse>> getBestSellers(@RequestParam(name = "size", defaultValue = "5") int size){

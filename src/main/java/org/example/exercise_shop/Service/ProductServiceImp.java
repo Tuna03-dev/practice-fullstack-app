@@ -44,10 +44,26 @@ public class ProductServiceImp implements ProductService{
             default -> pageable = PageRequest.of(page, size);
         }
 
-
         Page<Product> productPage = productRepository.findAllByNameIsLikeIgnoreCaseAndCategory_IdAndDeleteAtIsNull(name, categoryId, pageable);
         List<ProductResponse> productResponses = mapToProductResponseHaveDiscount(productPage.getContent());
 
+        return new PageImpl<>(productResponses, pageable, productPage.getTotalElements());
+    }
+
+    @Override
+    public Page<ProductResponse> getProductsByShopId(String name, int page, int size, ProductSortType productSortType, String categoryId, String shopId) {
+        Pageable pageable;
+        switch (productSortType) {
+            case HOT -> pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("soldQuantity"))
+                    .and(Sort.by(Sort.Order.desc("averageRate"))));
+            case NEW -> pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("audit.createdAt")));
+            case PRICE_ASC -> pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc("price")));
+            case PRICE_DESC -> pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("price")));
+            default -> pageable = PageRequest.of(page, size);
+        }
+
+        Page<Product> productPage = productRepository.findAllByNameIsLikeIgnoreCaseAndCategory_IdAndDeleteAtIsNullAndShopId(name, categoryId, shopId, pageable);
+        List<ProductResponse> productResponses = mapToProductResponseHaveDiscount(productPage.getContent());
 
         return new PageImpl<>(productResponses, pageable, productPage.getTotalElements());
     }
