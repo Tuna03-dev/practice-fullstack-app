@@ -18,8 +18,8 @@ public class UserRedisServiceImp implements UserRedisService{
     private final ObjectMapper redisObjectMapper;
     private static final String USER_PROFILE_CACHE_KEY_PREFIX = "userprofile:";
 
-    private String generateKey(String userId){
-        return USER_PROFILE_CACHE_KEY_PREFIX+ " " + userId;
+    private String generateKey(String username){
+        return USER_PROFILE_CACHE_KEY_PREFIX+ " " + username;
     }
 
     @Override

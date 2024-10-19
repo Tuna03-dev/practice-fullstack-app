@@ -24,7 +24,7 @@ public class RegisterRequest {
     String lastname;
     String phone;
     String email;
-    boolean gender;
+    String gender;
     LocalDate birthDate;
     Role role;
 }

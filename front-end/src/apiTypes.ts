@@ -32,6 +32,16 @@ export type slidesResponse = {
 
 } 
 
+export type UpdateUserProfileRequest = {
+    username: string,
+    email: string | null,
+    firstname?: string,
+    lastname?: string,
+    phone: string | null,
+    gender?: "Male" | "Female" | "Other",
+    birthDate?: Date
+   
+}
 
 export type UserProfileResponse = {
     id: string,
@@ -41,12 +51,15 @@ export type UserProfileResponse = {
     lastname: string,
     role: string
     phone: string,
-    address: string,
+    address: string,    
     imageUrl: string,
-    gender: boolean,
+    gender: string,
     birthDate: Date,
     status: boolean,
-
+    audit: {
+        createdAt: Date,
+        updatedAt: Date
+    }
 }
 
 

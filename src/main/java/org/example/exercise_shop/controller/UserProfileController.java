@@ -6,11 +6,14 @@ import lombok.RequiredArgsConstructor;
 import org.example.exercise_shop.Service.redis.UserRedisService;
 import org.example.exercise_shop.Service.UserService;
 import org.example.exercise_shop.dto.ApiResponse;
+
+import org.example.exercise_shop.dto.request.UpdateUserProfileRequest;
 import org.example.exercise_shop.dto.response.UserProfileResponse;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.example.exercise_shop.exception.ApplicationException;
+import org.example.exercise_shop.exception.ErrorCode;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/user/me")
@@ -42,6 +45,21 @@ public class UserProfileController {
             throw new RuntimeException(e);
         }
 
+    }
+
+    @PutMapping("/update")
+    public ApiResponse<UserProfileResponse> updateUserProfile(@RequestBody UpdateUserProfileRequest updateUserProfileRequest) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!authentication.getName().equals(updateUserProfileRequest.getUsername())) {
+            throw new ApplicationException(ErrorCode.UNAUTHORIZED);
+        }
+
+        userService.updateUserProfile(updateUserProfileRequest);
+        userRedisService.clear(updateUserProfileRequest.getUsername());
+
+        return ApiResponse.<UserProfileResponse>builder()
+                .message("User profile updated successfully")
+                .build();
     }
 
 }
