@@ -93,8 +93,12 @@ const onSubmit = form.handleSubmit(async (values) => {
         authStore.setUserRole(dataResponse.data.role)
         authStore.setUsername(form.values.username || '')
         toast.success('Login successful!')
-        queryClient.invalidateQueries({queryKey: ['cartitems']})
-        route.push('/')
+        if (authStore.userRole === 'CUSTOMER') {
+          queryClient.invalidateQueries({queryKey: ['cartitems']})
+          route.push('/')
+        }else if(authStore.userRole === 'SHOP'){
+          route.push('/management/shops')
+        }
       }
     }
   } catch (error: any) {

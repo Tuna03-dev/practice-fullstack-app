@@ -166,5 +166,17 @@ public class ShopServiceImp implements ShopService{
         return shopInformationResponse;
     }
 
+    @Override
+    public ShopInformationResponse getShopByUsername(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
+        Shop shop =  shopRepository.findByUserIdAndStatus(user.getId(), StatusShop.ACTIVE);
+        ShopInformationResponse shopInformationResponse = shopMapper.toShopInformationResponse(shop);
+        shopInformationResponse.setNumberOfProducts(shop.getProducts().size());
+        shopInformationResponse.setCreatedAt(shop.getAudit().getCreatedAt());
+        shopInformationResponse.setUpdatedAt(shop.getAudit().getUpdatedAt());
+        shopInformationResponse.setJoinedDate(dateTimeFormatter.format(shop.getAudit().getCreatedAt()));
+        return shopInformationResponse;
+    }
+
 
 }

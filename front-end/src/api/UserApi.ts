@@ -9,6 +9,9 @@ const UserApi = {
     },
     updateUserProfile: async ( updateUserRequest: UpdateUserProfileRequest) =>{
         return await httpClient.put('/user/me/update', updateUserRequest)
+    },
+    updateAvatar: async (url: string) => {
+        return await httpClient.put('/user/me/save-avatar-url', {url})
     }
 
 }

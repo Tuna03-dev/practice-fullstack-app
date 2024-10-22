@@ -93,6 +93,8 @@ export type ShopInformationType = {
     descriptionImage: string,
 
 }
+
+
 export type ProductDetailResponse = {
     id: string,
     name: string,
@@ -147,3 +149,22 @@ export type CartResponse = {
     shopName: string,
     cartItemResponses: CartItemResponse[]
 }
+
+export type AddressCreationRequest = {
+    name: string,
+    phone: string,
+    province: string,
+    district: string,
+    ward: string,
+    street: string
+}
+export type Address= {
+    id: string,
+    name: string,
+    phone: string,
+    province: string,
+    district: string,
+    ward: string,
+    street: string
+    defaultAddress: boolean
+  }

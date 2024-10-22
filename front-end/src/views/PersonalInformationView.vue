@@ -22,10 +22,12 @@ const fetchUserInfo = async () => {
       userInfo.value = response.data
     }
   } catch (error: any) {
-    toast.error(error.message)
+  
     console.error('Failed to fetch user profile:', error)
   }
 }
+
+
 
 const updateUserProfile = async (updateProfile: UpdateUserProfileRequest) => {
     try{

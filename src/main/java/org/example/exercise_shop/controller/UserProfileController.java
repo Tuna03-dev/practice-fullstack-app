@@ -15,6 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/v1/user/me")
 @RequiredArgsConstructor
@@ -59,6 +61,17 @@ public class UserProfileController {
 
         return ApiResponse.<UserProfileResponse>builder()
                 .message("User profile updated successfully")
+                .build();
+    }
+
+    @PutMapping("/save-avatar-url")
+    public ApiResponse<Object> saveAvatarUrl(@RequestBody Map<String, String> avatarUrlMap) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        userService.saveAvatarUrl(authentication.getName(), avatarUrlMap.get("url"));
+        userRedisService.clear(authentication.getName());
+
+        return ApiResponse.<Object>builder()
+                .message("Update avatar successfully")
                 .build();
     }
 

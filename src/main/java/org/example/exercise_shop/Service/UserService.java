@@ -9,4 +9,6 @@ public interface UserService {
     void complete2FAAuthentication(String username);
     void logout2FAAuthentication(String username);
     void updateUserProfile(UpdateUserProfileRequest updateUserProfileRequest);
+    void saveAvatarUrl(String username, String avatarUrl);
+
 }

@@ -43,6 +43,14 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
+    @Transactional
+    public void saveAvatarUrl(String username, String avatarUrl) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
+        user.setImageUrl(avatarUrl);
+        userRepository.save(user);
+    }
+
+    @Override
     public void complete2FAAuthentication(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new ApplicationException(ErrorCode.INVALID_USER));
         user.set2FAAuthenticated(true);

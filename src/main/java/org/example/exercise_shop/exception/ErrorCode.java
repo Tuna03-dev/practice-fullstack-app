@@ -34,7 +34,9 @@ public enum ErrorCode {
     ERROR_CACHE(1022, "Error cache"),
     ERROR_CONVERT_TIME(1023, "Error convert time"),
     CART_NOT_FOUND(1024,"Cart not found" ),
-    UNAUTHORIZED(1025,"Unauthorized" );
+    UNAUTHORIZED(1025,"Unauthorized" ),
+    LIMIT_ADDRESS(1026,"You can only have 3 addresses" ),
+    ADDRESS_NOT_FOUND(1027,"Address not found" );
 
     private int code;
     private String message;

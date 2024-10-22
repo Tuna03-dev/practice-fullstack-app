@@ -9,6 +9,9 @@ const ShopApi = {
     },
     getRecommedProductsByShopId: async (shopId: string) => {
         return await httpClient.get('/customer/shops/recommended/' + shopId)
+    },
+    getShopInforByUsername: async (username: string) => {
+        return await httpClient.get('/customer/shops/infor/get-by-user/' + username)
     }
     
 
