@@ -4,7 +4,7 @@ import Button from '../ui/button/Button.vue'
 import { ArrowUpDown } from 'lucide-vue-next'
 import { Checkbox } from '@/components/ui/checkbox'
 import type { ProductDetailResponse } from '@/apiTypes'
-import DataTableDropDown from './DataTableDropDown.vue'
+import DataTableDropDown from '@/components/data-table/DataTableDropDown.vue'
 import { useRouter } from 'vue-router'
 
 export const columns: ColumnDef<ProductDetailResponse>[] = [
@@ -57,7 +57,7 @@ export const columns: ColumnDef<ProductDetailResponse>[] = [
       return h('img', {
         src: image,
         class: 'w-16 h-16 object-cover cursor-pointer',
-        onClick: () => router.push(`/management/shops/products/edit/${productId}`) 
+        onClick: () => router.push(`/product/${productId}`) 
       })
     },
     size: 100,
