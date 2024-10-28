@@ -3,7 +3,7 @@ import { getStorage } from 'firebase/storage';
 
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyCUJ5_oKqsCZsoEy3SYWYjG_jaEHb5W0No',
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: 'tuna03-test.firebaseapp.com',
   projectId: 'tuna03-test',
   storageBucket: 'tuna03-test.appspot.com',

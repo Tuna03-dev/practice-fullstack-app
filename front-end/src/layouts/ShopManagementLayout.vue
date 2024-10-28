@@ -1,6 +1,5 @@
 <template >
   <div class="flex flex-col h-screen">
-
     <header
       class="bg-[#ee4d2d] text-white h-14 flex items-center px-4 fixed top-0 left-0 right-0 z-50"
     >
@@ -146,7 +145,8 @@ const menuItems: MenuItem[] = [
     icon: Settings,
     label: 'Manage Shop',
     items: [
-      { label: 'Shop profile', href: '/management/shops/profile' },
+      { label: 'Home', href: '/management/shops' },
+      { label: 'Shop profile', href: '/management/shops/profile' }
     ]
   },
   { icon: ShoppingCart, label: 'Manage Orders' },
@@ -159,7 +159,7 @@ const menuItems: MenuItem[] = [
     ]
   },
   { icon: Megaphone, label: 'Discount event' },
-  { icon: Users, label: 'Quản lý khách hàng' },
+  { icon: Users, label: 'Quản lý khách hàng' }
   // { icon: FileText, label: 'Tài chính' },
   // { icon: BarChart2, label: 'Phát triển' },
 
@@ -168,7 +168,7 @@ const menuItems: MenuItem[] = [
 
 const authStore = useAuthStore()
 const shopInfor = ref<ShopInformationType>()
-const router = useRouter();
+const router = useRouter()
 const fetchShopInformation = async () => {
   try {
     const response = await ManagementShopApi.getShopInforByUsername(authStore.username)
@@ -182,7 +182,7 @@ const fetchShopInformation = async () => {
 }
 
 const navigateTo = (href: string) => {
-    router.push(href);
+  router.push(href)
 }
 
 onMounted(() => {

@@ -47,7 +47,7 @@ public class ShopProfileController {
                     .build();
         }
         return ApiResponse.<Shop>builder()
-                .data(shop)
+                .message("Update shop information successfully")
                 .build();
 
     }

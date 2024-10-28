@@ -86,6 +86,7 @@ export type ShopInformationType = {
   joinedDate: string
   description: string
   descriptionImage: string
+  categories: CategoryResponse[]
 }
 
 export type ProductDetailResponse = {
@@ -188,4 +189,5 @@ export type ShopUpdateRequest = {
   description: string
   imageUrl: string
   descriptionImage: string
+  categories: string[]
 }

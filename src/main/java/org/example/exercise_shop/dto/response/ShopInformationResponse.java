@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.example.exercise_shop.entity.StatusShop;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 @Data
@@ -29,4 +30,5 @@ public class ShopInformationResponse {
     String descriptionImage;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
+    List<CategoryResponse> categories;
 }

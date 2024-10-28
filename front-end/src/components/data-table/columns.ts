@@ -57,7 +57,7 @@ export const columns: ColumnDef<ProductDetailResponse>[] = [
       return h('img', {
         src: image,
         class: 'w-16 h-16 object-cover cursor-pointer',
-        onClick: () => router.push(`/product/${productId}`) 
+        onClick: () => router.push(`/management/shops/products/edit/${productId}`) 
       })
     },
     size: 100,

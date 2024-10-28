@@ -9,6 +9,7 @@ import org.example.exercise_shop.Repository.ShopRepository;
 import org.example.exercise_shop.Repository.UserRepository;
 import org.example.exercise_shop.dto.request.ShopCreationRequest;
 import org.example.exercise_shop.dto.request.ShopUpdateRequest;
+import org.example.exercise_shop.dto.response.CategoryResponse;
 import org.example.exercise_shop.dto.response.ShopInformationResponse;
 import org.example.exercise_shop.entity.*;
 import org.example.exercise_shop.exception.ApplicationException;
@@ -25,9 +26,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -101,6 +100,18 @@ public class ShopServiceImp implements ShopService{
         Shop shop = getShopById(shopUpdateRequest.getId());
         shop.setName(shopUpdateRequest.getName());
         shop.setAddress(shopUpdateRequest.getAddress());
+        shop.setImageUrl(shopUpdateRequest.getImageUrl());
+        shop.setDescription(shopUpdateRequest.getDescription());
+        shop.setDescriptionImage(shopUpdateRequest.getDescriptionImage());
+        List<Category> categories = new ArrayList<>();
+        for (String categoryId : shopUpdateRequest.getCategories()) {
+            Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ApplicationException(ErrorCode.CATEGORY_NOT_FOUND));
+            categories.add(category);
+        }
+        shop.setCategories(new HashSet<>(categories));
+
+
+
 //        Set<Category> categories = shopUpdateRequest.getCategories().stream().map(category -> categoryRepository.findById(category.getId()).orElseThrow(() -> new ApplicationException(ErrorCode.CATEGORY_NOT_FOUND))).collect(Collectors.toSet());
 //        shop.setCategories(categories);
         return shopRepository.save(shop);
@@ -175,6 +186,11 @@ public class ShopServiceImp implements ShopService{
         shopInformationResponse.setCreatedAt(shop.getAudit().getCreatedAt());
         shopInformationResponse.setUpdatedAt(shop.getAudit().getUpdatedAt());
         shopInformationResponse.setJoinedDate(dateTimeFormatter.format(shop.getAudit().getCreatedAt()));
+        List<CategoryResponse> categoryResponses = shop.getCategories().stream().map(category -> CategoryResponse.builder()
+                .id(category.getId())
+                .name(category.getName())
+                .build()).toList();
+        shopInformationResponse.setCategories(categoryResponses);
         return shopInformationResponse;
     }
 

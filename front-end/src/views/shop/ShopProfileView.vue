@@ -55,7 +55,6 @@
             </FormField>
           </div>
 
-          
           <div class="space-y-2">
             <FormField v-slot="{ componentField }" name="description">
               <FormItem>
@@ -67,6 +66,39 @@
                     v-bind="componentField"
                   ></ckeditor>
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            </FormField>
+          </div>
+
+          <div class="space-y-2">
+            <FormField name="categories">
+              <FormItem>
+                <div class="mb-4">
+                  <FormLabel class="text-base"> Sidebar </FormLabel>
+                  <FormDescription>
+                    Select the items you want to display in the sidebar.
+                  </FormDescription>
+                </div>
+
+                <FormField
+                  v-for="item in categories"
+                  v-slot="{ value, handleChange }"
+                  :key="item.id"
+                  type="checkbox"
+                  :value="item.id"
+                  :unchecked-value="false"
+                  name="categories"
+                >
+                  <FormItem class="flex flex-row items-start space-x-3 space-y-0">
+                    <FormControl>
+                      <Checkbox :checked="value.includes(item.id)" @update:checked="handleChange" />
+                    </FormControl>
+                    <FormLabel class="font-normal">
+                      {{ item.name }}
+                    </FormLabel>
+                  </FormItem>
+                </FormField>
                 <FormMessage />
               </FormItem>
             </FormField>
@@ -130,10 +162,10 @@ import { Textarea } from '@/components/ui/textarea'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormDescription,
   FormMessage
 } from '@/components/ui/form'
 import { Upload, Image as ImageIcon } from 'lucide-vue-next'
@@ -147,6 +179,12 @@ import { getDownloadURL, ref as storageRef, getBlob } from 'firebase/storage'
 import { projectStorage } from '@/configs/firebase'
 import { Ckeditor } from '@ckeditor/ckeditor5-vue'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+import type { CategoryResponse, ShopUpdateRequest } from '@/apiTypes'
+import ShopApi from '@/api/ShopApi'
+import { toast } from 'vue-sonner'
+import { Checkbox } from '@/components/ui/checkbox'
+import CategoryApi from '@/api/CategoryApi'
+import { c } from 'node_modules/vite/dist/node/types.d-aGj9QkWt'
 
 const editor = ClassicEditor
 
@@ -157,12 +195,17 @@ const descriptionImage = ref<File | null>(null)
 const { uploadFile, uploadHtmlContent, fetchImageMetadata } = useStorage('shops')
 const { error, fetchShopInfor, loading, shopInfo } = useShop()
 const authStore = useAuthStore()
+const updateShopRequest = ref<ShopUpdateRequest>({} as ShopUpdateRequest)
+const categories = ref<CategoryResponse[]>([])
 
 const formSchema = toTypedSchema(
   z.object({
     name: z.string().min(1, { message: 'Name is required' }),
     address: z.string().min(1, { message: 'Address is required' }),
-    description: z.string().min(50, { message: 'Description is required' })
+    description: z.string().min(50, { message: 'Description is required' }),
+    categories: z.array(z.string()).refine((value) => value.some((item) => item), {
+      message: 'You have to select at least one item.'
+    })
   })
 )
 
@@ -171,10 +214,10 @@ const form = useForm({
   initialValues: {
     name: shopInfo.value?.name || '',
     address: shopInfo.value?.address || '',
-    description: shopInfo.value?.description || ''
+    description: shopInfo.value?.description || '',
+    categories: ['recents', 'home']
   }
 })
-
 
 
 const handleAvatarChange = (e: Event) => {
@@ -203,29 +246,52 @@ const handleDescriptionImageChange = (e: Event) => {
 
 const handleSubmit = form.handleSubmit(async (values) => {
   try {
-    let avaterUrl = '';
-    let descriptionImageUrl = '';
-    let descriptionUrl = '';
+    let avaterUrl = ''
+    let descriptionImageUrl = ''
+    let descriptionUrl = ''
     const imageUrl = avatar.value ? await uploadFile(avatar.value) : null
 
     if (imageUrl) {
       avaterUrl = imageUrl.value
     }
-    const description = descriptionImage.value
-      ? await uploadFile(descriptionImage.value)
-      : null
-    
+    const description = descriptionImage.value ? await uploadFile(descriptionImage.value) : null
+
     if (description) {
       descriptionImageUrl = description.value
     }
-
-    const urlDescription = await uploadHtmlContent(values.description);
+    const fullHtmlContent = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Document</title>
+    </head>
+    <body>
+      ${values.description}
+    </body>
+    </html>
+  `;
+    const urlDescription = await uploadHtmlContent(fullHtmlContent)
 
     if (urlDescription) {
       descriptionUrl = urlDescription.value
     }
-    console.log(avaterUrl, descriptionImageUrl, descriptionUrl);
-    
+    updateShopRequest.value = {
+      id: shopInfo.value?.id || '',
+      name: values.name,
+      address: values.address,
+      imageUrl: avaterUrl,
+      descriptionImage: descriptionImageUrl,
+      description: descriptionUrl,
+      categories: values.categories
+    }
+    console.log(updateShopRequest.value)
+    const response = await ShopApi.updateShopProfile(updateShopRequest.value)
+    if (response.code === 200) {
+      toast.success('Shop profile updated successfully')
+      fetchShopInfor(authStore.username)
+    }
   } catch (err) {
     console.log(err)
   }
@@ -243,9 +309,9 @@ const loadDescriptionFromUrl = async (filePath: string) => {
 }
 
 async function urlToFile(url: string, filename: string, mimeType: string): Promise<File> {
-  const response = await fetch(url);
-  const blob = await response.blob();
-  return new File([blob], filename, { type: mimeType });
+  const response = await fetch(url)
+  const blob = await response.blob()
+  return new File([blob], filename, { type: mimeType })
 }
 
 onMounted(async () => {
@@ -259,13 +325,27 @@ onMounted(async () => {
       avatar.value = await urlToFile(shopInfo.value?.imageUrl || '', 'avatar', avaterMineType)
     }
     if (descriptionMineType) {
-      descriptionImage.value = await urlToFile(shopInfo.value?.descriptionImage || '', 'descriptionImage', descriptionMineType)
+      descriptionImage.value = await urlToFile(
+        shopInfo.value?.descriptionImage || '',
+        'descriptionImage',
+        descriptionMineType
+      )
     }
 
     form.setFieldValue('name', shopInfo.value?.name || '')
     form.setFieldValue('address', shopInfo.value?.address || '')
     const descriptionText = await loadDescriptionFromUrl(shopInfo.value?.description || '')
     form.setFieldValue('description', descriptionText || '')
+
+    try {
+      const response = await CategoryApi.getAllCategories();
+      categories.value = response.data
+      console.log(response.data)
+    } catch (err: any) {
+      toast.error(err.message)
+    }
+
+    form.setFieldValue('categories', shopInfo.value?.categories.map((category) => category.id) || [])
   }
 })
 </script>

@@ -1,4 +1,4 @@
-import type { ProductCreationRequest } from "@/apiTypes";
+import type { ProductCreationRequest, ShopUpdateRequest } from "@/apiTypes";
 import httpClient from "./httpClient";
 
 const ShopApi = {
@@ -19,7 +19,10 @@ const ShopApi = {
     },
     updateProduct: async (products: ProductCreationRequest, id: string) =>{
         return await httpClient.put('/shop/products/update/' + id, products)
-    }
+    },
+    updateShopProfile: async (shop: ShopUpdateRequest) =>{
+        return await httpClient.put('/shop/info/update', shop)
+    },
     
 
 }

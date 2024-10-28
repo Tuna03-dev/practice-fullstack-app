@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores/authStore'
 import { projectStorage } from '@/configs/firebase'
-import { getDownloadURL, getMetadata, ref as storageRef, uploadBytes } from 'firebase/storage'
+import { getBlob, getDownloadURL, getMetadata, ref as storageRef, uploadBytes } from 'firebase/storage'
 import { v4 as uuidv4 } from 'uuid'
 
 const useStorage = (name: string) => {
@@ -65,7 +65,19 @@ const useStorage = (name: string) => {
     }
   }
 
-  return { error, url, uploadFile, filePath, uploadProductImage, productUrl, fetchImageMetadata, uploadHtmlContent }
+  const loadDescriptionFromUrl = async (filePath: string) => {
+    try {
+      const fileRef = storageRef(projectStorage, filePath)
+      const blob = await getBlob(fileRef)
+      const text = await blob.text()
+      return text
+    } catch (error) {
+      console.error('Error loading description:', error)
+      return null
+    }
+  }
+
+  return { error, url, uploadFile, filePath, uploadProductImage, productUrl, fetchImageMetadata, uploadHtmlContent, loadDescriptionFromUrl }
 }
 
 export default useStorage
