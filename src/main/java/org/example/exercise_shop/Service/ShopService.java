@@ -21,5 +21,5 @@ public interface ShopService {
     Page<Shop> getAllShopsActive(int page, int size,String name, String categoryId, String address);
     ShopInformationResponse getShopDetailByProductId(String productId);
     ShopInformationResponse getShopDetailByShopId(String shopId);
-    ShopInformationResponse getShopByUsername(String username);
+
 }

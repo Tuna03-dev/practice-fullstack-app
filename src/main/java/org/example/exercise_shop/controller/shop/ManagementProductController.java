@@ -44,21 +44,21 @@ public class ManagementProductController {
     }
     
     @PostMapping("/add")
-    public ApiResponse<Object> createProduct(@RequestBody @Valid ProductCreationRequest productCreationRequest) {
+    public ApiResponse<Product> createProduct(@RequestBody @Valid ProductCreationRequest productCreationRequest) {
         Shop shop = shopService.findByCurrentUser();
-       productService.addProduct(productCreationRequest, shop);
+        Product product = productService.addProduct(productCreationRequest, shop);
 
 
-        return ApiResponse.<Object>builder()
-                .message("Create successfully")
+        return ApiResponse.<Product>builder()
+                .data(product)
                 .build();
     }
 
-    @PutMapping("/update/{id}")
-    public ApiResponse<Object> updateProduct(@RequestBody @Valid ProductCreationRequest productUpdateRequest, @PathVariable String id) {
-        productService.updateProduct(productUpdateRequest, id);
-        return ApiResponse.<Object>builder()
-                .message("Update successfully")
+    @PutMapping("/update")
+    public ApiResponse<Product> updateProduct(@RequestBody @Valid ProductUpdateRequest productUpdateRequest){
+        Product product = productService.updateProduct(productUpdateRequest);
+        return ApiResponse.<Product>builder()
+                .data(product)
                 .build();
     }
 

@@ -2,7 +2,7 @@
   <DropdownMenu>
     <DropdownMenuTrigger as-child>
       <Avatar>
-        <AvatarImage :src="userInfo?.imageUrl ? userInfo.imageUrl : '../src/assets/hi.gif'" alt="User Avatar"></AvatarImage>
+        <AvatarImage :src="'./src/assets/hi.gif'" alt="User Avatar"></AvatarImage>
       </Avatar>
     </DropdownMenuTrigger>
     <DropdownMenuContent class="w-56 font-medium">
@@ -52,9 +52,6 @@ import { useAuthStore } from '@/stores/authStore'
 import { toast } from 'vue-sonner'
 import { useRouter } from 'vue-router'
 import { useQueryClient } from '@tanstack/vue-query'
-import UserApi from '../api/UserApi'
-import { onMounted, ref } from 'vue'
-import type { UserProfileResponse } from '@/apiTypes'
 
 const queryClient = useQueryClient()
 const route = useRouter()
@@ -65,27 +62,10 @@ const logout = () => {
   route.push('/')
   toast.success('Logout successful!')
 }
-const userInfo = ref<UserProfileResponse>()
+
 const profile = () => {
   route.push('/profile/personal-information')
 }
-
-const fetchUserInfo = async () => {
-  try {
-    const response = await UserApi.getInformation(authStore.username)
-    if (response.code === 200) {
-      console.log(response.data)
-      userInfo.value = response.data
-    }
-  } catch (error: any) {
-  
-    console.error('Failed to fetch user profile:', error)
-  }
-}
-
-onMounted(() => {
-  fetchUserInfo()
-})
 </script>
 <style lang="">
 </style>
