@@ -101,8 +101,8 @@ public class ShopServiceImp implements ShopService{
         Shop shop = getShopById(shopUpdateRequest.getId());
         shop.setName(shopUpdateRequest.getName());
         shop.setAddress(shopUpdateRequest.getAddress());
-        Set<Category> categories = shopUpdateRequest.getCategories().stream().map(category -> categoryRepository.findById(category.getId()).orElseThrow(() -> new ApplicationException(ErrorCode.CATEGORY_NOT_FOUND))).collect(Collectors.toSet());
-        shop.setCategories(categories);
+//        Set<Category> categories = shopUpdateRequest.getCategories().stream().map(category -> categoryRepository.findById(category.getId()).orElseThrow(() -> new ApplicationException(ErrorCode.CATEGORY_NOT_FOUND))).collect(Collectors.toSet());
+//        shop.setCategories(categories);
         return shopRepository.save(shop);
     }
 

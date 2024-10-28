@@ -14,6 +14,7 @@ import UserAddressView from '@/views/UserAddressView.vue'
 import ShopManagementLayout from '@/layouts/ShopManagementLayout.vue'
 import ProductTableView from '@/views/shop/ProductTableView.vue'
 import AddProductView from '@/views/shop/AddProductView.vue'
+import ShopProfileView from '@/views/shop/ShopProfileView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -107,12 +108,20 @@ const router = createRouter({
       meta: {requireAuth: true, role: 'SHOP'},
       children: [
         {
-          path: '',
+          path: 'products',
           component: ProductTableView
         },
         {
-          path: 'products/add',
+          path: 'products/add/',
           component: AddProductView
+        },
+        {
+          path: 'products/edit/:id',
+          component: AddProductView
+        },
+        {
+          path: 'profile',
+          component: ShopProfileView
         }
       ]
     }

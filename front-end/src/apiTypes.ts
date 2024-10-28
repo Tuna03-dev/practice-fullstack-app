@@ -1,170 +1,191 @@
 export enum sliderNames {
-    HOME = "HOME_SLIDER",
-
+  HOME = 'HOME_SLIDER'
 }
 
 export type CategoryResponse = {
-    id: string,
-    name: string,
-    icon: string,
-
+  id: string
+  name: string
+  icon: string
 }
 
 export type ProductResponse = {
-    id: string,
-    name: string,
-    price: bigint,
-    image: string,
-    priceWithDiscount: bigint,
-    averageRate: number,
-    categoryName: string
-    soldQuantity: number
+  id: string
+  name: string
+  price: bigint
+  image: string
+  priceWithDiscount: bigint
+  averageRate: number
+  categoryName: string
+  soldQuantity: number
 }
 
 export type slidesResponse = {
-    id : string,
-    imageUrl: string,
-    title: string,
-    description: string,
-    link: string,
-    orderIndex: number,
-    active: boolean
-
-} 
+  id: string
+  imageUrl: string
+  title: string
+  description: string
+  link: string
+  orderIndex: number
+  active: boolean
+}
 
 export type UpdateUserProfileRequest = {
-    username: string,
-    email: string | null,
-    firstname?: string,
-    lastname?: string,
-    phone: string | null,
-    gender?: "Male" | "Female" | "Other",
-    birthDate?: Date
-   
+  username: string
+  email: string | null
+  firstname?: string
+  lastname?: string
+  phone: string | null
+  gender?: 'Male' | 'Female' | 'Other'
+  birthDate?: Date
 }
 
 export type UserProfileResponse = {
-    id: string,
-    username: string,
-    email: string,
-    firstname: string,
-    lastname: string,
-    role: string
-    phone: string,
-    address: string,    
-    imageUrl: string,
-    gender: string,
-    birthDate: Date,
-    status: boolean,
-    audit: {
-        createdAt: Date,
-        updatedAt: Date
-    }
+  id: string
+  username: string
+  email: string
+  firstname: string
+  lastname: string
+  role: string
+  phone: string
+  address: string
+  imageUrl: string
+  gender: string
+  birthDate: Date
+  status: boolean
+  audit: {
+    createdAt: Date
+    updatedAt: Date
+  }
 }
-
 
 export type ProductImageResponse = {
-    id: string,
-    url: string,
-    description: string
+  id: string
+  url: string
+  description: string
 }
-enum StatusShop{
-    ACTIVE = "ACTIVE",
-    REJECT = "REJECT",
-    PENDING = "PENDING",
-    CANCELLED = "CANCELLED",
+export enum StatusShop {
+  ACTIVE = 'ACTIVE',
+  REJECT = 'REJECT',
+  PENDING = 'PENDING',
+  CANCELLED = 'CANCELLED'
 }
 export type ShopInformationType = {
-    id: string,
-    name: string,
-    address: string,
-    createdAt: Date,
-    updatedAt: Date,
-    status: StatusShop,
-    averageRate: number,
-    numberOfRates: number,
-    requestDate : Date,
-    feePercentage: number,
-    imageUrl: string,
-    userId: string,
-    numberOfProducts: number,
-    joinedDate: string,
-    description: string,
-    descriptionImage: string,
-
+  id: string
+  name: string
+  address: string
+  createdAt: Date
+  updatedAt: Date
+  status: StatusShop
+  averageRate: number
+  numberOfRates: number
+  requestDate: Date
+  feePercentage: number
+  imageUrl: string
+  userId: string
+  numberOfProducts: number
+  joinedDate: string
+  description: string
+  descriptionImage: string
 }
 
-
 export type ProductDetailResponse = {
-    id: string,
-    name: string,
-    price: bigint,
-    image: string,
-    priceWithDiscount: bigint,
-    averageRate: number,
-    categoryName: string,
-    soldQuantity: number,
-    stockQuantity: number,
-    productImages: ProductImageResponse[],
-    shopId: string,
- 
+  id: string
+  name: string
+  price: bigint
+  image: string
+  priceWithDiscount: bigint
+  averageRate: number
+  categoryId: string
+  categoryName: string
+  soldQuantity: number
+  stockQuantity: number
+  productImages: ProductImageResponse[]
+  shopId: string
+  description: string
+  imageDescription?: string,
+  brand?: string,
+  origin?: string,
+  material?: string,
+  weight?: string,
 }
 
 export type ReviewResponse = {
-    id: string,
-    userId: string,
-    productId: string,
-    material: string,
-    rating: number,
-    createdAt: string,
-    updatedAt: string,
-    comment: string,
-    colour: string,
-    trueDescription: string,
-    userName: string,
-    userAvatar: string
-    likes: number
+  id: string
+  userId: string
+  productId: string
+  material: string
+  rating: number
+  createdAt: string
+  updatedAt: string
+  comment: string
+  colour: string
+  trueDescription: string
+  userName: string
+  userAvatar: string
+  likes: number
 }
 
 export type AddCartRequest = {
-    productId: string,
-    quantity: number,
-    pricePerProduct: bigint
+  productId: string
+  quantity: number
+  pricePerProduct: bigint
 }
 
 export type CartItemResponse = {
-    id: string,
-    quantity: number,
-    pricePerProduct: bigint,
-    productId: string,
-    cartItemAmount: bigint,
-    productName: string,
-    productImage: string
+  id: string
+  quantity: number
+  pricePerProduct: bigint
+  productId: string
+  cartItemAmount: bigint
+  productName: string
+  productImage: string
 }
 
-
-
 export type CartResponse = {
-    shopId: string,
-    shopName: string,
-    cartItemResponses: CartItemResponse[]
+  shopId: string
+  shopName: string
+  cartItemResponses: CartItemResponse[]
 }
 
 export type AddressCreationRequest = {
-    name: string,
-    phone: string,
-    province: string,
-    district: string,
-    ward: string,
-    street: string
+  name: string
+  phone: string
+  province: string
+  district: string
+  ward: string
+  street: string
 }
-export type Address= {
-    id: string,
-    name: string,
-    phone: string,
-    province: string,
-    district: string,
-    ward: string,
-    street: string
-    defaultAddress: boolean
-  }
+export type Address = {
+  id: string
+  name: string
+  phone: string
+  province: string
+  district: string
+  ward: string
+  street: string
+  defaultAddress: boolean
+}
+
+export type ProductCreationRequest = {
+  name: string
+  price: number
+  image: string
+  categoryId: string
+  stockQuantity: number
+  listImages: string[]
+  description: string
+  imageDescription?: string,
+  brand?: string,
+  origin?: string,
+  material?: string,
+  weight?: string,
+}
+
+export type ShopUpdateRequest = {
+  id: string
+  name: string
+  address: string
+  description: string
+  imageUrl: string
+  descriptionImage: string
+}

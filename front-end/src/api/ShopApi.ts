@@ -1,3 +1,4 @@
+import type { ProductCreationRequest } from "@/apiTypes";
 import httpClient from "./httpClient";
 
 const ShopApi = {
@@ -12,6 +13,12 @@ const ShopApi = {
     },
     getShopInforByUsername: async (username: string) => {
         return await httpClient.get('/customer/shops/infor/get-by-user/' + username)
+    },
+    addNewProduct: async (products: ProductCreationRequest) =>{
+        return await httpClient.post('/shop/products/add', products)
+    },
+    updateProduct: async (products: ProductCreationRequest, id: string) =>{
+        return await httpClient.put('/shop/products/update/' + id, products)
     }
     
 

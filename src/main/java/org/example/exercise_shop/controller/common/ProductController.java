@@ -50,6 +50,16 @@ public class ProductController {
     }
 
 
+    @GetMapping("/get-all-by-shop/{shopId}")
+    public ApiResponse<List<ProductResponse>> getAllProductsByShopId(@PathVariable String shopId){
+        List<ProductResponse> products = productService.getAllProductsByShopId(shopId);
+
+        return ApiResponse.<List<ProductResponse>>builder()
+                .data(products)
+                .build();
+    }
+
+
     @GetMapping("/best-sellers")
     public ApiResponse<List<ProductResponse>> getBestSellers(@RequestParam(name = "size", defaultValue = "5") int size){
         List<ProductResponse> bestSellers = productService.getBestSellers(size);

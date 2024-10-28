@@ -1,6 +1,6 @@
 <template >
   <div class="flex flex-col h-screen">
-    <!-- Top Navigation Bar -->
+
     <header
       class="bg-[#ee4d2d] text-white h-14 flex items-center px-4 fixed top-0 left-0 right-0 z-50"
     >
@@ -96,7 +96,7 @@
       </aside>
 
       <main :class="[isCollapsed ? 'ml-16' : 'ml-64', 'flex-grow p-6 transition-all duration-300']">
-        <router-view></router-view>
+        <router-view :key="$route.fullPath"></router-view>
       </main>
     </div>
   </div>
@@ -146,10 +146,7 @@ const menuItems: MenuItem[] = [
     icon: Settings,
     label: 'Manage Shop',
     items: [
-      { label: 'Shop profile', href: '#' },
-      { label: 'Danh mục của Shop', href: '#' },
-      { label: 'Kho hình ảnh/Video', href: '#' },
-      { label: 'Báo cáo của tôi', href: '#' }
+      { label: 'Shop profile', href: '/management/shops/profile' },
     ]
   },
   { icon: ShoppingCart, label: 'Manage Orders' },
@@ -157,16 +154,16 @@ const menuItems: MenuItem[] = [
     icon: Package,
     label: 'Manage Products',
     items: [
-      { label: 'List Products', href: '#' },
+      { label: 'List Products', href: '/management/shops/products' },
       { label: 'Add Products', href: '/management/shops/products/add' }
     ]
   },
-  { icon: Megaphone, label: 'Kênh Marketing' },
+  { icon: Megaphone, label: 'Discount event' },
   { icon: Users, label: 'Quản lý khách hàng' },
-  { icon: FileText, label: 'Tài chính' },
-  { icon: BarChart2, label: 'Phát triển' },
+  // { icon: FileText, label: 'Tài chính' },
+  // { icon: BarChart2, label: 'Phát triển' },
 
-  { icon: HelpCircle, label: 'Trợ giúp' }
+  // { icon: HelpCircle, label: 'Trợ giúp' }
 ]
 
 const authStore = useAuthStore()

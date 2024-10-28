@@ -24,7 +24,7 @@ public class ProductUpdateRequest {
     String name;
 
     @Min(value = 0, message = "Stock quantity must be greater than or equal to 0")
-    int sockQuantity;
+    int stockQuantity;
 
     @NotNull(message = "Price is required")
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")

@@ -3,6 +3,7 @@ package org.example.exercise_shop.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.exercise_shop.Repository.CategoryRepository;
+import org.example.exercise_shop.Repository.ProductImageRepository;
 import org.example.exercise_shop.dto.request.ProductCreationRequest;
 import org.example.exercise_shop.dto.request.ProductUpdateRequest;
 import org.example.exercise_shop.dto.response.ProductDetailResponse;
@@ -16,11 +17,12 @@ import org.example.exercise_shop.mapper.ProductImageMapper;
 import org.example.exercise_shop.mapper.ProductMapper;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +32,7 @@ public class ProductServiceImp implements ProductService{
     private final CategoryRepository categoryRepository;
     private final ProductMapper productMapper;
     private final ProductImageMapper productImageMapper;
-
+    private final ProductImageRepository productImageRepository;
 
     @Override
     public Page<ProductResponse> getProducts(String name, int page, int size, ProductSortType productSortType, String categoryId) {
@@ -69,6 +71,12 @@ public class ProductServiceImp implements ProductService{
     }
 
     @Override
+    public List<ProductResponse> getAllProductsByShopId(String shopId) {
+        List<Product> products = productRepository.findAllByShop_IdAndDeleteAtIsNull(shopId);
+        return mapToProductResponseHaveDiscount(products);
+    }
+
+    @Override
     public Page<Product> getProductsByDeletedAtAndShopId(String shopId, int page, int size) {
         return productRepository.findProductsByDeleteAtIsNullAndShopId(shopId, PageRequest.of(page, size, Sort.by(Sort.Order.desc("soldQuantity")).and(Sort.by(Sort.Order.desc("averageRate")))));
     }
@@ -80,38 +88,58 @@ public class ProductServiceImp implements ProductService{
         List<ProductImageResponse> productImageResponses = productImageMapper.toListProductImageResponse(product.getProductImages());
         productDetailResponse.setProductImages(productImageResponses);
         productDetailResponse.setCategoryName(product.getCategory().getName());
+        productDetailResponse.setCategoryId(product.getCategory().getId());
         productDetailResponse.setPriceWithDiscount(product.getPrice().subtract(BigDecimal.valueOf(getDiscountPercentage(product)).multiply(product.getPrice())));
         productDetailResponse.setShopId(product.getShop().getId());
         return productDetailResponse;
     }
 
     @Override
-    public Product addProduct(ProductCreationRequest productCreationRequest, Shop shop) {
+    public void addProduct(ProductCreationRequest productCreationRequest, Shop shop) {
+        Category category = categoryRepository.findById(productCreationRequest.getCategoryId()).orElseThrow(() -> new ApplicationException(ErrorCode.CATEGORY_NOT_FOUND));
+        Product product = productMapper.toProduct(productCreationRequest);
+        product.setCategory(category);
+        product.setShop(shop);
+        List<ProductImage> images = new ArrayList<>();
+        if (productCreationRequest.getListImages() != null){
+            productCreationRequest.getListImages().forEach(image -> {
+                ProductImage productImage = ProductImage.builder()
+                        .url(image)
+                        .product(product)
+                        .build();
+                productImage.setProduct(product);
+                images.add(productImage);
+            });
+        }
+        product.setProductImages(images);
 
-        Product product = Product.builder()
-                .name(productCreationRequest.getName())
-                .price(productCreationRequest.getPrice())
-                .category(productCreationRequest.getCategory())
-                .stockQuantity(productCreationRequest.getSockQuantity())
-                .image(productCreationRequest.getImage())
-                .shop(shop)
-                .audit(new Audit())
-                .build();
-
-        return productRepository.save(product);
+        productRepository.save(product);
     }
 
     @Override
-    public Product updateProduct(ProductUpdateRequest productUpdateRequest) {
-        Category category = categoryRepository.findById(productUpdateRequest.getCategoryId()).orElseThrow(() -> new ApplicationException(ErrorCode.CATEGORY_NOT_FOUND));
+    @Transactional
+    public void updateProduct(ProductCreationRequest productCreationRequest, String id) {
+        Category category = categoryRepository.findById(productCreationRequest.getCategoryId()).orElseThrow(() -> new ApplicationException(ErrorCode.CATEGORY_NOT_FOUND));
 
-        Product product = productRepository.findById(productUpdateRequest.getId()).orElseThrow(() -> new ApplicationException(ErrorCode.PRODUCT_NOT_FOUND));
-        product.setName(productUpdateRequest.getName());
-        product.setPrice(productUpdateRequest.getPrice());
-        product.setStockQuantity(productUpdateRequest.getSockQuantity());
+        Product product = productRepository.findById(id).orElseThrow(() -> new ApplicationException(ErrorCode.PRODUCT_NOT_FOUND));
+        productMapper.updateProductFromRequest(product, productCreationRequest);
         product.setCategory(category);
-
-        return productRepository.save(product);
+        for(ProductImage productImage : product.getProductImages()){
+            productImageRepository.delete(productImage);
+        }
+        product.getProductImages().clear();
+        List<ProductImage> newImages = new ArrayList<>();
+        if (productCreationRequest.getListImages() != null) {
+            productCreationRequest.getListImages().forEach(image -> {
+                ProductImage productImage = ProductImage.builder()
+                        .url(image)
+                        .product(product)
+                        .build();
+                newImages.add(productImage);
+            });
+        }
+        product.setProductImages(newImages);
+        productRepository.save(product);
     }
 
     @Override
@@ -180,6 +208,7 @@ public class ProductServiceImp implements ProductService{
                     ProductResponse productResponse = productMapper.toProductResponse(product);
                     productResponse.setPriceWithDiscount(product.getPrice().subtract(BigDecimal.valueOf(discountPercentage).multiply(product.getPrice())));
                     productResponse.setCategoryName(product.getCategory().getName());
+                    productResponse.setCategoryId(product.getCategory().getId());
                     return productResponse;
                 }
 
