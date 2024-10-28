@@ -10,10 +10,11 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateUserProfileRequest {
+    String username;
     String firstname;
     String lastname;
     String phone;
     String email;
-    boolean gender;
+    String gender;
     LocalDate birthDate;
 }

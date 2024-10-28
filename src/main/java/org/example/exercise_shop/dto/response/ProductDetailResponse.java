@@ -17,10 +17,18 @@ public class ProductDetailResponse {
     BigDecimal price;
     BigDecimal priceWithDiscount;
     String categoryName;
+    String categoryId;
     int soldQuantity;
     int stockQuantity;
     double averageRate;
     String image;
     List<ProductImageResponse> productImages;
     String shopId;
+    String description;
+    String material;
+    String brand;
+    String origin;
+    String weight;
+    String imageDescription;
+
 }

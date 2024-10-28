@@ -45,5 +45,6 @@ public interface ShopRepository extends JpaRepository<Shop, String> {
             Pageable pageable);
 
     Optional<Shop> findByIdAndStatus(String id, StatusShop status);
+
 }
 

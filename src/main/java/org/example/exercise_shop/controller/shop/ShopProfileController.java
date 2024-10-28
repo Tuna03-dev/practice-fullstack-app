@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.exercise_shop.Service.ShopService;
 import org.example.exercise_shop.dto.request.ShopUpdateRequest;
 import org.example.exercise_shop.dto.ApiResponse;
+import org.example.exercise_shop.dto.response.ShopInformationResponse;
 import org.example.exercise_shop.entity.Shop;
 import org.example.exercise_shop.entity.User;
 import org.springframework.security.core.Authentication;
@@ -46,8 +47,16 @@ public class ShopProfileController {
                     .build();
         }
         return ApiResponse.<Shop>builder()
-                .data(shop)
+                .message("Update shop information successfully")
                 .build();
 
+    }
+
+    @GetMapping("/get-by-user/{username}")
+    public ApiResponse<ShopInformationResponse> getShopByUserId(@PathVariable(value = "username") String username){
+        ShopInformationResponse shop = shopService.getShopByUsername(username);
+        return ApiResponse.<ShopInformationResponse>builder()
+                .data(shop)
+                .build();
     }
 }

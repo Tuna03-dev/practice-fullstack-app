@@ -34,7 +34,7 @@ public class Category {
     Set<Product> products = new HashSet<>();
 
     @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)
-    @JsonIgnore
+    @JsonManagedReference
     Set<Shop> shops = new HashSet<>();
 
 

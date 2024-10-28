@@ -7,12 +7,13 @@
           :username="authStore.username"
           :first-name="userInfo?.firstname"
           :last-name="userInfo?.lastname"
+          @load-avatar="fetchUserInfo"
         ></user-avatar-card>
         <ProfileBar></ProfileBar>
       </div>
 
       <div class="col-span-3 h-full ml-5">
-        <router-view></router-view>
+        <router-view :key="$route.fullPath"></router-view>
       </div>
     </div>
   </container>

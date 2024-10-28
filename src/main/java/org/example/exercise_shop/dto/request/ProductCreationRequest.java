@@ -8,7 +8,7 @@ import org.example.exercise_shop.entity.*;
 
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 @Getter
@@ -19,16 +19,21 @@ import java.time.LocalDateTime;
 public class ProductCreationRequest {
     @NotBlank(message = "Product name is required")
     String name;
-
     @Min(value = 0, message = "Stock quantity must be greater than or equal to 0")
-    int sockQuantity;
-
+    int stockQuantity;
     @NotNull(message = "Price is required")
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
     BigDecimal price;
-
     @NotNull(message = "Category is required")
-    Category category;
+    String categoryId;
     String image;
+    String description;
+    String material;
+    String brand;
+    String origin;
+    String weight;
+    String imageDescription;
+    List<String> listImages;
+
 
 }

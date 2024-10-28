@@ -17,6 +17,14 @@ public class ProductResponse {
     BigDecimal priceWithDiscount;
     String categoryName;
     int soldQuantity;
+    int stockQuantity;
     double averageRate;
     String image;
+    String description;
+    String material;
+    String brand;
+    String origin;
+    String weight;
+    String imageDescription;
+    String categoryId;
 }
