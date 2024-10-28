@@ -36,7 +36,6 @@
       <div className="my-10">
         <h2 className="text-2xl font-bold my-10">{{ activeTab }}</h2>
         <rating-and-review-component :has-more-reviews="hasMoreReviews" @scroll-end="fetchRevews" :loading="loading" :reviews="reviews" v-if="activeTab === 'Ratings & Reviews'"></rating-and-review-component>
-        <description-component :product="productDetail"  v-if="activeTab === 'The Details'"></description-component>
       </div>
     </div>
   </Container>
@@ -56,7 +55,6 @@ import ShopApi from '@/api/ShopApi'
 import ReviewsApi from '@/api/ReviewsApi'
 import CartApi from '@/api/CartApi'
 import { useQueryClient } from '@tanstack/vue-query'
-import DescriptionComponent from '@/components/product-details/DescriptionComponent.vue'
 
 const queryClient = useQueryClient()
 const productDetail = ref<ProductDetailResponse>({} as ProductDetailResponse)

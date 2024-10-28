@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { cn } from '@/lib/utils'
-import { DotFilledIcon } from '@radix-icons/vue'
+import { type HTMLAttributes, computed } from 'vue'
 import {
   DropdownMenuItemIndicator,
   DropdownMenuRadioItem,
@@ -8,7 +7,8 @@ import {
   type DropdownMenuRadioItemProps,
   useForwardPropsEmits,
 } from 'radix-vue'
-import { computed, type HTMLAttributes } from 'vue'
+import { DotFilledIcon } from '@radix-icons/vue'
+import { cn } from '@/lib/utils'
 
 const props = defineProps<DropdownMenuRadioItemProps & { class?: HTMLAttributes['class'] }>()
 

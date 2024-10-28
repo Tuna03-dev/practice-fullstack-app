@@ -4,7 +4,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.example.exercise_shop.entity.Category;
 
-import java.util.List;
 import java.util.Set;
 
 @Builder
@@ -18,7 +17,5 @@ public class ShopUpdateRequest {
     String name;
     String address;
     String imageUrl;
-    String description;
-    String descriptionImage;
-    List<String> categories;
+    Set<Category> categories;
 }

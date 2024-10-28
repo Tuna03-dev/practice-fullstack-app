@@ -1,6 +1,8 @@
 package org.example.exercise_shop.entity;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -24,8 +26,9 @@ import java.util.Set;
 @EntityListeners(AuditingEntityListener.class)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Product {
+
+public class
+Product {
     @Id
     @UuidGenerator
     @Column(name = "product_id", updatable = false, unique = true)
@@ -44,18 +47,11 @@ public class Product {
 
     @Column(name = "product_image", length = 512)
     String image;
-    @Column(name = "product_description", length = 2000)
-    String description;
-    String material;
-    String brand;
-    String origin;
-    String weight;
-    @Column(name = "product_description_image", length = 512)
-    String imageDescription;
+
 
     @ManyToOne()
     @JoinColumn(name = "category_id")
-    @JsonBackReference
+    @JsonManagedReference
     Category category;
 
     @ManyToOne()

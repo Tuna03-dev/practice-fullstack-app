@@ -1,5 +1,7 @@
 package org.example.exercise_shop.Service;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
 import org.example.exercise_shop.Repository.UserRepository;
 import org.example.exercise_shop.dto.request.UpdateUserProfileRequest;
@@ -15,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImp implements UserService {
+public class UserServiceImp implements UserService{
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -28,27 +30,10 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public void updateUserProfile(UpdateUserProfileRequest updateUserProfileRequest) {
-        User user = userRepository.findByUsername(updateUserProfileRequest.getUsername()).orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
-        userMapper.updateUser(user, updateUserProfileRequest);
-        try {
-            synchronized (this) {
-                userRepository.save(user);
-            }
-
-        } catch (DataIntegrityViolationException | JpaSystemException e) {
-            throw new ApplicationException(ErrorCode.UNCATEGORIZED);
-        }
+    public void UpdateUserProfile(UpdateUserProfileRequest updateUserProfileRequest) {
 
     }
 
-    @Override
-    @Transactional
-    public void saveAvatarUrl(String username, String avatarUrl) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
-        user.setImageUrl(avatarUrl);
-        userRepository.save(user);
-    }
 
     @Override
     public void complete2FAAuthentication(String username) {
@@ -63,7 +48,6 @@ public class UserServiceImp implements UserService {
         userRepository.updateUser(username, false);
 
     }
-
 
     @Override
     @Transactional

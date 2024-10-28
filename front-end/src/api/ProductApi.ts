@@ -23,9 +23,6 @@ const ProductApi = {
     },
     getAllProductByShopId: async ({shopId, page, size, sort, name, categoryId}:{shopId?: string, page?: number, size?: number, sort?: string, name?: string, categoryId?: string}) => {
         return await httpClient.get(`/customer/products/get-by-shopId/${shopId}`, { params: { page: page, size: size, sort: sort, name: name, category: categoryId } });
-    },
-    getByShopId: async (shopId: string) => {
-        return await httpClient.get(`/customer/products/get-all-by-shop/${shopId}`);
     }
 
 
