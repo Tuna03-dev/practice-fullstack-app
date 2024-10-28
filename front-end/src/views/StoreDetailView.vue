@@ -48,7 +48,7 @@
 
     <div ref="productsSection" class="mt-10 min-h-screen">
       <p class="text-2xl font-bold mb-5">All Products</p>
-      <all-products-of-store :total-pages="totalPages" :categories="categories" :product-list="productList" @fetch-products="fetchProducts"></all-products-of-store>
+      <all-products-of-store :total-pages="totalPages":categories="categories" :product-list="productList" @fetch-products="fetchProducts"></all-products-of-store>
     </div>
   </Container>
 </template>
@@ -66,8 +66,6 @@ import { toast } from 'vue-sonner'
 import RecommenedProduct from '@/components/stores/RecommenedProduct.vue'
 import ProductApi from '@/api/ProductApi'
 import CategoryApi from '@/api/CategoryApi'
-import useStorage from '@/composables/useStorage'
-
 
 const navItem = ref<{ name: string }[]>([
   { name: 'Home' },
@@ -83,9 +81,6 @@ const recommendedProducts = ref<ProductResponse[]>([])
 const productList = ref<ProductResponse[]>([]);
 const categories = ref<CategoryResponse[]>([]);
 const totalPages = ref<number>(0)
-const {loadDescriptionFromUrl} = useStorage('shops');
-const description = ref<string>('')
-
 const fetchCategory = async () => {
   try {
     const response = await CategoryApi.getAllCategorisByShopId(route.params.id as string)
@@ -94,10 +89,6 @@ const fetchCategory = async () => {
     toast.error(err.message)
   }
 }
-
-
-
-
 
 const fetchProducts = async (currentPages: number, pageSize: number, query: string, sort: string, categoryId: string) => {
   try {
@@ -150,16 +141,11 @@ const scrollToSection = (sectionName: string) => {
   sectionRef?.value?.scrollIntoView({ behavior: 'smooth' })
 }
 
-
-
-
-onMounted(async () => {
+onMounted(() => {
   fetchShopDetails()
   fetchRecommendProducts()
   fetchCategory()
-  fetchProducts(1, 12, '', 'NONE', '')
-  const descriptionText = await loadDescriptionFromUrl(shopDetail.value.description || '') 
-  description.value = descriptionText || ''
+  fetchProducts(1, 12, '', 'asc', '')
 })
 </script>
   

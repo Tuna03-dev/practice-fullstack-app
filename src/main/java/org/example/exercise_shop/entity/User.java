@@ -38,7 +38,7 @@ public class User implements UserDetails {
     String lastname;
     String phone;
     String email;
-    String gender;
+    boolean gender;
     LocalDate birthDate;
     String imageUrl;
     boolean status;
@@ -54,10 +54,7 @@ public class User implements UserDetails {
     Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<TwoFactorAuthentication> twoFactorAuthentications;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    List<Address> addresses;
+    private List<TwoFactorAuthentication> twoFactorAuthentications;
 
     @Embedded
     Audit audit = new Audit();
@@ -86,6 +83,4 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-
 }

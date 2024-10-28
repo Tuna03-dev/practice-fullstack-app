@@ -16,7 +16,6 @@
 <script setup lang="ts">
 import CategoryApi from '@/api/CategoryApi'
 import type { CategoryResponse } from '@/apiTypes'
-
 import {
   Card,
   CardContent,

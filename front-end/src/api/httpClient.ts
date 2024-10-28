@@ -4,7 +4,7 @@ import router from "@/router";
 import { toast } from "vue-sonner";
 
 const httpClient = axios.create({
-    baseURL: import.meta.env.VITE_API_URL,
+    baseURL: "http://localhost:8080/api/v1",
     headers:{
         "Content-Type": "application/json",
     },

@@ -23,7 +23,7 @@ public class UserProfileResponse {
     String phone;
     String email;
     String imageUrl;
-    String gender;
+    boolean gender;
     LocalDate birthDate;
     boolean status;
     Role role;

@@ -14,11 +14,10 @@ import java.util.List;
 public interface ProductService {
     Page<ProductResponse> getProducts(String name, int page, int size, ProductSortType productSortType, String categoryId);
     Page<ProductResponse> getProductsByShopId(String name, int page, int size, ProductSortType productSortType, String categoryId, String shopId);
-    List<ProductResponse> getAllProductsByShopId(String shopId);
     Page<Product> getProductsByDeletedAtAndShopId(String shopId, int page, int size);
     ProductDetailResponse getProduct(String id);
-    void addProduct(ProductCreationRequest productCreationRequest, Shop shop);
-    void updateProduct(ProductCreationRequest productCreationRequest, String id);
+    Product addProduct(ProductCreationRequest productCreationRequest, Shop shop);
+    Product updateProduct(ProductUpdateRequest productUpdateRequest);
     void deleteProduct(String productId, Shop shop);
 
     List<ProductResponse> getBestSellers(int size);

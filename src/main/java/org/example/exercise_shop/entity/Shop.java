@@ -47,8 +47,10 @@ public class Shop {
     @Embedded
     Audit audit;
     @Column(length = 512)
+
     String description;
     @Column(length = 512)
+
     String descriptionImage;
 
     @ManyToMany(cascade = CascadeType.ALL)
