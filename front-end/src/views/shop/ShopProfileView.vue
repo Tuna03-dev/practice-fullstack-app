@@ -184,7 +184,6 @@ import ShopApi from '@/api/ShopApi'
 import { toast } from 'vue-sonner'
 import { Checkbox } from '@/components/ui/checkbox'
 import CategoryApi from '@/api/CategoryApi'
-import { c } from 'node_modules/vite/dist/node/types.d-aGj9QkWt'
 
 const editor = ClassicEditor
 
