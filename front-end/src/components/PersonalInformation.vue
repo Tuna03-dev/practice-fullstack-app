@@ -148,6 +148,7 @@ const formSchema = toTypedSchema(
       .nullable()
       .or(z.literal('')),
     birthDate: z.string().optional().refine((val) => {
+      if (!val) return false;
       const age = new Date().getFullYear() - new Date(val).getFullYear();
       return age >= 12;
     },{message: "You must be at least 12 years old"}),
