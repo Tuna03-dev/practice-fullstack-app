@@ -22,5 +22,18 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  define: {
+    'process.env': process.env
+  },
+  build: {
+    rollupOptions: {
+      external: [
+        'node_modules/vite/dist/node/types.d-aGj9QkWt'
+      ]
+    }
+  },
+  server: {
+    port: 5173,
   }
 })
