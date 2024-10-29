@@ -12,7 +12,7 @@ const fetchShopInfor = async (username: string) => {
   loading.value = true
   error.value = null
   try {
-    const response = await ManagementShopApi.getShopInforByUsername(username)
+    const response = await ManagementShopApi.getShopInforByUsername(username) 
     if (response.code === 200) {
       shopInfo.value = response.data
     } else {

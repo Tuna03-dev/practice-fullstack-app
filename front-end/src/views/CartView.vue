@@ -109,7 +109,7 @@
         </AlertDialog>
 
         <div class="text-xl font-bold ml-auto mr-3">Total: ₫{{ totalPrice.toLocaleString() }}</div>
-        <Button class="w-1/6" @click="checkout">Checkout</Button>
+        <Button class="w-1/6" >Checkout</Button>
       </div>
     </div>
 

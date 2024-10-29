@@ -73,7 +73,7 @@
         </div>
         <div v-if="totalPages > 1" class="flex justify-center mt-6">
           <Pagination
-            v-slot="{ page }"
+            
             :total="totalPages * 10"
             :sibling-count="1"
             show-edges

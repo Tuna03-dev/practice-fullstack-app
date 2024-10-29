@@ -1,13 +1,11 @@
+import type { sliderNames, ApiResponse } from "../apiTypes";
 import httpClient from "./httpClient";
-import { sliderNames } from "../apiTypes";
 
 const SliderApi = {
+    getAllSlidesBySliderName: async (sliderName: sliderNames): Promise<ApiResponse<any>> => {
+        const res = await httpClient.get<ApiResponse<any>>(`/sliders/get-slides/${sliderName}`);
+        return res.data;
+    }
+};
 
-    getAllSlidesBySliderName: async (sliderName: sliderNames) => {
-        return await httpClient.get(`/sliders/get-slides/${sliderName}`)
-    },
-
-
-}
-
-export default SliderApi
+export default SliderApi;

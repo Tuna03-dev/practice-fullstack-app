@@ -2,6 +2,7 @@ import axios, { type AxiosResponse } from "axios";
 import { useAuthStore } from "@/stores/authStore";
 import router from "@/router";
 import { toast } from "vue-sonner";
+import type { ApiResponse } from "@/apiTypes";
 
 const httpClient = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
@@ -27,13 +28,9 @@ httpClient.interceptors.request.use(
 );
 
 httpClient.interceptors.response.use(
-    (response: AxiosResponse) => {
-        if(response && response.data){
-            
-            return response.data;   
-        }
+    (response: AxiosResponse<ApiResponse<any>>): AxiosResponse<ApiResponse<any>> => {
         return response;
-    },
+      },
     async(error) => {
         if (error.response) {
             const { status, data } = error.response;
