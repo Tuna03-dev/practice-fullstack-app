@@ -34,13 +34,13 @@
               <div class="flex items-center justify-between">
                 <div class="flex flex-col">
                   <h4 class="font-semibold">{{ review.userName }}</h4>
-                  <StarRateing
+                  <vue3starRatings
                     :star-size="16"
-                    :show-rating="false"
-                    :rating="review.rating"
-                    :read-only="true"
-                    :increment="0.01"
-                  ></StarRateing>
+                    :model-value="review.rating"
+                    :disable-click="true"
+                    :inactive-color="'#333333'"
+                    :star-color="'#FED000'"
+                  ></vue3starRatings>
                 </div>
                 <span class="text-sm text-gray-500">{{ review.updatedAt }}</span>
               </div>
@@ -77,7 +77,7 @@
   
 <script lang="ts" setup>
 import type { ReviewResponse } from '@/apiTypes'
-import StarRateing from 'vue-star-rating'
+import vue3starRatings from "vue3-star-ratings";
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   Select,

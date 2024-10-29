@@ -43,8 +43,11 @@ httpClient.interceptors.response.use(
                 originalRequest._retry = true;
                 try{
                     const newTokens = await httpClient.post("/refresh", null, {withCredentials: true});
-                    authStore.setAccessToken(newTokens.data.accessToken);
-                    originalRequest.headers.Authorization = `Bearer ${newTokens.data.accessToken}`;
+                    if(newTokens){
+                        authStore.setAccessToken(newTokens.data.data.accessToken);
+                        originalRequest.headers.Authorization = `Bearer ${newTokens.data.data.accessToken}`;
+
+                    }
                     return httpClient(originalRequest);
 
                 }catch(error){
