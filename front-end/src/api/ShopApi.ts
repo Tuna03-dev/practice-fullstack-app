@@ -1,30 +1,35 @@
-import type { ProductCreationRequest, ShopUpdateRequest } from "@/apiTypes";
+import type { ProductCreationRequest, ShopUpdateRequest, ApiResponse } from "@/apiTypes";
 import httpClient from "./httpClient";
 
 const ShopApi = {
-    getShopdetailsByProductId: async (shopId: string) => {
-        return await httpClient.get('/customer/shops/by-product/' + shopId)
+    getShopdetailsByProductId: async (shopId: string): Promise<ApiResponse<any>> => {
+        const res = await httpClient.get<ApiResponse<any>>('/customer/shops/by-product/' + shopId);
+        return res.data;
     },
-    getShopdetailsById: async (id: string) => {
-        return await httpClient.get('/customer/shops/details/' + id)
+    getShopdetailsById: async (id: string): Promise<ApiResponse<any>> => {
+        const res = await httpClient.get<ApiResponse<any>>('/customer/shops/details/' + id);
+        return res.data;
     },
-    getRecommedProductsByShopId: async (shopId: string) => {
-        return await httpClient.get('/customer/shops/recommended/' + shopId)
+    getRecommedProductsByShopId: async (shopId: string): Promise<ApiResponse<any>> => {
+        const res = await httpClient.get<ApiResponse<any>>('/customer/shops/recommended/' + shopId);
+        return res.data;
     },
-    getShopInforByUsername: async (username: string) => {
-        return await httpClient.get('/customer/shops/infor/get-by-user/' + username)
+    getShopInforByUsername: async (username: string): Promise<ApiResponse<any>> => {
+        const res = await httpClient.get<ApiResponse<any>>('/customer/shops/infor/get-by-user/' + username);
+        return res.data;
     },
-    addNewProduct: async (products: ProductCreationRequest) =>{
-        return await httpClient.post('/shop/products/add', products)
+    addNewProduct: async (products: ProductCreationRequest): Promise<ApiResponse<any>> => {
+        const res = await httpClient.post<ApiResponse<any>>('/shop/products/add', products);
+        return res.data;
     },
-    updateProduct: async (products: ProductCreationRequest, id: string) =>{
-        return await httpClient.put('/shop/products/update/' + id, products)
+    updateProduct: async (products: ProductCreationRequest, id: string): Promise<ApiResponse<any>> => {
+        const res = await httpClient.put<ApiResponse<any>>('/shop/products/update/' + id, products);
+        return res.data;
     },
-    updateShopProfile: async (shop: ShopUpdateRequest) =>{
-        return await httpClient.put('/shop/info/update', shop)
-    },
-    
-
-}
+    updateShopProfile: async (shop: ShopUpdateRequest): Promise<ApiResponse<any>> => {
+        const res = await httpClient.put<ApiResponse<any>>('/shop/info/update', shop);
+        return res.data;
+    }
+};
 
 export default ShopApi;

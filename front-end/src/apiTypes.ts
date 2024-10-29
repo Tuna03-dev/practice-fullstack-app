@@ -2,6 +2,12 @@ export enum sliderNames {
   HOME = 'HOME_SLIDER'
 }
 
+export type ApiResponse<T> = {
+  code: number
+  data: T
+  message: string
+  timestamp: Date
+}
 export type CategoryResponse = {
   id: string
   name: string

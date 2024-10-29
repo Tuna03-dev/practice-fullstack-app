@@ -88,7 +88,7 @@ const description = ref<string>('')
 
 const fetchCategory = async () => {
   try {
-    const response = await CategoryApi.getAllCategorisByShopId(route.params.id as string)
+    const response = await CategoryApi.getAllCategoriesByShopId(route.params.id as string)
     categories.value = response.data
   } catch (err: any) {
     toast.error(err.message)
