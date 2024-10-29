@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import { onMounted, ref } from 'vue'
-import { columns, type Payment } from '@/components/data-table/columns'; 
+import { columns } from '@/components/data-table/columns'; 
 import DataTable from '@/components/data-table/DataTable.vue';
 import type { ProductDetailResponse } from '@/apiTypes';
 import ProductApi from '@/api/ProductApi';

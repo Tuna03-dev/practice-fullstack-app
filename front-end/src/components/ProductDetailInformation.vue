@@ -4,12 +4,13 @@
       <label class="text-4xl font-bold">{{ product.name }}</label>
       <label class="text-xl">{{ product.categoryName }}</label>
     </div>
-    <StarRateing
+    <vue3starRatings
+      :star-color="'#FED000'"
       :star-size="26"
-      :increment="0.01"
-      :rating="product.averageRate"
-      :read-only="true"
-    ></StarRateing>
+      :disable-click="true"
+      :model-value="product.averageRate"
+      
+    ></vue3starRatings>
     <div class="flex flex-col border-b-2 pb-10">
       <label v-if="product.priceWithDiscount !== undefined" class="text-2xl font-bold line-through text-gray-400">{{ product.price.toLocaleString() }} VND</label>
       <label v-if="product.priceWithDiscount !== undefined" class="text-4xl font-bold text-red-400">
@@ -43,7 +44,7 @@ import {
 } from '@/components/ui/number-field'
 import { Label } from '@/components/ui/label'
 import { type ProductDetailResponse } from '@/apiTypes'
-import StarRateing from 'vue-star-rating'
+import vue3starRatings from "vue3-star-ratings";
 import { ref } from 'vue';
 const props = defineProps<{
   product: ProductDetailResponse
