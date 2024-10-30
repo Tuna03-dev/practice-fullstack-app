@@ -197,3 +197,21 @@ export type ShopUpdateRequest = {
   descriptionImage: string
   categories: string[]
 }
+
+export interface ShippingMethod {
+  id: string
+  name: string
+  cost: string
+  provider: string
+  estimatedDays: number
+  logo: string
+}
+
+export type OrderCreationRequest = {
+  addressId: string
+  shippingMethodId: string
+  timeDelivery: number
+  totalAmount: number
+  totalAmountPaid: number
+  cartItemIds: string[]
+}

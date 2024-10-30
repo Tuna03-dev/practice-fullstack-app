@@ -1,6 +1,6 @@
 <template >
   <div
-    class="flex flex-col bg-gradient-to-r to-gray-100 from-blue-200 rounded-lg items-start w-full"
+    class="flex flex-col rounded-lg items-start w-full"
   >
   <button
       v-for="button in buttons"

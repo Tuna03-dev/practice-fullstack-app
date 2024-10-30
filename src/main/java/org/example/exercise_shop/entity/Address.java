@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "address")
 @Getter
@@ -30,4 +33,8 @@ public class Address {
     @JsonIgnore
     User user ;
     Boolean defaultAddress;
+
+    @OneToMany(mappedBy = "address", cascade = CascadeType.ALL)
+    @JsonIgnore
+    Set<Order> orders = new HashSet<>();
 }

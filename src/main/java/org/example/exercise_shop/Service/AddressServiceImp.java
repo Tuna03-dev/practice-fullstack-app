@@ -38,10 +38,10 @@ public class AddressServiceImp implements AddressService{
 
     @Override
     @Transactional
-    public void addAddress(AddressCreationRequest addressCreationRequest) {
+    public Address addAddress(AddressCreationRequest addressCreationRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
-            return;
+            return null;
         }
         User user = (User) authentication.getPrincipal();
         List<Address> addresses = addressRepository.findAllByUser_Username(user.getUsername());
@@ -54,7 +54,7 @@ public class AddressServiceImp implements AddressService{
         if (defaultAddress == null) {
             address.setDefaultAddress(true);
         }
-        addressRepository.save(address);
+        return addressRepository.save(address);
     }
 
     @Override

@@ -24,5 +24,10 @@ public class OrderRequest {
     String receiverName;
     String receiverPhone;
     String receiverAddress;
+    String addressId;
+    String shippingMethodId;
+    int timeDelivery;
+    BigDecimal totalAmount;
+    BigDecimal totalAmountPaid;
     List<String> cartItemIds;
 }

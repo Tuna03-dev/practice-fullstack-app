@@ -30,6 +30,12 @@ public class Order {
     String receiverName;
     String receiverPhone;
     String receiverAddress;
+    LocalDateTime estimatedDeliveryTime;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "address_id")
+    Address address;
+
 
     @Embedded
     @Builder.Default
@@ -37,6 +43,7 @@ public class Order {
 
     @Column(name = "total_amount")
     BigDecimal totalAmount;
+    BigDecimal totalAmountPaid;
     @Column(name = "order_status")
     @Enumerated(EnumType.STRING)
     StatusOrder status;
@@ -49,4 +56,8 @@ public class Order {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id")
     Shop shop;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shipping_method_id")
+    ShippingMethod shippingMethod;
 }
