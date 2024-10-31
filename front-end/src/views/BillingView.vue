@@ -99,7 +99,7 @@ const fetchAllOrder = async () => {
     }
 }
 
-const handleShowProductDetail = (productId: number) => {
+const handleShowProductDetail = (productId: string) => {
     router.push(`/products/details/${productId}`);
 }
 
