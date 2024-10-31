@@ -13,7 +13,7 @@
           <iconify-icon icon="lucide:user" class="mr-2 h-4 w-4" />
           <span>Profile</span>
         </DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem @click="billing">
           <iconify-icon icon="lucide:credit-card" class="mr-2 h-4 w-4" />
 
           <span>Billing</span>
@@ -69,7 +69,9 @@ const userInfo = ref<UserProfileResponse>()
 const profile = () => {
   route.push('/profile/personal-information')
 }
-
+const billing = () => {
+  route.push('/profile/billing')
+}
 const fetchUserInfo = async () => {
   try {
     const response = await UserApi.getInformation(authStore.username)

@@ -82,4 +82,16 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(value = OutOfStockException.class)
+    public ResponseEntity<ApiResponse<Object>> handleOutOfStockException(OutOfStockException e){
+        log.error("OutOfStockException: ", e);
+        return ResponseEntity.badRequest().body(
+                ApiResponse.builder()
+                        .code(HttpStatus.BAD_REQUEST.value())
+                        .data(e.getOutOfStockProductsMessage())
+                        .message(e.getMessage())
+                        .build()
+        );
+    }
+
 }

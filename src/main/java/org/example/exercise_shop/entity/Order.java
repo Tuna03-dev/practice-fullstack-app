@@ -27,9 +27,10 @@ public class Order {
     @Column(name = "order_id")
     String id;
 
-    String receiverName;
-    String receiverPhone;
-    String receiverAddress;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "address_id")
+    Address address;
+
 
     @Embedded
     @Builder.Default
@@ -37,16 +38,18 @@ public class Order {
 
     @Column(name = "total_amount")
     BigDecimal totalAmount;
+    BigDecimal totalAmountPaid;
     @Column(name = "order_status")
     @Enumerated(EnumType.STRING)
     StatusOrder status;
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    Set<OrderItem> orderItems = new HashSet<>();
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shop_id")
-    Shop shop;
+
+
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    Set<ShopOrder> shopOrders = new HashSet<>();
 }

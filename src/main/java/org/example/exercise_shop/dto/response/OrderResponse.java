@@ -2,10 +2,8 @@ package org.example.exercise_shop.dto.response;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.example.exercise_shop.entity.*;
 
 import java.math.BigDecimal;
@@ -16,18 +14,16 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderResponse {
 
     String id;
-
-    String receiverName;
-    String receiverPhone;
-    String receiverAddress;
     Audit audit;
+    Address address;
     BigDecimal totalAmount;
+    BigDecimal totalAmountPaid;
     StatusOrder status;
-    String userId;
-    String shopId;
+    Set<ShopOrderResponse> shopOrderResponses;
 
 
 }

@@ -31,4 +31,6 @@ public class ShopInformationResponse {
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
     List<CategoryResponse> categories;
+    boolean favourite;
+
 }

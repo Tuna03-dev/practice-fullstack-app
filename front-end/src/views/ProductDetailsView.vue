@@ -148,6 +148,7 @@ watch(activeTab, (newVal) => {
 onMounted(() => {
   fetchProductDetails()
   fetchShopDetails()
+  window.scrollTo(0, 0)
 })
 </script>
 <style lang="">

@@ -4,11 +4,7 @@
       <Card class="mb-6">
         <CardHeader class="ml-2">
           <CardTitle class="flex items-center">
-            <Checkbox
-              class="mr-2"
-              @update:checked="toggleAllProducts"
-              :checked="areAllProductsSelected"
-            />
+            <Checkbox class="mr-2" @update:checked="toggleAllProducts" :checked="areAllProductsSelected" />
             <span>All products</span>
           </CardTitle>
         </CardHeader>
@@ -17,11 +13,7 @@
       <Card v-for="shop in cartReponses" :key="shop.shopId" class="mb-6">
         <CardHeader class="ml-2">
           <CardTitle class="flex items-center">
-            <Checkbox
-              class="mr-2"
-              @update:checked="toggleShop(shop.shopId)"
-              :checked="isShopSelected(shop.shopId)"
-            />
+            <Checkbox class="mr-2" @update:checked="toggleShop(shop.shopId)" :checked="isShopSelected(shop.shopId)" />
             {{ shop.shopName }}
           </CardTitle>
         </CardHeader>
@@ -40,33 +32,21 @@
             <TableBody>
               <TableRow v-for="product in shop.cartItemResponses" :key="product.productId">
                 <TableCell>
-                  <Checkbox
-                    @update:checked="toggleProduct(product.productId)"
-                    :checked="selectedProducts.includes(product.productId)"
-                  />
+                  <Checkbox @update:checked="toggleProduct(product.productId)"
+                    :checked="selectedProducts.includes(product.productId)" />
                 </TableCell>
                 <TableCell class="w-96">
-                  <div
-                    class="flex items-center w-fit gap-1 hover:cursor-pointer"
-                    @click="handleShowProductDetail(product.productId)"
-                  >
+                  <div class="flex items-center w-fit gap-1 hover:cursor-pointer"
+                    @click="handleShowProductDetail(product.productId)">
                     <img class="w-16" :src="product.productImage" :alt="product.productName" />
                     <div>{{ product.productName }}</div>
                   </div>
                 </TableCell>
-                <TableCell class="text-center"
-                  >₫{{ product.pricePerProduct.toLocaleString() }}</TableCell
-                >
+                <TableCell class="text-center">₫{{ product.pricePerProduct.toLocaleString() }}</TableCell>
                 <TableCell class="text-center">
-                  <NumberField
-                    id="quantity"
-                    :default-value="18"
-                    v-model="product.quantity"
-                    :min="1"
-                    class="w-24"
+                  <NumberField id="quantity" :default-value="18" v-model="product.quantity" :min="1" class="w-24"
                     :disabled="disableFields.includes(product.productId)"
-                    @update:model-value="(value) => handleChangeQuantity(product.productId, value)"
-                  >
+                    @update:model-value="(value) => handleChangeQuantity(product.productId, value)">
                     <NumberFieldContent>
                       <NumberFieldDecrement />
                       <NumberFieldInput />
@@ -74,15 +54,9 @@
                     </NumberFieldContent>
                   </NumberField>
                 </TableCell>
-                <TableCell class="text-center"
-                  >₫{{ product.cartItemAmount.toLocaleString() }}</TableCell
-                >
+                <TableCell class="text-center">₫{{ product.cartItemAmount.toLocaleString() }}</TableCell>
                 <TableCell class="text-center">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    @click="handleRemoveProduct(product.productId)"
-                  >
+                  <Button variant="outline" size="sm" @click="handleRemoveProduct(product.productId)">
                     Delete
                   </Button>
                 </TableCell>
@@ -103,13 +77,14 @@
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction class="bg-red-400 hover:bg-red-500" @click="removeSelectedProducts">Delete</AlertDialogAction>
+              <AlertDialogAction class="bg-red-400 hover:bg-red-500" @click="removeSelectedProducts">Delete
+              </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
 
         <div class="text-xl font-bold ml-auto mr-3">Total: ₫{{ totalPrice.toLocaleString() }}</div>
-        <Button class="w-1/6" >Checkout</Button>
+        <Button class="w-1/6" @click="handleCheckout">Checkout</Button>
       </div>
     </div>
 
@@ -122,8 +97,8 @@
     </div>
   </Container>
 </template>
-  
-  <script setup lang="ts">
+
+<script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import {
   Table,
@@ -170,13 +145,17 @@ import router from '@/router'
 import { List } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
 import { useQueryClient } from '@tanstack/vue-query'
+import { useAuthStore } from '@/stores/authStore'
+import { useCartStore } from '@/stores/cartStore'
 
+const cartStore = useCartStore();
 const queryClient = useQueryClient()
 const cartReponses = ref<CartResponse[]>([])
 const selectedProducts = ref<string[]>([])
 const debounceTimout = ref<ReturnType<typeof setTimeout>>()
 const disableFields = ref<string[]>([])
-const showDialogDelete = ref(false)
+const authStore = useAuthStore();
+
 const areAllProductsSelected = computed(() => {
   return cartReponses.value
     .flatMap((c) => c.cartItemResponses)
@@ -230,7 +209,7 @@ const updateCartNumber = async (productId: string, quantity: number) => {
         }
       })
 
-      console.log(response.data)
+
       return
     }
     cartReponses.value = cartReponses.value.map((shop) => {
@@ -277,7 +256,7 @@ const toggleProduct = (productId: string) => {
   } else {
     selectedProducts.value.push(productId)
   }
-  console.log('Selected products:', selectedProducts.value)
+
 }
 
 const toggleShop = (shopId: string) => {
@@ -330,17 +309,39 @@ const fetchListCart = async () => {
   try {
     const response = await CartApi.getListCartGroupByShop()
     cartReponses.value = response.data
-    console.log(response.data)
+
   } catch (error) {
     console.error(error)
   }
 }
 
+const handleCheckout = () => {
+
+  if (selectedProducts.value.length === 0) {
+    toast.warning('Please select products to checkout')
+    return
+  } else if (!authStore.isLoggedIn) {
+
+    toast.warning('Please login to checkout')
+    return
+  }
+  cartStore.clearItems();
+  cartStore.setTotal(totalPrice.value);
+  cartReponses.value.forEach((shop) => {
+    const selectedItems = shop.cartItemResponses.filter((p) => selectedProducts.value.includes(p.productId))
+    if (selectedItems.length > 0) {
+      cartStore.addItem({
+        ...shop,
+        cartItemResponses: selectedItems,
+      });
+    }
+  })
+  router.push('/checkout')
+
+}
 onMounted(() => {
   fetchListCart()
 })
 </script>
-  
-<style>
-</style>
-  
+
+<style></style>

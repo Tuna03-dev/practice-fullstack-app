@@ -57,22 +57,22 @@ public class ReportServiceImp implements ReportService{
 
         LocalDateTime startOfMonth = LocalDateTime.of(year, month, 1, 0, 0);
         LocalDateTime endOfMonth = startOfMonth.plusMonths(1).minusSeconds(1);
-        List<Order> orders = orderRepository.findByShopAndOrderDateBetween(shop, startOfMonth, endOfMonth);
-        int totalOrders = orders.size();
-        BigDecimal totalRevenue = orders.stream()
-                .map(Order::getTotalAmount)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+//        List<Order> orders = orderRepository.findByShopAndOrderDateBetween(shop, startOfMonth, endOfMonth);
+//        int totalOrders = orders.size();
+//        BigDecimal totalRevenue = orders.stream()
+//                .map(Order::getTotalAmount)
+//                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         double profitFee = shop.getFeePercentage();
-        BigDecimal profit = totalRevenue.subtract(totalRevenue.multiply(BigDecimal.valueOf(profitFee)));
+//        BigDecimal profit = totalRevenue.subtract(totalRevenue.multiply(BigDecimal.valueOf(profitFee)));
 
         Report report = Report.builder()
                 .shopId(shop.getId())
                 .year(year)
                 .month(month)
-                .totalOrders(totalOrders)
-                .totalRevenue(totalRevenue)
-                .profit(profit)
+//                .totalOrders(totalOrders)
+//                .totalRevenue(totalRevenue)
+//                .profit(profit)
                 .build();
 
         reportRepository.save(report);

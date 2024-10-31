@@ -21,12 +21,13 @@ public class OrderItemServiceImp implements OrderItemService{
 
     @Override
     public List<OrderItemResponse> findAllOrderItemsByOrderId(String orderId) {
-        return orderItemRepository.findAllByOrderId(orderId).stream().map(orderItem -> {
-            OrderItemResponse orderItemResponse = orderItemMapper.toOrderItemResponse(orderItem);
-            orderItemResponse.setOrderId(orderItem.getOrder().getId());
-            orderItemResponse.setProductId(orderItem.getProduct().getId());
-            return orderItemResponse;
-
-        }).toList();
+//        return orderItemRepository.findAllByOrderId(orderId).stream().map(orderItem -> {
+//            OrderItemResponse orderItemResponse = orderItemMapper.toOrderItemResponse(orderItem);
+////            orderItemResponse.setOrderId(orderItem.getOrder().getId());
+//            orderItemResponse.setProductId(orderItem.getProduct().getId());
+//            return orderItemResponse;
+//
+//        }).toList();
+        return null;
     }
 }

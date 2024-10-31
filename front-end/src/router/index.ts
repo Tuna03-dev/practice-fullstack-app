@@ -16,20 +16,28 @@ import ProductTableView from '@/views/shop/ProductTableView.vue'
 import AddProductView from '@/views/shop/AddProductView.vue'
 import ShopProfileView from '@/views/shop/ShopProfileView.vue'
 import DefaultView from '@/views/shop/DefaultView.vue'
+import CheckOutView from '@/views/CheckoutView.vue'
+import OrderSuccessView from '@/views/OrderSuccessView.vue'
+import { useCartStore } from '@/stores/cartStore'
+import BillingView from '@/views/BillingView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: () => import('@/views/NotFoundView.vue')
+    },
+    {
       path: '/',
       name: 'home',
       component: HomeLayout,
-      children:[
+      children: [
         {
           path: '',
           component: HomeView
         }
-
       ]
     },
     {
@@ -51,7 +59,7 @@ const router = createRouter({
       path: '/profile',
       name: 'profile',
       component: HomeLayout,
-      meta:{requireAuth: true, role: 'CUSTOMER'},
+      meta: { requireAuth: true, role: 'CUSTOMER' },
       children: [
         {
           path: '',
@@ -60,18 +68,17 @@ const router = createRouter({
             {
               path: 'personal-information',
               component: PersonalInformationView
-            }
-          ]
-        },
-        {
-          path: '',
-          component: ProfileLayout,
-          children: [
+            },
             {
               path: 'address',
               component: UserAddressView
             }
           ]
+        },
+        {
+          path: 'billing',
+          component: BillingView,
+          
         }
       ]
     },
@@ -86,11 +93,7 @@ const router = createRouter({
         }
       ]
     },
-    {
-      path: '/:pathMatch(.*)*',
-      name: 'not-found',
-      component: () => import('@/views/NotFoundView.vue')
-    },
+
     {
       path: '/cart',
       name: 'cart',
@@ -103,10 +106,23 @@ const router = createRouter({
       ]
     },
     {
+      path: '/checkout',
+      name: 'checkout',
+      meta: { requireAuth: true, role: 'CUSTOMER' },
+      component: HomeLayout,
+      
+      children: [
+        {
+          path: '',
+          component: CheckOutView
+        }
+      ]
+    },
+    {
       path: '/management/shops',
       name: 'manage-shop',
       component: ShopManagementLayout,
-      meta: {requireAuth: true, role: 'SHOP'},
+      meta: { requireAuth: true, role: 'SHOP' },
       children: [
         {
           path: '',
@@ -129,37 +145,49 @@ const router = createRouter({
           component: ShopProfileView
         }
       ]
+    },
+    {
+      path: '/order-success',
+      component: HomeLayout,
+      meta: { requireAuth: true, role: 'CUSTOMER' },
+      beforeEnter: (to, from, next) => {
+        const cartStore = useCartStore();
+        if(cartStore.isOrder){
+          next();
+        }else{
+          next({path: '/cart'});
+        }
+      },
+      children: [
+        {
+          path: '',
+          component: OrderSuccessView
+        }
+      ]
     }
-    
   ]
 })
 
-
 router.beforeEach((to, from, next) => {
-  const authStore = useAuthStore();
-  const isAuthenticated = authStore.isLoggedIn;
-  const userRole = authStore.userRole;
+  const authStore = useAuthStore()
+  const isAuthenticated = authStore.isLoggedIn
+  const userRole = authStore.userRole
 
-
-  if(to.matched.some(record => record.meta.requireAuth)){
-    if(!isAuthenticated){
-      toast.error("You don't have permission to access this page");
-      return next({path: '/'});
+  if (to.matched.some((record) => record.meta.requireAuth)) {
+    if (!isAuthenticated) {
+      toast.error("You don't have permission to access this page")
+      return next({ path: '/' })
     }
 
-    const requiredRole = to.meta.role;
-    if(requiredRole && userRole !== requiredRole){
-      toast.error("You don't have permission to access this page");
+    const requiredRole = to.meta.role
+    if (requiredRole && userRole !== requiredRole) {
+      toast.error("You don't have permission to access this page")
 
-      return next({path: '/'});
-
+      return next({ path: '/' })
     }
-
   }
 
-  next();
+  next()
 })
-
-
 
 export default router

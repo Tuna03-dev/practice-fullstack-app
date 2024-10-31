@@ -31,7 +31,7 @@ const editProduct = (id: string) => {
     <DropdownMenuContent align="end">
       <DropdownMenuLabel>Actions</DropdownMenuLabel>
       
-      <DropdownMenuItem>View detais</DropdownMenuItem>
+      <!-- <DropdownMenuItem>View detais</DropdownMenuItem> -->
       <DropdownMenuItem @click="editProduct(product.id)">Edit</DropdownMenuItem>
       <DropdownMenuSeparator />
       <DropdownMenuItem @click="copy(product.id)" class="text-red-500 hover:text-red-400">

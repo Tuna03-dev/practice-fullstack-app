@@ -229,19 +229,19 @@ import type { Address } from '@/apiTypes'
 
 const addresses = ref<Address[]>([])
 
-interface Province {
+export interface Province {
   code: number
   name: string
   'quan-huyen': District[]
 }
 
-interface District {
+export interface District {
   code: number
   name: string
   'xa-phuong': Ward[]
 }
 
-interface Ward {
+export interface Ward {
   code: number
   name: string
 }

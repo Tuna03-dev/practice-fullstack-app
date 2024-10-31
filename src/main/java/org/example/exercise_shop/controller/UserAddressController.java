@@ -19,18 +19,21 @@ public class UserAddressController {
     private final AddressService addressService;
 
     @PostMapping("/add")
-    public ApiResponse<Object> addAddress(@RequestBody AddressCreationRequest addressCreationRequest) {
+    public ApiResponse<Address> addAddress(@RequestBody AddressCreationRequest addressCreationRequest) {
+        Address address = new Address();
+
         try{
-            addressService.addAddress(addressCreationRequest);
+           address = addressService.addAddress(addressCreationRequest);
         }catch (Exception e){
-            return ApiResponse.builder()
+            return ApiResponse.<Address>builder()
                     .code(500)
                     .message("Failed to add address")
                     .build();
         }
 
-        return ApiResponse.builder()
+        return ApiResponse.<Address>builder()
                 .message("Address added successfully")
+                .data(address)
                 .build();
     }
 

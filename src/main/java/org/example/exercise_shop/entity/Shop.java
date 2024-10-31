@@ -63,10 +63,10 @@ public class Shop {
     @JsonIgnore
     Set<Product> products;
 
-
+    boolean favourite;
 
     @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL)
-    List<Order> orders;
+    List<ShopOrder> shopOrders;
 
     @OneToMany(mappedBy = "shop")
     List<Discount> discounts;

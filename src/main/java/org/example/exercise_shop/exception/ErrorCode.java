@@ -36,7 +36,8 @@ public enum ErrorCode {
     CART_NOT_FOUND(1024,"Cart not found" ),
     UNAUTHORIZED(1025,"Unauthorized" ),
     LIMIT_ADDRESS(1026,"You can only have 3 addresses" ),
-    ADDRESS_NOT_FOUND(1027,"Address not found" );
+    ADDRESS_NOT_FOUND(1027,"Address not found" ),
+    SHIPPING_METHOD_NOT_FOUND(1028,"Shipping method not found" );
 
     private int code;
     private String message;

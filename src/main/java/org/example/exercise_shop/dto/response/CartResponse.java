@@ -3,6 +3,7 @@ package org.example.exercise_shop.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -14,4 +15,5 @@ public class CartResponse {
     String shopId;
     String shopName;
     List<CartItemResponse> cartItemResponses;
+    BigDecimal totalAmount;
 }

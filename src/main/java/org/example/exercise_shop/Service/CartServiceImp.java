@@ -342,8 +342,13 @@ public class CartServiceImp implements CartService{
                             .shopId(shop.getId())
                             .shopName(shop.getName())
                             .cartItemResponses(new ArrayList<>())
+                            .totalAmount(BigDecimal.ZERO)
                             .build()
             ).getCartItemResponses().add(cartItemResponse);
+
+            cartResponseMap.get(shop.getId()).setTotalAmount(
+                    cartResponseMap.get(shop.getId()).getTotalAmount().add(cartItemResponse.getCartItemAmount())
+            );
         }
 
         return new ArrayList<>(cartResponseMap.values());

@@ -1,5 +1,6 @@
 package org.example.exercise_shop.Repository;
 
+import org.example.exercise_shop.entity.OrderItem;
 import org.example.exercise_shop.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 
 public interface ProductRepository extends JpaRepository<Product,String> {
@@ -37,4 +39,6 @@ public interface ProductRepository extends JpaRepository<Product,String> {
     List<Product> findBestSellersByShopId(String shopId);
 
     List<Product> findAllByShop_IdAndDeleteAtIsNull(String shopId);
+
+    Optional<Product> findByOrderItemsContains(OrderItem orderItem);
 }

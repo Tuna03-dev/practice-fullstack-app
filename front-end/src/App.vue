@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import {Toaster} from 'vue-sonner'
+import Toaster2 from '@/components/ui/toast/Toaster.vue'
 import { useAuthStore } from '@/stores/authStore'
 import { onMounted } from 'vue';
 const authStore = useAuthStore();
@@ -14,7 +15,7 @@ onMounted(() => {
 
 <template>
   <div class="font-sans">
-
+    <Toaster2 />
     <Toaster richColors  :expand="true" position="top-center"/>
     <RouterView />
   </div>
