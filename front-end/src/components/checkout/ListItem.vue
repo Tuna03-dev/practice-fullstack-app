@@ -91,7 +91,7 @@ const shopOrderList = ref<ShopOrderRequest[]>([]);
 const emit = defineEmits(['on-select-shipping'])
 const shoppingFee = computed(() => {
     return Object.values(shippingMethodsMap.value).filter((method) => method !== null).reduce((acc, method) => {
-        return acc + Number(method.cost);
+        return acc + Number(method?.cost);
     }, 0)
 })
 
