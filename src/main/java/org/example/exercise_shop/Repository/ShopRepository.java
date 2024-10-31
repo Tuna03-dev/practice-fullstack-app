@@ -1,6 +1,7 @@
 package org.example.exercise_shop.Repository;
 
 import org.example.exercise_shop.entity.Shop;
+import org.example.exercise_shop.entity.ShopOrder;
 import org.example.exercise_shop.entity.StatusShop;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,6 +46,6 @@ public interface ShopRepository extends JpaRepository<Shop, String> {
             Pageable pageable);
 
     Optional<Shop> findByIdAndStatus(String id, StatusShop status);
-
+    Optional<Shop> findByShopOrdersContains(ShopOrder shopOrder);
 }
 

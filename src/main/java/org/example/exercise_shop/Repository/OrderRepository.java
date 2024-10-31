@@ -15,8 +15,8 @@ import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, String> {
 
-    @Query("SELECT sum(o.totalAmount) from Order o where o.shop = :shop")
-    BigDecimal getTotalPrice(@Param(value = "shop")Shop shop);
+//    @Query("SELECT sum(o.totalAmount) from Order o where o.shop = :shop")
+//    BigDecimal getTotalPrice(@Param(value = "shop")Shop shop);
 
 //    @Query("SELECT o FROM Order o where o.shop = :shop and o.audit.createdAt between :start and :end")
 //    List<Order> findByShopAndOrderDateBetween(@Param(value = "shop") Shop shop,@Param(value = "start") LocalDateTime start,@Param(value = "end") LocalDateTime end);
@@ -25,5 +25,8 @@ public interface OrderRepository extends JpaRepository<Order, String> {
 
 //    Page<Order> findAllByUserId(String userId, Pageable pageable);
 //    Page<Order> findAllByShopId(String shopId, Pageable pageable);
-    List<Order> findByUserId(String userId);
+    List<Order> findByUser_Id(String userId);
+
+    @Query("SELECT o FROM Order o JOIN FETCH o.shopOrders so JOIN FETCH so.orderItems oi WHERE o.user.id = :userId")
+    List<Order> findOrdersWithDetailsByUserId(@Param("userId") String userId);
 }

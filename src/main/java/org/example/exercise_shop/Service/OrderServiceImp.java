@@ -14,6 +14,7 @@ import org.example.exercise_shop.exception.ErrorCode;
 import org.example.exercise_shop.exception.OutOfStockException;
 import org.example.exercise_shop.mapper.OrderItemMapper;
 import org.example.exercise_shop.mapper.OrderMapper;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
 import org.springframework.security.core.Authentication;
@@ -43,10 +44,16 @@ public class OrderServiceImp implements OrderService{
     private final OrderItemMapper orderItemMapper;
 
     @Override
+    @Transactional
     public Page<OrderResponse> findAllByUserId(String userId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("Audit.createdAt")));
-        List<Order> orders = orderRepository.findByUserId(userId);
+        List<Order> orders = orderRepository.findOrdersWithDetailsByUserId(userId);
+        orders.forEach(order -> {
+            Hibernate.initialize(order.getShopOrders());
+            Hibernate.initialize(order.getAddress());
 
+            order.getShopOrders().forEach(shopOrder -> Hibernate.initialize(shopOrder.getOrderItems()));
+        });
         List<OrderResponse> orderResponses = orders.stream().map(order -> {
             OrderResponse orderResponse = orderMapper.toOrderReponse(order);
             Set<ShopOrderResponse> shopOrderResponses = responseShopOrder(order);
@@ -184,19 +191,22 @@ public class OrderServiceImp implements OrderService{
 
     private Set<ShopOrderResponse> responseShopOrder(Order order){
         return order.getShopOrders().stream().map(shopOrder -> {
+            Shop shop = shopRepository.findByShopOrdersContains(shopOrder).orElseThrow(() -> new ApplicationException(ErrorCode.SHOP_NOT_FOUND));
             ShopOrderResponse shopOrderResponse = orderMapper.toShopOrderResponse(shopOrder);
-            shopOrderResponse.setShop(shopService.getShopDetailByShopId(shopOrder.getShop().getId()));
+            shopOrderResponse.setShopInformationResponse(shopService.getShopDetailByShopId(shop.getId()));
             shopOrderResponse.setOrderItems(responseOrderItemResponse(shopOrder));
             return shopOrderResponse;
         }).collect(Collectors.toSet());
     }
 
+
     private Set<OrderItemResponse> responseOrderItemResponse(ShopOrder shopOrder){
         return shopOrder.getOrderItems().stream().map(orderItem -> {
+            Product product = productRepository.findByOrderItemsContains(orderItem).orElseThrow(() -> new ApplicationException(ErrorCode.PRODUCT_NOT_FOUND));
             OrderItemResponse orderItemResponse = orderItemMapper.toOrderItemResponse(orderItem);
-            orderItemResponse.setProductId(orderItem.getProduct().getId());
-            orderItemResponse.setProductName(orderItem.getProduct().getName());
-            orderItemResponse.setProductImageUrl(orderItem.getProduct().getImage());
+            orderItemResponse.setProductId(product.getId());
+            orderItemResponse.setProductName(product.getName());
+            orderItemResponse.setProductImageUrl(product.getImage());
             return orderItemResponse;
         }).collect(Collectors.toSet());
     }

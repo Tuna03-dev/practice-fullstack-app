@@ -224,7 +224,7 @@ export type ShopOrderRequest = {
   totalAmount: number
 }
 
-export type OrderResponse = {
+export type OrderResponseType = {
   id: string
   totalAmount: number
   status: string
@@ -240,7 +240,7 @@ export type ShopOrderResponse = {
   shippingMethod: ShippingMethod
   totalAmount: number
   status: string
-  shop: ShopInformationType
+  shopInformationResponse: ShopInformationType
   estimatedDeliveryTime: Date
   orderItems: OrderItemResponse[]
 }

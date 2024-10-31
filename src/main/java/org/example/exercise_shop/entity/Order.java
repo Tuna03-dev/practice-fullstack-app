@@ -27,7 +27,7 @@ public class Order {
     @Column(name = "order_id")
     String id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id")
     Address address;
 
@@ -47,13 +47,8 @@ public class Order {
     @JoinColumn(name = "user_id")
     User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shop_id")
-    Shop shop;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shipping_method_id")
-    ShippingMethod shippingMethod;
+
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     Set<ShopOrder> shopOrders = new HashSet<>();

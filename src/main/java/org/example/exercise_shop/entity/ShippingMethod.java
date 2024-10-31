@@ -32,5 +32,5 @@ public class ShippingMethod {
 
     @JsonIgnore
     @OneToMany(mappedBy = "shippingMethod", cascade = CascadeType.ALL)
-    List<Order> orders;
+    List<ShopOrder> orders;
 }

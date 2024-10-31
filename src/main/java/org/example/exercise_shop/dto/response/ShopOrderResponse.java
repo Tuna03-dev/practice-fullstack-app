@@ -19,7 +19,7 @@ public class ShopOrderResponse {
     ShippingMethod shippingMethod;
     BigDecimal totalAmount;
     ShopOrderStatus status;
-    ShopInformationResponse shop;
+    ShopInformationResponse shopInformationResponse;
     LocalDateTime estimatedDeliveryTime;
     Set<OrderItemResponse> orderItems;
 }
