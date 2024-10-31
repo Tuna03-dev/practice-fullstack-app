@@ -1,19 +1,20 @@
-package org.example.exercise_shop.dto.response;
+package org.example.exercise_shop.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
 import java.util.List;
-
-@Data
 @Builder
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@NoArgsConstructor
-public class CartResponse {
+public class ShopOrderRequest {
     String shopId;
-    String shopName;
-    List<CartItemResponse> cartItemResponses;
+    String shippingMethodId;
+    List<String> cartItemIds;
+    int timeDelivery;
     BigDecimal totalAmount;
+
 }

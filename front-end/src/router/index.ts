@@ -18,6 +18,8 @@ import ShopProfileView from '@/views/shop/ShopProfileView.vue'
 import DefaultView from '@/views/shop/DefaultView.vue'
 import CheckOutView from '@/views/CheckoutView.vue'
 import OrderSuccessView from '@/views/OrderSuccessView.vue'
+import { useCartStore } from '@/stores/cartStore'
+import BillingView from '@/views/BillingView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -66,18 +68,17 @@ const router = createRouter({
             {
               path: 'personal-information',
               component: PersonalInformationView
-            }
-          ]
-        },
-        {
-          path: '',
-          component: ProfileLayout,
-          children: [
+            },
             {
               path: 'address',
               component: UserAddressView
             }
           ]
+        },
+        {
+          path: 'billing',
+          component: BillingView,
+          
         }
       ]
     },
@@ -109,6 +110,7 @@ const router = createRouter({
       name: 'checkout',
       meta: { requireAuth: true, role: 'CUSTOMER' },
       component: HomeLayout,
+      
       children: [
         {
           path: '',
@@ -147,6 +149,15 @@ const router = createRouter({
     {
       path: '/order-success',
       component: HomeLayout,
+      meta: { requireAuth: true, role: 'CUSTOMER' },
+      beforeEnter: (to, from, next) => {
+        const cartStore = useCartStore();
+        if(cartStore.isOrder){
+          next();
+        }else{
+          next({path: '/cart'});
+        }
+      },
       children: [
         {
           path: '',

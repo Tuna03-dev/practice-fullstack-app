@@ -18,12 +18,12 @@ public interface OrderRepository extends JpaRepository<Order, String> {
     @Query("SELECT sum(o.totalAmount) from Order o where o.shop = :shop")
     BigDecimal getTotalPrice(@Param(value = "shop")Shop shop);
 
-    @Query("SELECT o FROM Order o where o.shop = :shop and o.audit.createdAt between :start and :end")
-    List<Order> findByShopAndOrderDateBetween(@Param(value = "shop") Shop shop,@Param(value = "start") LocalDateTime start,@Param(value = "end") LocalDateTime end);
+//    @Query("SELECT o FROM Order o where o.shop = :shop and o.audit.createdAt between :start and :end")
+//    List<Order> findByShopAndOrderDateBetween(@Param(value = "shop") Shop shop,@Param(value = "start") LocalDateTime start,@Param(value = "end") LocalDateTime end);
 
-    boolean existsByOrOrderItems_ProductIdAndStatus(String productId, StatusOrder status);
+//    boolean existsByOrOrderItems_ProductIdAndStatus(String productId, StatusOrder status);
 
-    Page<Order> findAllByUserId(String userId, Pageable pageable);
-    Page<Order> findAllByShopId(String shopId, Pageable pageable);
-
+//    Page<Order> findAllByUserId(String userId, Pageable pageable);
+//    Page<Order> findAllByShopId(String shopId, Pageable pageable);
+    List<Order> findByUserId(String userId);
 }

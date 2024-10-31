@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "order_items")
@@ -24,12 +25,11 @@ public class OrderItem {
     int quantity;
     @Column(name = "price_per_unit")
     BigDecimal pricePerUnit;
-
     BigDecimal totalAmount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id")
-    Order order;
+    @JoinColumn(name = "shop_order_id")
+    ShopOrder shopOrder;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")

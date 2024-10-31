@@ -56,9 +56,9 @@ public class ReviewServiceImp implements  ReviewService{
 
     @Override
     public Review addReviewForProduct(AddReviewRequest addReviewRequest) {
-        if (!orderRepository.existsByOrOrderItems_ProductIdAndStatus(addReviewRequest.getProductId(), StatusOrder.COMPLETED)){
-            throw new ApplicationException(ErrorCode.PRODUCT_NOT_PURCHASED);
-        }
+//        if (!orderRepository.existsByOrOrderItems_ProductIdAndStatus(addReviewRequest.getProductId(), StatusOrder.COMPLETED)){
+//            throw new ApplicationException(ErrorCode.PRODUCT_NOT_PURCHASED);
+//        }
         Product product = productRepository.findById(addReviewRequest.getProductId()).orElseThrow(() -> new ApplicationException(ErrorCode.PRODUCT_NOT_FOUND));
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();

@@ -93,6 +93,7 @@ export type ShopInformationType = {
   description: string
   descriptionImage: string
   categories: CategoryResponse[]
+  favourite: boolean
 }
 
 export type ProductDetailResponse = {
@@ -152,6 +153,7 @@ export type CartResponse = {
   shopId: string
   shopName: string
   cartItemResponses: CartItemResponse[]
+  totalAmount: bigint
 }
 
 export type AddressCreationRequest = {
@@ -201,7 +203,7 @@ export type ShopUpdateRequest = {
 export interface ShippingMethod {
   id: string
   name: string
-  cost: string
+  cost: bigint
   provider: string
   estimatedDays: number
   logo: string
@@ -209,9 +211,47 @@ export interface ShippingMethod {
 
 export type OrderCreationRequest = {
   addressId: string
-  shippingMethodId: string
-  timeDelivery: number
   totalAmount: number
   totalAmountPaid: number
+  shopOrderRequests: ShopOrderRequest[]
+}
+
+export type ShopOrderRequest = {
+  shopId: string,
+  shippingMethodId: string
+  timeDelivery: number
   cartItemIds: string[]
+  totalAmount: number
+}
+
+export type OrderResponse = {
+  id: string
+  totalAmount: number
+  status: string
+  audit:{
+    createdAt: Date
+    updatedAt: Date
+  }
+  shopOrderResponses: ShopOrderResponse[]
+}
+
+export type ShopOrderResponse = {
+  id: string
+  shippingMethod: ShippingMethod
+  totalAmount: number
+  status: string
+  shop: ShopInformationType
+  estimatedDeliveryTime: Date
+  orderItems: OrderItemResponse[]
+}
+
+export type OrderItemResponse = {
+  id: string
+  quantity: number
+  pricePerUnit: number
+  totalAmount: number
+  productId: string
+  productName: string
+  productImageUrl: string
+  totalAmountPaid: number
 }

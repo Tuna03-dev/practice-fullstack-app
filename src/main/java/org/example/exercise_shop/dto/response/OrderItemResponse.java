@@ -16,7 +16,8 @@ public class OrderItemResponse {
     int quantity;
     BigDecimal pricePerUnit;
     BigDecimal totalAmount;
-    String orderId;
     String productId;
+    String productName;
+    String productImageUrl;
 
 }

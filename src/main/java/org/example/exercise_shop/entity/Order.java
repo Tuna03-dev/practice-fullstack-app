@@ -27,11 +27,6 @@ public class Order {
     @Column(name = "order_id")
     String id;
 
-    String receiverName;
-    String receiverPhone;
-    String receiverAddress;
-    LocalDateTime estimatedDeliveryTime;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id")
     Address address;
@@ -47,8 +42,7 @@ public class Order {
     @Column(name = "order_status")
     @Enumerated(EnumType.STRING)
     StatusOrder status;
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    Set<OrderItem> orderItems = new HashSet<>();
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     User user;
@@ -60,4 +54,7 @@ public class Order {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shipping_method_id")
     ShippingMethod shippingMethod;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    Set<ShopOrder> shopOrders = new HashSet<>();
 }

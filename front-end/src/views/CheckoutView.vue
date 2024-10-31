@@ -164,15 +164,9 @@
             </div>
         </div>
         <div class="w-8/12" ref="product">
-
-            <list-item>
-            </list-item>
+            <list-item @on-select-shipping="handleShipping"> </list-item>
         </div>
-        <div class="w-8/12 mt-4" ref="shipping">
-
-            <shipping-component
-                @method-selected="(method: ShippingMethod) => updateStepIndex(3, method)"></shipping-component>
-        </div>
+        
         <div class="w-8/12 mt-4" ref="payment">
             <Card>
                 <CardHeader>
@@ -202,15 +196,15 @@
                     <Separator class="my-6"></Separator>
                     <div class="flex justify-between items-center  gap-4 text-gray-500">
                         <p>Total product cost: </p>
-                        <p>₫ {{ cartStore.total.toLocaleString() }}</p>
+                        <p>₫ {{ cartStore.productAmount.toLocaleString() }}</p>
                     </div>
                     <div class="flex justify-between items-center  gap-4 text-gray-500">
                         <p>Total shipping fee: </p>
-                        <p>₫ {{ shippingMethod && shippingMethod.cost ? shippingMethod.cost.toLocaleString() : 0 }}</p>
+                        <p>₫ {{ cartStore.shippingFee.toLocaleString()}}</p>
                     </div>
                     <div class="flex justify-between items-center  gap-4 text-xl ">
                         <p>Total payment: </p>
-                        <p class="text-orange-500">₫ {{ totalPayment.toLocaleString() }}</p>
+                        <p class="text-orange-500">₫ {{ cartStore.total.toLocaleString() }}</p>
                     </div>
                 </CardContent>
                 <Separator class="my-6"></Separator>
@@ -220,7 +214,7 @@
                         <p class="text-2xl font-bold">Total Payment</p>
                         <div class="flex items-center gap-2">
                             <span class="text-orange-500 font-bold text-2xl mr-2">
-                                ₫ {{ totalPayment.toLocaleString() }}
+                                ₫ {{ cartStore.total.toLocaleString() }}
                             </span>
                             <Button @click="handleOrder" size="lg"
                                 class="bg-orange-400 text-lg hover:bg-orange-500">Order
@@ -250,7 +244,7 @@ import { Stepper, StepperDescription, StepperIndicator, StepperItem, StepperSepa
 import { computed, onMounted, ref, watch } from 'vue'
 import { BookUser, CircleDollarSign, Check, CreditCard, Truck, ChevronRight, MapPin, Phone, UserRoundPen, BookUserIcon, Wallet, Banknote } from 'lucide-vue-next'
 import Container from '@/components/Container.vue'
-import type { Address, OrderCreationRequest, ShippingMethod } from '@/apiTypes'
+import type { Address, OrderCreationRequest, ShippingMethod, ShopOrderRequest } from '@/apiTypes'
 import type { District, Province, Ward } from './UserAddressView.vue'
 import { toTypedSchema } from '@vee-validate/zod'
 import { z } from 'zod'
@@ -267,7 +261,9 @@ import CardFooter from '@/components/ui/card/CardFooter.vue'
 import { useToast } from '@/components/ui/toast'
 import { useRouter } from 'vue-router'
 import OrderApi from '@/api/OrderApi'
+import { useQueryClient } from '@tanstack/vue-query'
 
+const queryClient = useQueryClient()
 const { toast: showToast } = useToast();
 const paymentMethods = [
     {
@@ -286,7 +282,7 @@ const cartStore = useCartStore()
 const selectedPaymentMethod = ref('');
 const payment = ref<HTMLElement | null>(null)
 const address = ref<HTMLElement | null>(null)
-const shipping = ref<HTMLElement | null>(null)
+const product = ref<HTMLElement | null>(null)
 const authStore = useAuthStore()
 const stepIndex = ref(1)
 const steps = [{
@@ -310,6 +306,7 @@ const steps = [{
     description: 'Confirm your order',
     icon: Check,
 }]
+const isSelectedShip = ref(false)
 const router = useRouter()
 const showAddressModal = ref(false)
 const addresses = ref<Address[]>([])
@@ -318,15 +315,9 @@ const districts = ref<District[]>([])
 const wards = ref<Ward[]>([])
 const selectedAddress = ref<Address>({} as Address)
 const selectedAddressId = ref('')
-const shippingMethod = ref<ShippingMethod>({} as ShippingMethod)
+
 const orderCreation = ref<OrderCreationRequest>({} as OrderCreationRequest)
-const totalPayment = computed(() => {
-    if (shippingMethod.value && shippingMethod.value.cost) {
-        return cartStore.total + shippingMethod.value.cost
-    } else {
-        return cartStore.total
-    }
-})
+
 
 function toggleAddressModal() {
     showAddressModal.value = !showAddressModal.value
@@ -421,15 +412,19 @@ const fetchAddresses = async () => {
     }
 }
 
-const updateStepIndex = (index: number, method: ShippingMethod) => {
-    stepIndex.value = index
-    shippingMethod.value = method
+const handleShipping = ({isSelectedAllShipping, shopOrderList}: { isSelectedAllShipping: boolean, shopOrderList: ShopOrderRequest[] }) => {
+    console.log(isSelectedAllShipping, shopOrderList)
+    if (isSelectedAllShipping) {
+        isSelectedShip.value = true
+        stepIndex.value = 3
+    }
 
+    orderCreation.value.shopOrderRequests = shopOrderList
 }
 
 const handleOrder = async () => {
-    console.log(selectedAddress.value, selectedPaymentMethod.value, shippingMethod.value)
-    if (selectedAddress.value && selectedPaymentMethod.value && shippingMethod.value) {
+    console.log(selectedAddress.value, selectedPaymentMethod.value, isSelectedShip.value)
+    if (selectedAddress.value && selectedPaymentMethod.value && isSelectedShip.value) {
         if (selectedPaymentMethod.value === 'credit-card') {
             showToast({
                 title: 'Error',
@@ -438,21 +433,20 @@ const handleOrder = async () => {
             })
             return;
         }
-        const itemIds = cartStore.items.map((item) => item.cartItemResponses.map((cartItem) => cartItem.id)).flat();
 
         orderCreation.value = {
+            ...orderCreation.value,
             addressId: selectedAddress.value.id,
-            shippingMethodId: shippingMethod.value.id,
-            timeDelivery: shippingMethod.value.estimatedDays,
             totalAmount: cartStore.total,
-            totalAmountPaid: Number(totalPayment.value),
-            cartItemIds: itemIds,
+            totalAmountPaid: cartStore.total,
         }
 
         try {
             const response = await OrderApi.createOrder(orderCreation.value);
             if (response.code === 200) {
                 cartStore.clearItems();
+                cartStore.setIsOrder(true);
+                queryClient.invalidateQueries({ queryKey: ['cartitems'] });
                 router.push('/order-success')
             }
         } catch (error: any) {
@@ -485,7 +479,7 @@ const handleOrder = async () => {
 watch(stepIndex, (newIndex) => {
     const contentRefs: { [key: number]: HTMLElement | null } = {
         1: address.value,
-        2: shipping.value,
+        2: product.value,
         3: payment.value
     }
 
