@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.UuidGenerator;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -17,6 +18,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ShopOrder {
 
@@ -46,4 +48,6 @@ public class ShopOrder {
 
     @OneToMany(mappedBy = "shopOrder", cascade = CascadeType.ALL)
     Set<OrderItem> orderItems = new HashSet<>();
+    @Embedded
+    Audit audit = new Audit();
 }

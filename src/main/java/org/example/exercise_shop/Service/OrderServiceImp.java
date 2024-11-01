@@ -15,7 +15,6 @@ import org.example.exercise_shop.exception.OutOfStockException;
 import org.example.exercise_shop.mapper.OrderItemMapper;
 import org.example.exercise_shop.mapper.OrderMapper;
 import org.hibernate.Hibernate;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -42,28 +41,22 @@ public class OrderServiceImp implements OrderService{
     private final ShopRepository shopRepository;
     private final ShopService shopService;
     private final OrderItemMapper orderItemMapper;
+    private final ShopOrderRepository shopOrderRepository;
 
     @Override
     @Transactional
-    public Page<OrderResponse> findAllByUserId(String userId, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("Audit.createdAt")));
+    public Page<ShopOrderResponse> findAllByUserId(String userId, int page, int size, String type, String search) {
         List<Order> orders = orderRepository.findOrdersWithDetailsByUserId(userId);
-        orders.forEach(order -> {
-            Hibernate.initialize(order.getShopOrders());
-            Hibernate.initialize(order.getAddress());
+        List<ShopOrderResponse> shopOrderResponses = orders.stream()
+                .flatMap(order -> responseShopOrder(order, type, search).stream())
+                .toList();
 
-            order.getShopOrders().forEach(shopOrder -> Hibernate.initialize(shopOrder.getOrderItems()));
-        });
-        List<OrderResponse> orderResponses = orders.stream().map(order -> {
-            OrderResponse orderResponse = orderMapper.toOrderReponse(order);
-            Set<ShopOrderResponse> shopOrderResponses = responseShopOrder(order);
-            orderResponse.setShopOrderResponses(shopOrderResponses);
-            return  orderResponse;
-        }).toList();
-
-        return new PageImpl<>(orderResponses, pageable, orderResponses.size());
-
+        int start = (int) Pageable.ofSize(size).withPage(page).getOffset();
+        int end = Math.min((start + size), shopOrderResponses.size());
+        List<ShopOrderResponse> pagedShopOrderResponses = shopOrderResponses.subList(start, end);
+        return new PageImpl<>(pagedShopOrderResponses, PageRequest.of(page, size), shopOrderResponses.size());
     }
+
 
     @Override
     public Page<OrderResponse> findAllByShopId(String shopId, int page, int size) {
@@ -184,25 +177,53 @@ public class OrderServiceImp implements OrderService{
 
     @Override
     public void cancelOrder(String orderId) {
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new ApplicationException(ErrorCode.ORDER_NOT_FOUND));
-        order.setStatus(StatusOrder.CANCELLED);
-        orderRepository.save(order);
+        ShopOrder shopOrder = shopOrderRepository.findById(orderId).orElseThrow(() -> new ApplicationException(ErrorCode.ORDER_NOT_FOUND));
+        if (shopOrder.getStatus() != ShopOrderStatus.PENDING && shopOrder.getStatus() != ShopOrderStatus.PROCESSING ) throw new ApplicationException(ErrorCode.ORDER_CANNOT_CANCEL);
+        shopOrder.setStatus(ShopOrderStatus.CANCELLED);
+        shopOrderRepository.save(shopOrder);
     }
 
-    private Set<ShopOrderResponse> responseShopOrder(Order order){
-        return order.getShopOrders().stream().map(shopOrder -> {
-            Shop shop = shopRepository.findByShopOrdersContains(shopOrder).orElseThrow(() -> new ApplicationException(ErrorCode.SHOP_NOT_FOUND));
+    private Set<ShopOrderResponse> responseShopOrder(Order order, String type, String search) {
+        Set<ShopOrder> shopOrders = order.getShopOrders();
+        shopOrders = switch (type) {
+            case "pending" -> shopOrders.stream()
+                    .filter(shopOrder -> shopOrder.getStatus() == ShopOrderStatus.PENDING)
+                    .collect(Collectors.toSet());
+            case "processing" -> shopOrders.stream()
+                    .filter(shopOrder -> shopOrder.getStatus() == ShopOrderStatus.PROCESSING)
+                    .collect(Collectors.toSet());
+            case "delivered" -> shopOrders.stream()
+                    .filter(shopOrder -> shopOrder.getStatus() == ShopOrderStatus.DELIVERED)
+                    .collect(Collectors.toSet());
+            case "cancelled" -> shopOrders.stream()
+                    .filter(shopOrder -> shopOrder.getStatus() == ShopOrderStatus.CANCELLED)
+                    .collect(Collectors.toSet());
+            case "delivering" -> shopOrders.stream()
+                    .filter(shopOrder -> shopOrder.getStatus() == ShopOrderStatus.SHIPPING)
+                    .collect(Collectors.toSet());
+            default -> shopOrders;
+        };
+        return shopOrders.stream().map(shopOrder -> {
+
+            Shop shop = shopOrder.getShop();
             ShopOrderResponse shopOrderResponse = orderMapper.toShopOrderResponse(shopOrder);
             shopOrderResponse.setShopInformationResponse(shopService.getShopDetailByShopId(shop.getId()));
-            shopOrderResponse.setOrderItems(responseOrderItemResponse(shopOrder));
+            shopOrderResponse.setOrderItems(responseOrderItemResponse(shopOrder, search));
+            shopOrderResponse.setAddress(order.getAddress());
+            shopOrderResponse.setOrderId(order.getId());
             return shopOrderResponse;
-        }).collect(Collectors.toSet());
+        }).filter(shopOrderResponse -> !shopOrderResponse.getOrderItems().isEmpty()).collect(Collectors.toSet());
     }
 
 
-    private Set<OrderItemResponse> responseOrderItemResponse(ShopOrder shopOrder){
-        return shopOrder.getOrderItems().stream().map(orderItem -> {
-            Product product = productRepository.findByOrderItemsContains(orderItem).orElseThrow(() -> new ApplicationException(ErrorCode.PRODUCT_NOT_FOUND));
+    private Set<OrderItemResponse> responseOrderItemResponse(ShopOrder shopOrder, String search){
+        Set<OrderItem> orderItems = shopOrder.getOrderItems().stream().
+                filter(orderItem ->
+                    orderItem.getProduct().getName().toLowerCase().contains(search.toLowerCase()))
+                .collect(Collectors.toSet());
+
+        return orderItems.stream().map(orderItem -> {
+            Product product = orderItem.getProduct();
             OrderItemResponse orderItemResponse = orderItemMapper.toOrderItemResponse(orderItem);
             orderItemResponse.setProductId(product.getId());
             orderItemResponse.setProductName(product.getName());

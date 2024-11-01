@@ -243,6 +243,11 @@ export type ShopOrderResponse = {
   shopInformationResponse: ShopInformationType
   estimatedDeliveryTime: Date
   orderItems: OrderItemResponse[]
+  audit:{
+    createdAt: Date
+    updatedAt: Date
+  }
+  address: Address
 }
 
 export type OrderItemResponse = {

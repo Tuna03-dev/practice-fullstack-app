@@ -60,7 +60,6 @@ public class DateTimeFormatter {
 
     public String format(LocalDateTime localDateTime){
         long timeSecond = ChronoUnit.SECONDS.between(localDateTime, LocalDateTime.now());
-        log.info("Time second: " + timeSecond);
         var strategy= strategyMap.entrySet().stream().filter(entry -> timeSecond < entry.getKey())
                 .findFirst().orElseThrow(() -> new ApplicationException(ErrorCode.ERROR_CONVERT_TIME));
 

@@ -25,5 +25,4 @@ public class OrderResponse {
     StatusOrder status;
     Set<ShopOrderResponse> shopOrderResponses;
 
-
 }
