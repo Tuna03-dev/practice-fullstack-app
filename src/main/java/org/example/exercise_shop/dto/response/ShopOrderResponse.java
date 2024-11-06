@@ -21,6 +21,7 @@ public class ShopOrderResponse {
     String orderId;
     ShippingMethod shippingMethod;
     Address address;
+    String username;
     BigDecimal totalAmount;
     ShopOrderStatus status;
     ShopInformationResponse shopInformationResponse;

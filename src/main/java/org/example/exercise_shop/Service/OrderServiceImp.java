@@ -59,16 +59,13 @@ public class OrderServiceImp implements OrderService{
 
 
     @Override
-    public Page<OrderResponse> findAllByShopId(String shopId, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("Audit.createdAt")));
-
-//        return orderRepository.findAllByShopId(shopId,pageable).map(order -> {
-//            OrderResponse orderResponse = orderMapper.toOrderReponse(order);
-//            orderResponse.setUserId(order.getUser().getId());
-//            orderResponse.setShopId(order.getShop().getId());
-//            return orderResponse;
-//        });
-        return null;
+    public Page<ShopOrderResponse> findAllByShopId(String shopId, int page, int size) {
+        List<Order> orders = orderRepository.findOrderWithDetailsByShopId(shopId);
+        List<ShopOrderResponse> shopOrderResponses = orders.stream().flatMap(order -> responseShopOrder(order, "", "").stream()).toList();
+        int start = (int) Pageable.ofSize(size).withPage(page).getOffset();
+        int end = Math.min((start + size), shopOrderResponses.size());
+        List<ShopOrderResponse> pagedShopOrderResponses = shopOrderResponses.subList(start, end);
+        return new PageImpl<>(pagedShopOrderResponses, PageRequest.of(page, size), shopOrderResponses.size());
     }
 
 
@@ -185,6 +182,8 @@ public class OrderServiceImp implements OrderService{
 
     private Set<ShopOrderResponse> responseShopOrder(Order order, String type, String search) {
         Set<ShopOrder> shopOrders = order.getShopOrders();
+        if (order.getUser() == null) throw new ApplicationException(ErrorCode.USER_NOT_FOUND);
+        User user = order.getUser();
         shopOrders = switch (type) {
             case "pending" -> shopOrders.stream()
                     .filter(shopOrder -> shopOrder.getStatus() == ShopOrderStatus.PENDING)
@@ -210,6 +209,7 @@ public class OrderServiceImp implements OrderService{
             shopOrderResponse.setShopInformationResponse(shopService.getShopDetailByShopId(shop.getId()));
             shopOrderResponse.setOrderItems(responseOrderItemResponse(shopOrder, search));
             shopOrderResponse.setAddress(order.getAddress());
+            shopOrderResponse.setUsername(user.getUsername());
             shopOrderResponse.setOrderId(order.getId());
             return shopOrderResponse;
         }).filter(shopOrderResponse -> !shopOrderResponse.getOrderItems().isEmpty()).collect(Collectors.toSet());

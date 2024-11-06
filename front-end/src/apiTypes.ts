@@ -247,6 +247,7 @@ export type ShopOrderResponse = {
     createdAt: Date
     updatedAt: Date
   }
+  username:string
   address: Address
 }
 

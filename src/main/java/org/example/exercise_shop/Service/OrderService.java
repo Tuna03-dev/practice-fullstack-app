@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 public interface OrderService {
 
     Page<ShopOrderResponse> findAllByUserId(String userId, int page, int size, String type, String search);
-    Page<OrderResponse> findAllByShopId(String shopId, int page, int size);
+    Page<ShopOrderResponse> findAllByShopId(String shopId, int page, int size);
     BigDecimal handlerCheckoutInfor(OrderRequest orderRequest);
     void saveOrder(OrderRequest orderRequest, BigDecimal totalAmount);
     void createOrder(OrderRequest orderRequest);

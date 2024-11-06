@@ -38,7 +38,8 @@ public class User implements UserDetails {
     String lastname;
     String phone;
     String email;
-    String gender;
+    @Column(name = "gender", columnDefinition = "VARCHAR(10)")
+    private String gender;
     LocalDate birthDate;
     String imageUrl;
     boolean status;
