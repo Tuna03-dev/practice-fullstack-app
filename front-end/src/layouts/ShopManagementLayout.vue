@@ -62,7 +62,7 @@
               <li v-for="(item, index) in menuItems" :key="index">
                 <Collapsible v-if="item.items">
                   <CollapsibleTrigger asChild>
-                    <Button variant="ghost" class="w-full justify-between font-normal">
+                    <Button variant="ghost" class="w-full justify-between font-normal" >
                       <span class="flex items-center">
                         <component :is="item.icon" class="h-4 w-4 mr-2" />
                         <span :class="['text-sm', isCollapsed && 'sr-only']">{{ item.label }}</span>
@@ -84,7 +84,7 @@
                     </Button>
                   </CollapsibleContent>
                 </Collapsible>
-                <Button v-else variant="ghost" class="w-full justify-start font-normal">
+                <Button v-else variant="ghost" class="w-full justify-start font-normal" @click="navigateTo(item.href)">
                   <component :is="item.icon" class="h-4 w-4 mr-2" />
                   <span :class="['text-sm', isCollapsed && 'sr-only']">{{ item.label }}</span>
                 </Button>
@@ -136,6 +136,7 @@ type MenuItem = {
   icon: any
   label: string
   items?: { label: string; href: string }[]
+  href?: string
 }
 
 const isCollapsed = ref(false)
@@ -149,7 +150,7 @@ const menuItems: MenuItem[] = [
       { label: 'Shop profile', href: '/management/shops/profile' }
     ]
   },
-  { icon: ShoppingCart, label: 'Manage Orders' },
+  { icon: ShoppingCart, label: 'Manage Orders', href: '/management/shops/orders' },
   {
     icon: Package,
     label: 'Manage Products',
@@ -181,9 +182,11 @@ const fetchShopInformation = async () => {
   }
 }
 
-const navigateTo = (href: string) => {
-  router.push(href)
-}
+const navigateTo = (href: string | undefined) => {
+  if (href) {
+    router.push(href);
+  }
+};
 
 onMounted(() => {
   fetchShopInformation()

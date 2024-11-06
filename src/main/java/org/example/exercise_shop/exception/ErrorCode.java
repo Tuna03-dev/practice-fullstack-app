@@ -37,7 +37,8 @@ public enum ErrorCode {
     UNAUTHORIZED(1025,"Unauthorized" ),
     LIMIT_ADDRESS(1026,"You can only have 3 addresses" ),
     ADDRESS_NOT_FOUND(1027,"Address not found" ),
-    SHIPPING_METHOD_NOT_FOUND(1028,"Shipping method not found" );
+    SHIPPING_METHOD_NOT_FOUND(1028,"Shipping method not found" ),
+    ORDER_CANNOT_CANCEL(1029,"Order can not be cancelled!" );
 
     private int code;
     private String message;

@@ -20,6 +20,7 @@ import CheckOutView from '@/views/CheckoutView.vue'
 import OrderSuccessView from '@/views/OrderSuccessView.vue'
 import { useCartStore } from '@/stores/cartStore'
 import BillingView from '@/views/BillingView.vue'
+import ManageOrderView from '@/views/shop/ManageOrderView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -143,6 +144,10 @@ const router = createRouter({
         {
           path: 'profile',
           component: ShopProfileView
+        },
+        {
+          path: 'orders',
+          component: ManageOrderView
         }
       ]
     },

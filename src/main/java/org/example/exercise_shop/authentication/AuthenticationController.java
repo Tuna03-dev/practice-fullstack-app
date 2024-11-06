@@ -1,6 +1,7 @@
 package org.example.exercise_shop.authentication;
 
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -39,8 +40,14 @@ public class AuthenticationController {
                     .build();
         }
 
-        String sessionId = Arrays.stream(request.getCookies()).filter(cookie -> cookie.getName().equals("SESSION_CART")).findFirst().map(cookie -> cookie.getValue()).orElse(null);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String sessionId = null;
+        if (request.getCookies() != null) {
+            sessionId = Arrays.stream(request.getCookies())
+                    .filter(cookie -> "SESSION_CART".equals(cookie.getName()))
+                    .findFirst()
+                    .map(Cookie::getValue)
+                    .orElse(null);
+        }        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null && authentication.isAuthenticated()) {
             var user = (User) authentication.getPrincipal();

@@ -40,6 +40,9 @@ spring:
 #    baseline-version: 1
 #    baseline-on-migrate: true
 
+host:
+  front-end: ${HOST_FRONT_END:http://localhost:5173}
+
 jwt:
   signer-key: "bTjB9aNwmnrGaTjQEBciTlZlC6iYu3q8uqOCQbIX25FSgkDBLnQ+m6yMZOX1VqJU"
   access:
@@ -52,3 +55,4 @@ init:
 
 application:
   time-reserve-product: "60" #in second
+

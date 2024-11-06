@@ -6,6 +6,7 @@ import org.example.exercise_shop.Service.OrderService;
 import org.example.exercise_shop.dto.ApiResponse;
 import org.example.exercise_shop.dto.response.OrderItemResponse;
 import org.example.exercise_shop.dto.response.OrderResponse;
+import org.example.exercise_shop.dto.response.ShopOrderResponse;
 import org.example.exercise_shop.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
@@ -23,17 +24,20 @@ public class PersonalOrderController {
     private final OrderItemService orderItemService;
 
     @GetMapping
-    public ApiResponse<Page<OrderResponse>> getOrderHistories(@RequestParam(value = "page", defaultValue = "0")int page,
-                                                              @RequestParam(value = "size", defaultValue = "10")int size) {
+    public ApiResponse<Page<ShopOrderResponse>> getOrderHistories(@RequestParam(value = "page", defaultValue = "0")int page,
+                                                                  @RequestParam(value = "size", defaultValue = "3")int size,
+                                                                  @RequestParam(value = "type", defaultValue = "all")String type,
+                                                                  @RequestParam(value = "search", defaultValue = "")String search){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
-        Page<OrderResponse> orders = orderService.findAllByUserId(user.getId(), page, size);
+        Page<ShopOrderResponse> orders = orderService.findAllByUserId(user.getId(), page, size, type, search);
 
-        return ApiResponse.<Page<OrderResponse>>builder()
+        return ApiResponse.<Page<ShopOrderResponse>>builder()
                 .data(orders)
                 .build();
     }
+
 
     @GetMapping("/{id}/details")
     public ApiResponse<List<OrderItemResponse>> getOrderDetailsByOrderId(@PathVariable(value = "id")String orderId){
@@ -46,9 +50,9 @@ public class PersonalOrderController {
 
 
     @PutMapping("/{id}/cancel")
-    public ApiResponse<?> cancelOrder(@PathVariable(value = "id")String orderId){
+    public ApiResponse<?> cancelOrder(@PathVariable(value = "id")String shopOrderId){
 
-        orderService.cancelOrder(orderId);
+        orderService.cancelOrder(shopOrderId);
         return ApiResponse.builder()
                 .message("Cancelled successfully")
                 .build();

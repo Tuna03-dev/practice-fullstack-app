@@ -266,7 +266,7 @@
       </Card>
 
       <div class="flex justify-end gap-4 mt-4">
-        <Button type="submit" class="w-24 bg-orange-400 hover:bg-orange-500">Save</Button>
+        <Button type="submit" class="w-48 bg-orange-400 hover:bg-orange-500">Save</Button>
       </div>
     </form>
   </div>
