@@ -31,10 +31,13 @@ public class ManageOrderController {
 
     @GetMapping()
     public ApiResponse<Page<ShopOrderResponse>> getAllOrderByShopId(@RequestParam(value = "page", defaultValue = "0")int page,
-                                                                    @RequestParam(value = "size", defaultValue = "10")int size){
+                                                                    @RequestParam(value = "size", defaultValue = "10")int size,
+                                                                    @RequestParam(value = "status", defaultValue = "")ShopOrderStatus status,
+                                                                    @RequestParam(value = "search", defaultValue = "")String search,
+                                                                    @RequestParam(value = "delivery", defaultValue = "")String delivery){
 
         Shop shop = shopService.findByCurrentUser();
-        Page<ShopOrderResponse> orderResponses = orderService.findAllByShopId(shop.getId(), page, size);
+        Page<ShopOrderResponse> orderResponses = orderService.findAllByShopId(shop.getId(), page, size, status, search, delivery);
 
         return ApiResponse.<Page<ShopOrderResponse>>builder()
                 .data(orderResponses)

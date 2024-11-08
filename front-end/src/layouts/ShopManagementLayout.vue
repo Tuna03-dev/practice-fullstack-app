@@ -30,7 +30,7 @@
           <DropdownMenuContent align="end">
             <DropdownMenuItem>Profile</DropdownMenuItem>
             <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem @click="logout">Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -182,6 +182,10 @@ const fetchShopInformation = async () => {
   }
 }
 
+const logout = () => {
+  authStore.logout()
+  router.push('/')
+}
 const navigateTo = (href: string | undefined) => {
   if (href) {
     router.push(href);

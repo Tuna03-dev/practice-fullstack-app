@@ -2,6 +2,7 @@ package org.example.exercise_shop.Repository;
 
 import org.example.exercise_shop.entity.Order;
 import org.example.exercise_shop.entity.Shop;
+import org.example.exercise_shop.entity.ShopOrderStatus;
 import org.example.exercise_shop.entity.StatusOrder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +31,6 @@ public interface OrderRepository extends JpaRepository<Order, String> {
     @Query("SELECT o FROM Order o JOIN FETCH o.shopOrders so JOIN FETCH so.orderItems oi WHERE o.user.id = :userId")
     List<Order> findOrdersWithDetailsByUserId(@Param("userId") String userId);
 
-    @Query("SELECT o FROM Order o JOIN FETCH o.shopOrders so JOIN FETCH o.user u JOIN FETCH so.orderItems oi where so.shop.id = :shopId")
-    List<Order> findOrderWithDetailsByShopId(@Param("shopId") String shopId);
+    @Query("SELECT o FROM Order o JOIN FETCH o.shopOrders so JOIN FETCH o.user u JOIN FETCH so.orderItems oi where so.shop.id = :shopId and (:status is null or so.status = :status) and  (:delivery = '' or so.shippingMethod.id = :delivery)")
+    List<Order> findOrderWithDetailsByShopId(@Param("shopId") String shopId, @Param("status") ShopOrderStatus status, @Param("delivery") String delivery);
 }

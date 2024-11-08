@@ -15,6 +15,8 @@ import org.example.exercise_shop.exception.OutOfStockException;
 import org.example.exercise_shop.mapper.OrderItemMapper;
 import org.example.exercise_shop.mapper.OrderMapper;
 import org.hibernate.Hibernate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,6 +32,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderServiceImp implements OrderService{
 
+    private static final Logger log = LoggerFactory.getLogger(OrderServiceImp.class);
     private final OrderMapper orderMapper;
     private final OrderItemRepository orderItemRepository;
     private final OrderRepository orderRepository;
@@ -59,9 +62,10 @@ public class OrderServiceImp implements OrderService{
 
 
     @Override
-    public Page<ShopOrderResponse> findAllByShopId(String shopId, int page, int size) {
-        List<Order> orders = orderRepository.findOrderWithDetailsByShopId(shopId);
-        List<ShopOrderResponse> shopOrderResponses = orders.stream().flatMap(order -> responseShopOrder(order, "", "").stream()).toList();
+    public Page<ShopOrderResponse> findAllByShopId(String shopId, int page, int size, ShopOrderStatus status, String search, String delivery) {
+        List<Order> orders = orderRepository.findOrderWithDetailsByShopId(shopId, status, delivery);
+        log.info("status: {}", status);
+        List<ShopOrderResponse> shopOrderResponses = orders.stream().flatMap(order -> responseShopOrder(order, "", search).stream()).toList();
         int start = (int) Pageable.ofSize(size).withPage(page).getOffset();
         int end = Math.min((start + size), shopOrderResponses.size());
         List<ShopOrderResponse> pagedShopOrderResponses = shopOrderResponses.subList(start, end);

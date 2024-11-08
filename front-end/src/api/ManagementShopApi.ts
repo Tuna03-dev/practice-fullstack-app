@@ -6,8 +6,8 @@ const ManagementShopApi = {
         const res = await httpClient.get<ApiResponse<any>>(`/shop/info/get-by-user/${username}`);
         return res.data;
     },
-    getOrderDetailByShopId: async (): Promise<ApiResponse<any>> => {
-        const res = await httpClient.get<ApiResponse<any>>(`/shop/orders`);
+    getOrderDetailByShopId: async (page:number, search: string, status: string, delivery: string): Promise<ApiResponse<any>> => {
+        const res = await httpClient.get<ApiResponse<any>>(`/shop/orders?status=${status}&delivery=${delivery}&search=${search}&page=${page}`);
         return res.data;
     },
     getNumberOrderDetailByShopId: async (): Promise<ApiResponse<any>> => {
