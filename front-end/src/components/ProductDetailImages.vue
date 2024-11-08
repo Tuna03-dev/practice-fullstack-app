@@ -1,23 +1,28 @@
 <template>
-  <div class="grid auto-rows-auto gap-4 justify-center p-4 bg-gray-50">
-    <div class="flex justify-center">
-      <a data-fancybox="gallery" :href="mainImage" class="w-96">
+  <div class="grid auto-rows-auto gap-4 justify-center p-4 bg-gray-50 max-w-full">
+    <div class="flex justify-center overflow-hidden">
+      <a data-fancybox="gallery" :href="mainImage" class="w-96 max-w-full">
         <img
-        :src="mainImage"
-        class="w-full h-auto object-cover rounded-lg hover:cursor-pointer"
-        alt=""
+          :src="mainImage"
+          class="w-full h-auto object-cover rounded-lg hover:cursor-pointer"
+          alt=""
         />
       </a>
     </div>
-    <div class="flex gap-4 w-full overflow-auto">
-      <a data-fancybox="gallery" :href="mainImage" >
+    <div class="flex gap-4 overflow-x-auto pb-2 ">
+      <a data-fancybox="gallery" :href="mainImage">
         <img
           :src="mainImage"
           class="w-24 h-24 object-cover rounded-lg hover:border-2 hover:border-orange-500"
           alt=""
         />
       </a>
-      <a data-fancybox="gallery" v-for="image in images" :key="image.id" :href="image.url"  >
+      <a
+        data-fancybox="gallery"
+        v-for="image in images"
+        :key="image.id"
+        :href="image.url"
+      >
         <img
           :src="image.url"
           :alt="image.description"
@@ -32,34 +37,25 @@
 import type { ProductImageResponse } from '@/apiTypes'
 import { Fancybox } from '@fancyapps/ui'
 import '@fancyapps/ui/dist/fancybox/fancybox.css'
-import { onMounted, ref } from 'vue';
-
+import { onMounted, ref } from 'vue'
 
 const props = defineProps<{
   images: ProductImageResponse[]
   mainImage: string
 }>()
 
-
-const currentMainImage = ref<string>(props.mainImage);
-
-// const changeMainImage = (url: string) => {
-//   currentMainImage.value = url;
-// }
-
+const currentMainImage = ref<string>(props.mainImage)
 
 onMounted(() => {
-  currentMainImage.value = props.mainImage;
+  currentMainImage.value = props.mainImage
 
   Fancybox.bind("[data-fancybox='gallery']", {
     Thumbs: false,
     Toolbar: true,
     animated: true
-  });
-});
+  })
+})
 </script>
-
-
 
 <style scoped>
 </style>

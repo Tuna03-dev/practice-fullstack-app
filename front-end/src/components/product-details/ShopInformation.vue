@@ -1,5 +1,5 @@
 <template >
-  <div class="bg-gray-100 rounded-lg p-8 flex gap-10">
+  <div class="bg-gray-100 rounded-lg p-8 flex flex-col md:flex-row gap-10">
     <div class="flex gap-4 border-r-2  border-black pr-10">
       <Avatar class="w-20 h-20">
         <AvatarImage src="../../public/images/shops/default-avatar.png" alt="@radix-vue" />

@@ -3,9 +3,9 @@
     <Container class="flex items-center gap-10">
       <div class="flex items-center gap-2">
         <iconify-icon icon="pajamas:github" class="text-3xl" />
-        <RouterLink to="/" class="text-xl font-medium">Tuna03-dev</RouterLink>
+        <RouterLink to="/" class="text-xl md:flex hidden font-medium">Tuna03-dev</RouterLink>
       </div>
-      <ul class="flex gap-2">
+      <ul class="hidden md:flex  gap-2">
         <li
           :class="[
             'hover:bg-gray-300 hover:text-gray-500 rounded-3xl px-4 py-2',
@@ -21,31 +21,42 @@
         </li>
       </ul>
 
-      <div class="flex items-center ml-auto ">
+      <div class="fixed bottom-0 left-0 right-0 bg-white border-t md:hidden flex justify-around py-2">
+      <RouterLink class="flex items-center justify-center gap-1" v-for="item in menuItems" :key="item.path" :to="item.path" :class="{'text-black': isActive(item.path), 'text-gray-400': !isActive(item.path)}">
+        <iconify-icon :icon="item.icon" class="text-2xl" />
+        <span class="text-xs">{{ item.name }}</span>
+      </RouterLink>
+      <div @click="handleGotoCart" class="flex  items-center cursor-pointer">
+        <iconify-icon icon="ic:round-shopping-cart" class="text-2xl" />
+        <span class="text-xs">Cart</span>
+      </div>
+    </div>
+
+      <div class="flex items-center md:ml-auto ">
         <input
           type="text"
           v-model="searchQuery"
           @keyup.enter="handleSearch"
           placeholder="Search..."
-          class="border-2 border-gray-300 px-4 w-[300px] py-2 rounded-lg focus:rounded-lg outline-none hover:bg-gray-100"
+          class="border-2 border-gray-300 md:px-4 md:py-2 px-2 py-1  w-full lg:w-[300px] rounded-lg focus:rounded-lg outline-none hover:bg-gray-100"
         />
 
-        <Button class="ml-2 py-5 px-3 font-medium" @click="handleSearch"><Search /></Button>
+        <Button class="ml-2  md:py-5 md:px-3 px-2 font-medium" @click="handleSearch"><Search /></Button>
       </div>
-      <div class="ml-auto">
+      <div class="hidden md:flex ml-auto">
         <shopping-cart-header :cartItems="data" @click="handleGotoCart"/>
       </div>
 
       <template v-if="isLogged">
-        <div class="flex space-x-2 mr-10">
+        <div class="flex space-x-2 mr-10 ml-auto">
           <UserNav />
         </div>
       </template>
       <template v-else>
-        <div class="flex space-x-2">
+        <div class="flex space-x-2 ml-auto">
           <Dialog>
             <DialogTrigger>
-              <button class="border-2 border-black px-4 py-2 rounded-lg font-medium">
+              <button class="border-2 border-black md:px-4 md:py-2 md:text-lg text-xs px-1 py-1  rounded-lg font-medium">
                 Sign in
               </button>
             </DialogTrigger>
@@ -59,7 +70,7 @@
 
           <Dialog>
             <DialogTrigger>
-              <button class="bg-black text-white px-4 py-2 rounded-lg font-medium">Sign up</button>
+              <button class="bg-black text-white md:px-4 md:py-2 md:text-lg text-xs px-1 py-1 rounded-lg font-medium">Sign up</button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>

@@ -3,7 +3,7 @@
     <div class="font-bold text-5xl mb-10 text-center">Products</div>
 
     <div class="grid grid-cols-4 gap-4">
-      <div class="col-span-1">
+      <div class="md:col-span-1 col-span-4">
         <div class="flex justify-between">
           <div class="flex gap-2 text-2xl font-bold">
             <Filter />
@@ -32,7 +32,7 @@
           </div>
         </div>
       </div>
-      <div class="sm:col-span-3 col-span-4">
+      <div class="md:col-span-3 col-span-4">
         <div v-if="productList.length === 0" class="text-center text-3xl text-red-400 bg-gray-100 p-4">
           No products
         </div>
@@ -64,7 +64,7 @@
             </SelectContent>
           </Select>
         </div>
-        <div class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-4">
+        <div class="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-4">
           <product-card
             v-for="product in productList"
             :product="product"
