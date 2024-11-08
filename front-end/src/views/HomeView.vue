@@ -52,29 +52,55 @@ onMounted(() => {
 </script>
 
 <template>
-  <container>
-    <slider-home></slider-home>
-    <div class=" grid grid-cols-3 gap-4 mt-16">
-      <div class="col-span-1">
-        <category-card  class="category-card w-10/12"></category-card>
+  <Container>
+    <!-- Slider Section -->
+    <SliderHome />
 
+    <!-- Responsive Grid for Category, Best Seller, New Arrivals, and Top Rated -->
+    <div class="grid gap-4 mt-16 md:grid-cols-3">
+      <!-- Category Section -->
+      <div class="md:col-span-1">
+        <CategoryCard class="category-card w-full md:w-10/12" />
+
+        <!-- Best Seller Section -->
         <div>
           <p class="font-bold text-2xl mt-6">Best Seller</p>
         </div>
-        <product-best-seller-card class="w-10/12"  v-for="product in productSellers" :product="product" :key="product.id"></product-best-seller-card>
+        <div class="grid grid-cols-2 gap-4 md:block">
+          <ProductBestSellerCard 
+            class="w-full" 
+            v-for="product in productSellers" 
+            :product="product" 
+            :key="product.id" 
+          />
+        </div>
       </div>
+
+      <!-- New Arrivals Section -->
       <div>
         <p class="font-bold text-2xl">New Arrivals</p>
-        <home-product-card v-for="product in productNewArrivals" :product="product" :key="product.id"></home-product-card>
+        <div class="grid grid-cols-2 gap-4 md:block">
+          <HomeProductCard 
+            v-for="product in productNewArrivals" 
+            :product="product" 
+            :key="product.id" 
+          />
+        </div>
       </div>
+
+      <!-- Top Rated Section -->
       <div>
         <p class="font-bold text-2xl">Top Rated</p>
-        <home-product-card v-for="product in productToprates" :product="product" :key="product.id"></home-product-card>
+        <div class="grid grid-cols-2 gap-4 md:block">
+          <HomeProductCard 
+            v-for="product in productToprates" 
+            :product="product" 
+            :key="product.id" 
+          />
+        </div>
       </div>
     </div>
-    
-  
-  </container>
+  </Container>
 </template>
 
 <style lang="scss">

@@ -47,7 +47,8 @@ public class AuthenticationController {
                     .findFirst()
                     .map(Cookie::getValue)
                     .orElse(null);
-        }        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null && authentication.isAuthenticated()) {
             var user = (User) authentication.getPrincipal();

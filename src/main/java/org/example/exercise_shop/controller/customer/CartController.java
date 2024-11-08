@@ -94,11 +94,15 @@ public class CartController {
     }
 
     private String getSessionIdFromCookies(HttpServletRequest request) {
-        return Arrays.stream(request.getCookies())
-                .filter(cookie -> "SESSION_CART".equals(cookie.getName()))
-                .findFirst()
-                .map(Cookie::getValue)
-                .orElse(null);
+        String sessionId = null;
+        if (request.getCookies() != null) {
+            sessionId = Arrays.stream(request.getCookies())
+                    .filter(cookie -> "SESSION_CART".equals(cookie.getName()))
+                    .findFirst()
+                    .map(Cookie::getValue)
+                    .orElse(null);
+        }
+        return sessionId;
     }
 
 
